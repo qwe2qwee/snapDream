@@ -1,98 +1,242 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+// ============================================
+// screens/Index.tsx
+// ============================================
+import { ItineraryDisplay } from "@/components/ItineraryDisplay";
+import { LoadingMessages } from "@/components/LoadingMessages";
+import { PopularDestinations } from "@/components/PopularDestinations";
+import { TripForm } from "@/components/TripForm";
+import { useAuth } from "@/contexts/AuthContext";
+import { Compass, LogOut, Plane } from "lucide-react-native";
+import React, { useState } from "react";
+import {
+  Alert,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+interface Itinerary {
+  days: {
+    day: number;
+    title: string;
+    activities: { time: string; activity: string; description: string }[];
+  }[];
+}
 
-export default function HomeScreen() {
+export default function Index() {
+  const [itinerary, setItinerary] = useState<Itinerary | null>(null);
+  const [destination, setDestination] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { signOut } = useAuth();
+
+  const handleGenerate = async (data: {
+    destination: string;
+    days: number;
+    interests: string[];
+  }) => {
+    setIsLoading(true);
+    setItinerary(null);
+
+    try {
+      const response = await fetch(
+        `${process.env.EXPO_PUBLIC_SUPABASE_URL}/functions/v1/generate-itinerary`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY}`,
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.error || "Failed to generate itinerary");
+      }
+
+      const result = await response.json();
+      setItinerary(result.itinerary);
+      setDestination(data.destination);
+    } catch (error) {
+      console.error("Error generating itinerary:", error);
+      Alert.alert(
+        "Error",
+        error instanceof Error ? error.message : "Failed to generate itinerary"
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+        {/* Header */}
+        <View style={styles.header}>
+          <TouchableOpacity onPress={signOut} style={styles.logoutButton}>
+            <LogOut size={24} color="#666" />
+          </TouchableOpacity>
+          <View style={styles.iconContainer}>
+            <Plane size={28} color="#6366f1" />
+          </View>
+          <Text style={styles.title}>Travel Itinerary Planner</Text>
+          <Text style={styles.subtitle}>
+            Get a personalized day-by-day travel plan powered by AI
+          </Text>
+        </View>
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+        {/* Form Section */}
+        <View style={styles.formCard}>
+          <Text style={styles.sectionTitle}>Plan Your Trip</Text>
+          <TripForm
+            onSubmit={handleGenerate}
+            isLoading={isLoading}
+            destination={destination}
+            onDestinationChange={setDestination}
+          />
+        </View>
+
+        {/* Results Section */}
+        <View style={styles.resultsSection}>
+          {isLoading && <LoadingMessages />}
+
+          {!isLoading && itinerary && (
+            <ItineraryDisplay itinerary={itinerary} destination={destination} />
+          )}
+
+          {!isLoading && !itinerary && (
+            <View style={styles.emptyStateContainer}>
+              {/* Empty State */}
+              <View style={styles.emptyState}>
+                <View style={styles.emptyIconContainer}>
+                  <Compass size={32} color="#999" />
+                </View>
+                <Text style={styles.emptyStateTitle}>
+                  Your itinerary will appear here
+                </Text>
+                <Text style={styles.emptyStateSubtitle}>
+                  Fill in the form or pick a destination below
+                </Text>
+              </View>
+
+              {/* Popular Destinations */}
+              <View style={styles.popularCard}>
+                <PopularDestinations onSelect={setDestination} />
+              </View>
+            </View>
+          )}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#f9fafb",
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  container: {
+    flex: 1,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  header: {
+    alignItems: "center",
+    paddingVertical: 32,
+    paddingHorizontal: 20,
+    position: "relative",
+  },
+  logoutButton: {
+    position: "absolute",
+    top: 32,
+    right: 20,
+    zIndex: 1,
+    padding: 8,
+  },
+  iconContainer: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: "#ede9fe",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: "700",
+    color: "#000",
+    textAlign: "center",
+  },
+  subtitle: {
+    fontSize: 14,
+    color: "#666",
+    textAlign: "center",
+    marginTop: 8,
+  },
+  formCard: {
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#e5e7eb",
+    padding: 20,
+    marginHorizontal: 20,
+    marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#000",
+    marginBottom: 16,
+  },
+  resultsSection: {
+    paddingHorizontal: 20,
+    paddingBottom: 40,
+  },
+  emptyStateContainer: {
+    gap: 24,
+  },
+  emptyState: {
+    alignItems: "center",
+    paddingVertical: 32,
+  },
+  emptyIconContainer: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: "#f3f4f6",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  emptyStateTitle: {
+    fontSize: 16,
+    fontWeight: "500",
+    color: "#666",
+    marginBottom: 4,
+  },
+  emptyStateSubtitle: {
+    fontSize: 14,
+    color: "#999",
+  },
+  popularCard: {
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#e5e7eb",
+    padding: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 2,
   },
 });
