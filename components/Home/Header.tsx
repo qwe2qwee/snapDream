@@ -1,7 +1,9 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+
+// Replace this with your actual SVG
+import CreditsIcon from "@/assets/icons/credits.svg"; // Make sure this SVG exists
 
 interface HeaderProps {
   credits?: number;
@@ -15,15 +17,15 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <View style={styles.header}>
       <Text style={styles.logo}>SnapDream</Text>
+
       <View style={styles.headerRight}>
+        {/* Credits display */}
         <View style={styles.creditsContainer}>
-          <MaterialCommunityIcons
-            name="circle-multiple"
-            size={16}
-            color="#ffffffff"
-          />
+          <CreditsIcon width={16} height={16} fill="#FFFFFF" />
           <Text style={styles.creditsText}>{credits}</Text>
         </View>
+
+        {/* Go Pro button */}
         <TouchableOpacity activeOpacity={0.8} onPress={onProPress}>
           <LinearGradient
             colors={["#f5550b", "#ffa47add"]}
@@ -39,6 +41,9 @@ export const Header: React.FC<HeaderProps> = ({
   );
 };
 
+// ------------------------------
+// Styles
+// ------------------------------
 const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
@@ -62,7 +67,7 @@ const styles = StyleSheet.create({
   creditsContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#252530ff",
+    backgroundColor: "#252530",
     paddingVertical: 10,
     paddingHorizontal: 16,
     borderRadius: 20,

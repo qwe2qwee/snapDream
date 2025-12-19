@@ -1,9 +1,9 @@
 import { BlurView } from "expo-blur";
+import { Image, ImageSource } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import {
   Dimensions,
-  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -25,7 +25,7 @@ const CrownBadge = () => (
 
 interface EffectCardProps {
   title: string;
-  image: string;
+  image: ImageSource;
   isPremium: boolean;
   onPress?: () => void;
 }
@@ -42,7 +42,7 @@ export const EffectCard: React.FC<EffectCardProps> = ({
     onPress={onPress}
   >
     <View style={styles.effectImageContainer}>
-      <Image source={{ uri: image }} style={styles.effectImage} />
+      <Image source={image} style={styles.effectImage} contentFit="cover" />
       <LinearGradient
         colors={["transparent", "rgba(0,0,0,0.7)"]}
         style={styles.effectGradient}
@@ -67,7 +67,6 @@ const styles = StyleSheet.create({
   effectImage: {
     width: "100%",
     height: "100%",
-    resizeMode: "cover",
   },
   effectGradient: {
     position: "absolute",

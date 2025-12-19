@@ -9,7 +9,6 @@ import { Header } from "@/components/Home/Header";
 import {
   hairstyleEffects,
   imageEffects,
-  IMAGES,
   tryOnEffects,
   videoEffects,
 } from "@/constants/data";
@@ -39,12 +38,12 @@ export default function HomeScreen() {
             <FeatureCard
               title="Image Generation"
               gradient={["#1E3A5F", "#0D7377"]}
-              image={IMAGES.imageGen}
+              image={require("../../assets/icons/imageGen.png")}
             />
             <FeatureCard
               title="Video Generation"
               gradient={["#2D1B4E", "#1E3A5F"]}
-              image={IMAGES.videoGen}
+              image={require("../../assets/icons/videoGen.png")}
             />
           </View>
 

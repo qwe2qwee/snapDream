@@ -1,7 +1,7 @@
 // ImageUpscaleScreen.js
 import { Feather } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
 import {
   Dimensions,
@@ -58,7 +58,10 @@ export default function ImageUpscaleScreen() {
       <StatusBar barStyle="light-content" />
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => router.back()}
+        >
           <Feather name="chevron-left" size={24} color="#fff" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Image Upscale</Text>

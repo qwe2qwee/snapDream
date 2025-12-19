@@ -1,4 +1,3 @@
-import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
 import {
@@ -16,35 +15,48 @@ import {
   Text,
 } from "react-native";
 
+// ------------------------------
+// Import your SVG icons
+// Make sure the file names match exactly (case-sensitive)
+// ------------------------------
+import CommunityIcon from "@/assets/icons/community.svg";
+import CreateIcon from "@/assets/icons/create.svg";
+import CreationsIcon from "@/assets/icons/creations.svg";
+import HomeIcon from "@/assets/icons/home.svg";
+import ProfileIcon from "@/assets/icons/profile.svg";
+
 type IconName = "home" | "community" | "create" | "creations" | "profile";
 
 interface TabButtonProps extends TabTriggerSlotProps {
   icon: IconName;
   label: string;
   isCenter?: boolean;
+  isFocused?: boolean;
 }
 
+// ------------------------------
+// Map icon name to SVG component
+// ------------------------------
 const getIcon = (name: IconName, color: string, size: number = 22) => {
   switch (name) {
     case "home":
-      return <Ionicons name="home" size={size} color={color} />;
+      return <HomeIcon width={size} height={size} />;
     case "community":
-      return <Ionicons name="people-outline" size={size} color={color} />;
+      return <CommunityIcon width={size} height={size} />;
     case "create":
-      return (
-        <MaterialCommunityIcons name="creation" size={26} color="#0D0D0F" />
-      );
+      return <CreateIcon width={26} height={26} fill="#0D0D0F" />;
     case "creations":
-      return (
-        <MaterialCommunityIcons name="grid-large" size={size} color={color} />
-      );
+      return <CreationsIcon width={size} height={size} />;
     case "profile":
-      return <Feather name="user" size={size} color={color} />;
+      return <ProfileIcon width={size} height={size} />;
     default:
       return null;
   }
 };
 
+// ------------------------------
+// Tab button component
+// ------------------------------
 function TabButton({
   icon,
   label,
@@ -93,6 +105,9 @@ function TabButton({
   );
 }
 
+// ------------------------------
+// Main TabLayout
+// ------------------------------
 export default function TabLayout() {
   return (
     <Tabs>
@@ -122,6 +137,9 @@ export default function TabLayout() {
   );
 }
 
+// ------------------------------
+// Styles
+// ------------------------------
 const styles = StyleSheet.create({
   tabList: {
     flexDirection: "row",
@@ -130,8 +148,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#141416",
     paddingTop: 12,
     paddingBottom: 28,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
+
     position: "absolute",
     bottom: 0,
     left: 0,

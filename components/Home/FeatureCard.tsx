@@ -1,11 +1,12 @@
+import { Image, ImageSource } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
-import { Image, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
 
 interface FeatureCardProps {
   title: string;
   gradient: [string, string];
-  image: string;
+  image: ImageSource; // Changed from ImageSourcePropType
   onPress?: () => void;
 }
 
@@ -27,7 +28,7 @@ export const FeatureCard: React.FC<FeatureCardProps> = ({
       style={styles.featureGradient}
     >
       <Text style={styles.featureTitle}>{title}</Text>
-      <Image source={{ uri: image }} style={styles.featureImage} />
+      <Image source={image} style={styles.featureImage} contentFit="cover" />
     </LinearGradient>
   </TouchableOpacity>
 );
@@ -46,6 +47,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingLeft: 16,
     paddingRight: 8,
+    bottom: 0,
   },
   featureTitle: {
     color: "#FFFFFF",
@@ -58,6 +60,9 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 8,
+    position: "absolute",
+    right: -8,
+    bottom: 0,
     marginRight: 8,
   },
 });

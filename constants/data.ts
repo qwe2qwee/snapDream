@@ -1,8 +1,6 @@
 export const IMAGES = {
-  imageGen:
-    "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200",
-  videoGen:
-    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200",
+  imageGen: require("../assets/icons/imageGen.png"),
+  videoGen: require("../assets/icons/videoGen.png"),
   hugging: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=200",
   aiDance: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=200",
   video: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200",
