@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import React from "react";
+import React, { useMemo } from "react";
 import { ScrollView, StatusBar, StyleSheet, View } from "react-native";
 
 import { GradientBackground } from "@/components/GradientBackground";
@@ -12,29 +12,61 @@ import {
   tryOnEffects,
   videoEffects,
 } from "@/constants/data";
+import { useResponsive } from "@/hooks/useResponsive";
 
 export default function HomeScreen() {
   const router = useRouter();
+  const {
+    spacing,
+    safeAreaTop,
+    getTabBarHeight,
+    getContentHeight,
+    isSmallScreen,
+    isTablet,
+    width,
+  } = useResponsive();
 
   const handleEffectPress = (id: number) => {
     router.push(`/details/${id}`);
   };
 
+  // Responsive dynamic styles
+  const dynamicStyles = useMemo(
+    () => ({
+      container: {
+        paddingTop: 0,
+      },
+      scrollContent: {
+        // Account for tab bar height + extra breathing room
+        paddingBottom: getTabBarHeight(true) + spacing.lg,
+      },
+      featureCards: {
+        paddingHorizontal: isTablet ? spacing.lg : spacing.md,
+        gap: isSmallScreen ? spacing.sm : spacing.md,
+        marginBottom: isTablet ? spacing.xl : spacing.lg,
+      },
+    }),
+    [safeAreaTop, spacing, getTabBarHeight, isSmallScreen, isTablet]
+  );
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, dynamicStyles.container]}>
       <GradientBackground>
         <StatusBar barStyle="light-content" backgroundColor="#0D0D0F" />
 
         {/* Header */}
-        <Header credits={5000} onProPress={() => {}} />
+        <Header credits={5000} onProPress={() => {}} isSubscribed />
 
         <ScrollView
           style={styles.scrollView}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.scrollContent}
+          contentContainerStyle={[
+            styles.scrollContent,
+            dynamicStyles.scrollContent,
+          ]}
         >
           {/* Feature Cards */}
-          <View style={styles.featureCards}>
+          <View style={[styles.featureCards, dynamicStyles.featureCards]}>
             <FeatureCard
               title="Image Generation"
               gradient={["#1E3A5F", "#0D7377"]}
@@ -93,12 +125,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 120,
+    // Dynamic paddingBottom applied via dynamicStyles
   },
   featureCards: {
     flexDirection: "row",
-    paddingHorizontal: 16,
-    gap: 12,
-    marginBottom: 24,
+    // Dynamic spacing applied via dynamicStyles
   },
 });

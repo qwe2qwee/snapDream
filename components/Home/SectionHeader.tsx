@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+
+import { useFontFamily } from "@/hooks/useFontFamily";
+import { useResponsive } from "@/hooks/useResponsive";
 
 interface SectionHeaderProps {
   title: string;
@@ -9,32 +12,80 @@ interface SectionHeaderProps {
 export const SectionHeader: React.FC<SectionHeaderProps> = ({
   title,
   onSeeAll,
-}) => (
-  <View style={styles.sectionHeader}>
-    <Text style={styles.sectionTitle}>{title}</Text>
-    <TouchableOpacity onPress={onSeeAll}>
-      <Text style={styles.seeAllText}>See All</Text>
-    </TouchableOpacity>
-  </View>
-);
+}) => {
+  const { spacing, typography, getResponsiveValue, isTablet, isSmallScreen } =
+    useResponsive();
 
+  const fonts = useFontFamily();
+
+  // Responsive values with memoization
+  const responsiveValues = useMemo(
+    () => ({
+      // Section title size scales from 18px to 24px
+      titleSize: getResponsiveValue(18, 19, 20, 22, 24),
+
+      // "See All" text size
+      seeAllSize: getResponsiveValue(13, 13.5, 14, 14, 15),
+
+      // Letter spacing (tighter on small screens)
+      letterSpacing: isSmallScreen ? -0.2 : -0.3,
+
+      // Horizontal padding
+      horizontalPadding: isTablet ? spacing.lg : spacing.md,
+
+      // Margin bottom
+      marginBottom: getResponsiveValue(12, 13, 14, 15, 16),
+    }),
+    [getResponsiveValue, spacing, isTablet, isSmallScreen]
+  );
+
+  // Dynamic styles
+  const dynamicStyles = useMemo(
+    () => ({
+      sectionHeader: {
+        paddingHorizontal: responsiveValues.horizontalPadding,
+        marginBottom: responsiveValues.marginBottom,
+      },
+      sectionTitle: {
+        fontSize: responsiveValues.titleSize,
+        fontFamily: fonts.Bold,
+        letterSpacing: responsiveValues.letterSpacing,
+      },
+      seeAllText: {
+        fontSize: responsiveValues.seeAllSize,
+        fontFamily: fonts.Medium,
+      },
+    }),
+    [responsiveValues, fonts]
+  );
+
+  return (
+    <View style={[styles.sectionHeader, dynamicStyles.sectionHeader]}>
+      <Text style={[styles.sectionTitle, dynamicStyles.sectionTitle]}>
+        {title}
+      </Text>
+      <TouchableOpacity onPress={onSeeAll} activeOpacity={0.7}>
+        <Text style={[styles.seeAllText, dynamicStyles.seeAllText]}>
+          See All
+        </Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+// ------------------------------
+// Static base styles
+// ------------------------------
 const styles = StyleSheet.create({
   sectionHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 16,
-    marginBottom: 14,
   },
   sectionTitle: {
     color: "#FFFFFF",
-    fontSize: 20,
-    fontWeight: "700",
-    letterSpacing: -0.3,
   },
   seeAllText: {
     color: "#6B6B6B",
-    fontSize: 14,
-    fontWeight: "500",
   },
 });

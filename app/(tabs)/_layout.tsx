@@ -7,7 +7,7 @@ import {
   TabTrigger,
   TabTriggerSlotProps,
 } from "expo-router/ui";
-import React from "react";
+import React, { useMemo } from "react";
 import {
   GestureResponderEvent,
   Pressable,
@@ -15,10 +15,10 @@ import {
   Text,
 } from "react-native";
 
-// ------------------------------
+// Import your custom hooks
+import { useFontFamily } from "@/hooks/useFontFamily";
+
 // Import your SVG icons
-// Make sure the file names match exactly (case-sensitive)
-// ------------------------------
 import CommunityIconActive from "@/assets/icons/community-active.svg";
 import CommunityIcon from "@/assets/icons/community.svg";
 import CreateIcon from "@/assets/icons/create.svg";
@@ -28,6 +28,8 @@ import HomeIconActive from "@/assets/icons/home-active.svg";
 import HomeIcon from "@/assets/icons/home.svg";
 import ProfileIconActive from "@/assets/icons/profile-active.svg";
 import ProfileIcon from "@/assets/icons/profile.svg";
+import { useResponsive } from "@/hooks/useResponsive";
+
 type IconName = "home" | "community" | "create" | "creations" | "profile";
 
 interface TabButtonProps extends TabTriggerSlotProps {
@@ -60,7 +62,7 @@ const getIcon = (
         <CommunityIcon width={size} height={size} />
       );
     case "create":
-      return <CreateIcon width={26} height={26} fill="#0D0D0F" />;
+      return <CreateIcon width={size} height={size} fill="#0D0D0F" />;
     case "creations":
       return isFocused ? (
         <CreationsIconActive width={size} height={size} />
@@ -88,29 +90,67 @@ function TabButton({
   isFocused,
   ...props
 }: TabButtonProps) {
+  const {
+    spacing,
+    getIconSize,
+    isVerySmallScreen,
+    isSmallScreen,
+    getResponsiveValue,
+  } = useResponsive();
+  const fonts = useFontFamily();
+
+  // Responsive sizes
+  const iconSize = useMemo(() => {
+    return getResponsiveValue(20, 22, 24, 26, 28);
+  }, [getResponsiveValue]);
+
+  const createButtonSize = useMemo(() => {
+    return getResponsiveValue(52, 56, 58, 60, 62);
+  }, [getResponsiveValue]);
+
+  const createIconSize = useMemo(() => {
+    return getResponsiveValue(24, 26, 28, 30, 32);
+  }, [getResponsiveValue]);
+
+  const elevation = useMemo(() => {
+    return getResponsiveValue(-28, -30, -32, -34, -36);
+  }, [getResponsiveValue]);
+
   const handlePress = (e: GestureResponderEvent) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     props.onPress?.(e);
   };
 
+  // Center "Create" button
   if (isCenter) {
     return (
       <Pressable
         {...props}
         onPress={handlePress}
-        style={styles.createButtonContainer}
+        style={[styles.createButtonContainer, { marginTop: elevation }]}
       >
         <LinearGradient
           colors={["#FFFFFF", "#E8E8E8"]}
-          style={styles.createButton}
+          style={[
+            styles.createButton,
+            {
+              width: createButtonSize,
+              height: createButtonSize,
+              borderRadius: createButtonSize / 2,
+            },
+          ]}
         >
-          {getIcon(icon, "#0D0D0F")}
+          {getIcon(icon, "#0D0D0F", createIconSize)}
         </LinearGradient>
       </Pressable>
     );
   }
 
+  // Regular tab buttons
   const iconColor = isFocused ? "#FFFFFF" : "#6B6B6B";
+
+  // Responsive label font size
+  const labelFontSize = isVerySmallScreen ? 10 : isSmallScreen ? 10.5 : 11;
 
   return (
     <Pressable
@@ -118,11 +158,21 @@ function TabButton({
       onPress={handlePress}
       style={({ pressed }) => [
         styles.tabButton,
+        { gap: spacing.xs * 0.5 },
         pressed && styles.tabButtonPressed,
       ]}
     >
-      {getIcon(icon, iconColor, 22, isFocused)}
-      <Text style={[styles.tabLabel, isFocused && styles.tabLabelActive]}>
+      {getIcon(icon, iconColor, iconSize, isFocused)}
+      <Text
+        style={[
+          styles.tabLabel,
+          {
+            fontSize: labelFontSize,
+            fontFamily: fonts.Medium,
+          },
+          isFocused && styles.tabLabelActive,
+        ]}
+      >
         {label}
       </Text>
     </Pressable>
@@ -133,10 +183,32 @@ function TabButton({
 // Main TabLayout
 // ------------------------------
 export default function TabLayout() {
+  const {
+    safeAreaBottom,
+    safeAreaLeft,
+    safeAreaRight,
+    spacing,
+    isVerySmallScreen,
+    getResponsiveValue,
+  } = useResponsive();
+
+  // Responsive dynamic styles
+  const dynamicStyles = useMemo(
+    () => ({
+      tabList: {
+        paddingTop: getResponsiveValue(10, 12, 12, 14, 14),
+        paddingBottom: Math.max(safeAreaBottom, 8) + spacing.sm,
+        paddingLeft: safeAreaLeft || spacing.xs,
+        paddingRight: safeAreaRight || spacing.xs,
+      },
+    }),
+    [safeAreaBottom, safeAreaLeft, safeAreaRight, spacing, getResponsiveValue]
+  );
+
   return (
     <Tabs>
       <TabSlot />
-      <TabList style={styles.tabList}>
+      <TabList style={[styles.tabList, dynamicStyles.tabList]}>
         <TabTrigger name="index" href="/" asChild>
           <TabButton icon="home" label="Home" />
         </TabTrigger>
@@ -162,7 +234,7 @@ export default function TabLayout() {
 }
 
 // ------------------------------
-// Styles
+// Static Styles (non-responsive base styles)
 // ------------------------------
 const styles = StyleSheet.create({
   tabList: {
@@ -170,9 +242,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
     backgroundColor: "#141416",
-    paddingTop: 12,
-    paddingBottom: 28,
-
     position: "absolute",
     bottom: 0,
     left: 0,
@@ -181,7 +250,6 @@ const styles = StyleSheet.create({
   tabButton: {
     alignItems: "center",
     justifyContent: "center",
-    gap: 4,
     minWidth: 60,
     paddingVertical: 4,
   },
@@ -190,20 +258,16 @@ const styles = StyleSheet.create({
   },
   tabLabel: {
     color: "#6B6B6B",
-    fontSize: 11,
-    fontWeight: "500",
   },
   tabLabelActive: {
     color: "#FFFFFF",
   },
   createButtonContainer: {
-    marginTop: -30,
+    // marginTop is now dynamic
   },
   createButton: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
     justifyContent: "center",
     alignItems: "center",
+    // width, height, borderRadius are now dynamic
   },
 });
