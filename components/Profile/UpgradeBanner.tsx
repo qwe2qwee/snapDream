@@ -1,4 +1,5 @@
-import { Feather } from "@expo/vector-icons";
+import ArrowLeft from "@/assets/icons/arrow-left.svg";
+import { useResponsive } from "@/hooks/useResponsive";
 import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
@@ -22,9 +23,73 @@ export const UpgradeBanner: React.FC<UpgradeBannerProps> = ({
   imageUri = "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600",
   onPress,
 }) => {
+  const {
+    spacing,
+    typography,
+    getResponsiveValue,
+    getBorderRadius,
+    getIconSize,
+  } = useResponsive();
+
   const bannerText = isSubscribed
     ? "Manage Your Subscription"
     : "Upgrade Now to Level Up";
+
+  const iconSize = getIconSize("medium");
+
+  const styles = StyleSheet.create({
+    upgradeBanner: {
+      height: getResponsiveValue(170, 180, 190, 200, 210),
+      borderRadius: getBorderRadius("large") + 10,
+      overflow: "hidden",
+      marginBottom: spacing.lg,
+    },
+    bannerGradient: {
+      flex: 1,
+      position: "relative",
+    },
+    bannerImage: {
+      width: "100%",
+      height: "100%",
+      resizeMode: "cover",
+      position: "absolute",
+    },
+    bannerOverlay: {
+      position: "absolute",
+      bottom: 0,
+      left: 0,
+      right: 0,
+      height: "60%",
+    },
+    bannerContent: {
+      position: "absolute",
+      bottom: spacing.sm + spacing.xs / 2,
+      left: spacing.sm + spacing.xs / 2,
+      right: spacing.sm + spacing.xs / 2,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+    },
+    bannerText: {
+      fontSize: typography.body,
+      fontWeight: "600",
+      color: "#FFFFFF",
+    },
+    bannerTextContainer: {
+      borderRadius: 999,
+      overflow: "hidden", // REQUIRED
+      padding: spacing.sm + spacing.xs / 2,
+      borderColor: "rgba(255, 255, 255, 0.1)",
+      borderWidth: 2,
+    },
+    bannerIconContainer: {
+      padding: spacing.sm,
+      overflow: "hidden", // REQUIRED
+      borderRadius: 999,
+      borderColor: "rgba(255, 255, 255, 0.1)",
+      borderWidth: 2,
+    },
+  });
 
   return (
     <TouchableOpacity
@@ -74,7 +139,7 @@ export const UpgradeBanner: React.FC<UpgradeBannerProps> = ({
               tint="dark"
               style={styles.bannerIconContainer}
             >
-              <Feather name="arrow-up-right" size={16} color="#FFFFFF" />
+              <ArrowLeft width={iconSize} height={iconSize} />
             </BlurView>
           ) : (
             <LinearGradient
@@ -86,7 +151,7 @@ export const UpgradeBanner: React.FC<UpgradeBannerProps> = ({
                 { justifyContent: "center", alignItems: "center" },
               ]}
             >
-              <Feather name="arrow-up-right" size={16} color="#FFFFFF" />
+              <ArrowLeft width={iconSize} height={iconSize} />
             </LinearGradient>
           )}
         </View>
@@ -94,57 +159,3 @@ export const UpgradeBanner: React.FC<UpgradeBannerProps> = ({
     </TouchableOpacity>
   );
 };
-
-const styles = StyleSheet.create({
-  upgradeBanner: {
-    height: 190,
-    borderRadius: 30,
-    overflow: "hidden",
-    marginBottom: 24,
-  },
-  bannerGradient: {
-    flex: 1,
-    position: "relative",
-  },
-  bannerImage: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "cover",
-    position: "absolute",
-  },
-  bannerOverlay: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: "60%",
-  },
-  bannerContent: {
-    position: "absolute",
-    bottom: 13,
-    left: 13,
-    right: 13,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  bannerText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#FFFFFF",
-  },
-  bannerTextContainer: {
-    borderRadius: 999,
-    overflow: "hidden", // REQUIRED
-    padding: 13,
-    borderColor: "rgba(255, 255, 255, 0.1)",
-    borderWidth: 2,
-  },
-  bannerIconContainer: {
-    padding: 13,
-    overflow: "hidden", // REQUIRED
-    borderRadius: 999,
-    borderColor: "rgba(255, 255, 255, 0.1)",
-    borderWidth: 2,
-  },
-});

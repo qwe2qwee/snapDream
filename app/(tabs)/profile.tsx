@@ -13,10 +13,15 @@ import { MenuSection } from "@/components/Profile/MenuSection";
 import { SectionTitle } from "@/components/Profile/SectionTitle";
 import { UpgradeBanner } from "@/components/Profile/UpgradeBanner";
 import { UserProfileCard } from "@/components/Profile/UserProfileCard";
+import { useResponsive } from "@/hooks/useResponsive";
 import React from "react";
 import { Alert, ScrollView, StatusBar, StyleSheet, View } from "react-native";
 
 export default function ProfileScreen() {
+  const { spacing, getResponsiveValue, safeAreaBottom, getIconSize } =
+    useResponsive();
+  const iconSize = getIconSize("medium");
+
   const handleLogout = () => {
     Alert.alert("Log Out", "Are you sure you want to log out?", [
       { text: "Cancel", style: "cancel" },
@@ -35,10 +40,25 @@ export default function ProfileScreen() {
     );
   };
 
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: "#0D0D0F",
+    },
+    scrollView: {
+      flex: 1,
+    },
+    scrollContent: {
+      paddingHorizontal: spacing.md,
+      paddingBottom:
+        getResponsiveValue(100, 120, 120, 140, 160) + safeAreaBottom,
+    },
+  });
+
   return (
     <View style={styles.container}>
       <GradientBackground>
-        <StatusBar barStyle="light-content" backgroundColor="#0D0D0F" />
+        <StatusBar barStyle="light-content" />
 
         <ScrollView
           style={styles.scrollView}
@@ -53,7 +73,9 @@ export default function ProfileScreen() {
             name="Coozy"
             email="coozy890@gmail.com"
             avatarUri="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200"
+            loginType="google"
           />
+          {/* google, facebook, email*/}
 
           {/* Upgrade Banner */}
           <UpgradeBanner
@@ -65,38 +87,41 @@ export default function ProfileScreen() {
           <SectionTitle title="Too precious!" />
           <MenuSection>
             <MenuItem
-              icon={<Terms width={20} height={20} />}
+              icon={<Terms width={iconSize} height={iconSize} />}
               label="Terms and Conditions"
             />
             <MenuItem
-              icon={<Privacy width={20} height={20} />}
+              icon={<Privacy width={iconSize} height={iconSize} />}
               isMiddleItem
               label="Privacy Policy"
             />
-            <MenuItem icon={<Rate width={20} height={20} />} label="Rate App" />
+            <MenuItem
+              icon={<Rate width={iconSize} height={iconSize} />}
+              label="Rate App"
+            />
           </MenuSection>
 
           {/* Security Section */}
           <SectionTitle title="Security" />
           <MenuSection>
             <MenuItem
-              icon={<FeedBack width={20} height={20} />}
+              icon={<FeedBack width={iconSize} height={iconSize} />}
               label="Feedback"
             />
             <MenuItem
-              icon={<Contact width={20} height={20} />}
+              icon={<Contact width={iconSize} height={iconSize} />}
               isMiddleItem
               label="Contact Us"
             />
             <MenuItem
-              icon={<Logout width={20} height={20} />}
+              icon={<Logout width={iconSize} height={iconSize} />}
               label="Log Out"
               isLastItem
               onPress={handleLogout}
               isDestructive
             />
             <MenuItem
-              icon={<Delete width={20} height={20} />}
+              icon={<Delete width={iconSize} height={iconSize} />}
               label="Delete Account"
               onPress={handleDeleteAccount}
               isDestructive
@@ -107,17 +132,3 @@ export default function ProfileScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#0D0D0F",
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingHorizontal: 16,
-    paddingBottom: 120,
-  },
-});

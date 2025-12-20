@@ -93,8 +93,8 @@ export const CreationCard: React.FC<CreationCardProps> = ({
       position: "absolute",
       top: getResponsiveValue(50, 54, 56, 58, 60),
       right: spacing.sm + spacing.xs,
-      width: getResponsiveValue(140, 150, 160, 170, 180),
-      borderRadius: getBorderRadius("medium"),
+      width: getResponsiveValue(120, 130, 140, 150, 160),
+      borderRadius: getBorderRadius("large") + 2,
       overflow: "hidden",
       zIndex: 20,
     },
@@ -166,11 +166,6 @@ export const CreationCard: React.FC<CreationCardProps> = ({
                 style={styles.menuOption}
                 onPress={() => handleOptionPress(onDownload)}
               >
-                <Feather
-                  name="download"
-                  size={getResponsiveValue(16, 17, 18, 19, 20)}
-                  color="#FFFFFF"
-                />
                 <Text style={styles.menuOptionText}>Download</Text>
               </TouchableOpacity>
 
@@ -180,11 +175,6 @@ export const CreationCard: React.FC<CreationCardProps> = ({
                 style={styles.menuOption}
                 onPress={() => handleOptionPress(onShare)}
               >
-                <Feather
-                  name="share-2"
-                  size={getResponsiveValue(16, 17, 18, 19, 20)}
-                  color="#FFFFFF"
-                />
                 <Text style={styles.menuOptionText}>Share</Text>
               </TouchableOpacity>
 
@@ -194,11 +184,6 @@ export const CreationCard: React.FC<CreationCardProps> = ({
                 style={styles.menuOption}
                 onPress={() => handleOptionPress(onDelete)}
               >
-                <Feather
-                  name="trash-2"
-                  size={getResponsiveValue(16, 17, 18, 19, 20)}
-                  color="#FF4B4B"
-                />
                 <Text style={[styles.menuOptionText, styles.deleteText]}>
                   Delete
                 </Text>

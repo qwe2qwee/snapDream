@@ -1,4 +1,5 @@
-import { Feather } from "@expo/vector-icons";
+import ArrowRight from "@/assets/icons/arrow-right.svg";
+import { useResponsive } from "@/hooks/useResponsive";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
@@ -18,53 +19,58 @@ export const MenuItem: React.FC<MenuItemProps> = ({
   isDestructive = false,
   isLastItem = false,
   isMiddleItem = false,
-}) => (
-  <TouchableOpacity
-    style={[
-      styles.menuItem,
-      isMiddleItem && styles.middleItem,
-      isLastItem && styles.lastItem,
-    ]}
-    onPress={onPress}
-    activeOpacity={0.7}
-  >
-    <View style={styles.menuIconContainer}>{icon}</View>
-    <Text style={[styles.menuLabel, isDestructive && styles.destructiveText]}>
-      {label}
-    </Text>
-    <Feather name="chevron-right" size={20} color="#4A4A4A" />
-  </TouchableOpacity>
-);
+}) => {
+  const { spacing, typography, getResponsiveValue, getIconSize } =
+    useResponsive();
+  const iconSize = getIconSize("medium");
 
-const styles = StyleSheet.create({
-  menuItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 18,
-    paddingHorizontal: 18,
+  const styles = StyleSheet.create({
+    menuItem: {
+      flexDirection: "row",
+      alignItems: "center",
+      paddingVertical: spacing.md + 2,
+      paddingHorizontal: spacing.md + 2,
+      gap: spacing.sm + spacing.xs / 2,
+    },
+    middleItem: {
+      borderTopWidth: 2,
+      borderBottomWidth: 2,
+      borderColor: "#000000ff",
+    },
+    menuIconContainer: {
+      width: spacing.lg,
+      alignItems: "center",
+    },
+    menuLabel: {
+      flex: 1,
+      fontSize: typography.body,
+      color: "#FFFFFF",
+      fontWeight: "400",
+    },
+    destructiveText: {
+      color: "#E85454",
+    },
+    lastItem: {
+      borderBottomWidth: 2,
+      borderColor: "#000000ff",
+    },
+  });
 
-    gap: 14,
-  },
-  middleItem: {
-    borderTopWidth: 2,
-    borderBottomWidth: 2,
-    borderColor: "#000000ff",
-  },
-  menuIconContainer: {
-    width: 24,
-    alignItems: "center",
-  },
-  menuLabel: {
-    flex: 1,
-    fontSize: 15,
-    color: "#FFFFFF",
-    fontWeight: "400",
-  },
-  destructiveText: {
-    color: "#E85454",
-  },
-  lastItem: {
-    borderBottomWidth: 2,
-    borderColor: "#000000ff",
-  },
-});
+  return (
+    <TouchableOpacity
+      style={[
+        styles.menuItem,
+        isMiddleItem && styles.middleItem,
+        isLastItem && styles.lastItem,
+      ]}
+      onPress={onPress}
+      activeOpacity={0.7}
+    >
+      <View style={styles.menuIconContainer}>{icon}</View>
+      <Text style={[styles.menuLabel, isDestructive && styles.destructiveText]}>
+        {label}
+      </Text>
+      <ArrowRight width={iconSize} height={iconSize} />
+    </TouchableOpacity>
+  );
+};
