@@ -32,13 +32,13 @@ export const UserProfileCard: React.FC<UserProfileCardProps> = ({
       marginBottom: spacing.md + spacing.xs,
       gap: spacing.sm + spacing.xs / 2,
       backgroundColor: "rgba(255, 255, 255, 0.05)",
-      padding: spacing.md - 1,
+      padding: spacing.sm + spacing.xs,
       borderRadius: getBorderRadius("large"),
     },
     avatar: {
       width: avatarSize,
       height: avatarSize,
-      borderRadius: getBorderRadius("medium"),
+      borderRadius: getBorderRadius("medium") + spacing.xs / 2,
       backgroundColor: "#1A1A1D",
     },
     userDetails: {

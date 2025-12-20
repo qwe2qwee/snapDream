@@ -1,3 +1,4 @@
+import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
 import { Feather } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
@@ -40,6 +41,7 @@ export const CreationCard: React.FC<CreationCardProps> = ({
   const [showMenu, setShowMenu] = useState(false);
   const { width, spacing, getResponsiveValue, getBorderRadius, typography } =
     useResponsive();
+  const fonts = useFontFamily();
 
   const PADDING = spacing.md;
   const GAP = getResponsiveValue(10, 12, 14, 16, 18);
@@ -111,7 +113,7 @@ export const CreationCard: React.FC<CreationCardProps> = ({
     menuOptionText: {
       fontSize: typography.body,
       color: "#FFFFFF",
-      fontWeight: "500",
+      fontFamily: fonts.Medium,
     },
     deleteText: {
       color: "#FF4B4B",

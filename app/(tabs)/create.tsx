@@ -1,9 +1,12 @@
+import { useFontFamily } from "@/hooks/useFontFamily";
 import { StyleSheet, Text, View } from "react-native";
 
 export default function Create() {
+  const fonts = useFontFamily();
+
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Create</Text>
+      <Text style={[styles.text, { fontFamily: fonts.SemiBold }]}>Create</Text>
     </View>
   );
 }
@@ -17,6 +20,5 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 20,
-    fontWeight: "600",
   },
 });

@@ -1,4 +1,5 @@
 import ArrowLeft from "@/assets/icons/arrow-left.svg";
+import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
 import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
@@ -30,6 +31,8 @@ export const UpgradeBanner: React.FC<UpgradeBannerProps> = ({
     getBorderRadius,
     getIconSize,
   } = useResponsive();
+
+  const fonts = useFontFamily();
 
   const bannerText = isSubscribed
     ? "Manage Your Subscription"
@@ -72,7 +75,7 @@ export const UpgradeBanner: React.FC<UpgradeBannerProps> = ({
     },
     bannerText: {
       fontSize: typography.body,
-      fontWeight: "600",
+      fontFamily: fonts.Medium,
       color: "#FFFFFF",
     },
     bannerTextContainer: {

@@ -73,7 +73,7 @@ export default function ProfileScreen() {
             name="Coozy"
             email="coozy890@gmail.com"
             avatarUri="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200"
-            loginType="google"
+            loginType="Google"
           />
           {/* google, facebook, email*/}
 

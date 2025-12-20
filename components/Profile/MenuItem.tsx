@@ -22,7 +22,7 @@ export const MenuItem: React.FC<MenuItemProps> = ({
 }) => {
   const { spacing, typography, getResponsiveValue, getIconSize } =
     useResponsive();
-  const iconSize = getIconSize("medium");
+  const iconSize = getIconSize("small") + spacing.xs / 2;
 
   const styles = StyleSheet.create({
     menuItem: {
