@@ -1,23 +1,12 @@
+import { useResponsive } from "@/hooks/useResponsive";
 import { Feather } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import React, { useState } from "react";
-import {
-  Dimensions,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 // SVG icons (both)
 import ImageIcon from "../../assets/icons/ImageIcon.svg";
 import VideoIcon from "../../assets/icons/VideoIcon.svg";
-
-const { width } = Dimensions.get("window");
-const PADDING = 16;
-const GAP = 14;
-const CARD_WIDTH = (width - PADDING * 2 - GAP) / 2;
 
 interface CreationCardProps {
   uri: string;
@@ -31,10 +20,13 @@ interface CreationCardProps {
    Media type icon (SVG)
 ----------------------------------------- */
 const MediaTypeIcon = ({ type }: { type: "image" | "video" }) => {
+  const { getIconSize } = useResponsive();
+  const iconSize = getIconSize("medium");
+
   return type === "video" ? (
-    <VideoIcon width={20} height={20} />
+    <VideoIcon width={iconSize} height={iconSize} />
   ) : (
-    <ImageIcon width={20} height={20} />
+    <ImageIcon width={iconSize} height={iconSize} />
   );
 };
 
@@ -46,11 +38,90 @@ export const CreationCard: React.FC<CreationCardProps> = ({
   onDelete,
 }) => {
   const [showMenu, setShowMenu] = useState(false);
+  const { width, spacing, getResponsiveValue, getBorderRadius, typography } =
+    useResponsive();
+
+  const PADDING = spacing.md;
+  const GAP = getResponsiveValue(10, 12, 14, 16, 18);
+  const CARD_WIDTH = (width - PADDING * 2 - GAP) / 2;
 
   const handleOptionPress = (callback?: () => void) => {
     setShowMenu(false);
     callback?.();
   };
+
+  const styles = StyleSheet.create({
+    creationCard: {
+      width: CARD_WIDTH,
+      height: CARD_WIDTH,
+      borderRadius: getBorderRadius("large"),
+      backgroundColor: "#1A1A1D",
+      position: "relative",
+    },
+    creationImage: {
+      width: "100%",
+      height: "100%",
+      resizeMode: "cover",
+      borderRadius: getBorderRadius("large"),
+    },
+    iconButton: {
+      position: "absolute",
+      top: spacing.sm + spacing.xs,
+      left: spacing.sm + spacing.xs,
+      width: getResponsiveValue(32, 34, 36, 38, 40),
+      height: getResponsiveValue(32, 34, 36, 38, 40),
+      borderRadius: getResponsiveValue(16, 17, 18, 19, 20),
+      overflow: "hidden",
+      zIndex: 10,
+    },
+    moreButton: {
+      left: undefined,
+      right: spacing.sm + spacing.xs,
+    },
+    blurContainer: {
+      width: "100%",
+      height: "100%",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    menuOverlay: {
+      position: "absolute",
+      inset: 0,
+      zIndex: 15,
+    },
+    menuContainer: {
+      position: "absolute",
+      top: getResponsiveValue(50, 54, 56, 58, 60),
+      right: spacing.sm + spacing.xs,
+      width: getResponsiveValue(140, 150, 160, 170, 180),
+      borderRadius: getBorderRadius("medium"),
+      overflow: "hidden",
+      zIndex: 20,
+    },
+    menuBlur: {
+      padding: spacing.xs + 2,
+    },
+    menuOption: {
+      flexDirection: "row",
+      alignItems: "center",
+      paddingVertical: spacing.sm + spacing.xs,
+      paddingHorizontal: spacing.sm + 2,
+      gap: spacing.sm + 2,
+    },
+    menuOptionText: {
+      fontSize: typography.body,
+      color: "#FFFFFF",
+      fontWeight: "500",
+    },
+    deleteText: {
+      color: "#FF4B4B",
+    },
+    menuDivider: {
+      height: 1,
+      backgroundColor: "rgba(255,255,255,0.1)",
+      marginHorizontal: spacing.sm + 2,
+    },
+  });
 
   return (
     <View style={styles.creationCard}>
@@ -71,7 +142,11 @@ export const CreationCard: React.FC<CreationCardProps> = ({
         onPress={() => setShowMenu((prev) => !prev)}
       >
         <BlurView intensity={80} tint="dark" style={styles.blurContainer}>
-          <Feather name="more-vertical" size={20} color="#FFFFFF" />
+          <Feather
+            name="more-vertical"
+            size={getResponsiveValue(18, 19, 20, 21, 22)}
+            color="#FFFFFF"
+          />
         </BlurView>
       </TouchableOpacity>
 
@@ -91,7 +166,11 @@ export const CreationCard: React.FC<CreationCardProps> = ({
                 style={styles.menuOption}
                 onPress={() => handleOptionPress(onDownload)}
               >
-                <Feather name="download" size={18} color="#FFFFFF" />
+                <Feather
+                  name="download"
+                  size={getResponsiveValue(16, 17, 18, 19, 20)}
+                  color="#FFFFFF"
+                />
                 <Text style={styles.menuOptionText}>Download</Text>
               </TouchableOpacity>
 
@@ -101,7 +180,11 @@ export const CreationCard: React.FC<CreationCardProps> = ({
                 style={styles.menuOption}
                 onPress={() => handleOptionPress(onShare)}
               >
-                <Feather name="share-2" size={18} color="#FFFFFF" />
+                <Feather
+                  name="share-2"
+                  size={getResponsiveValue(16, 17, 18, 19, 20)}
+                  color="#FFFFFF"
+                />
                 <Text style={styles.menuOptionText}>Share</Text>
               </TouchableOpacity>
 
@@ -111,7 +194,11 @@ export const CreationCard: React.FC<CreationCardProps> = ({
                 style={styles.menuOption}
                 onPress={() => handleOptionPress(onDelete)}
               >
-                <Feather name="trash-2" size={18} color="#FF4B4B" />
+                <Feather
+                  name="trash-2"
+                  size={getResponsiveValue(16, 17, 18, 19, 20)}
+                  color="#FF4B4B"
+                />
                 <Text style={[styles.menuOptionText, styles.deleteText]}>
                   Delete
                 </Text>
@@ -123,80 +210,3 @@ export const CreationCard: React.FC<CreationCardProps> = ({
     </View>
   );
 };
-
-/* ----------------------------------------
-   Styles
------------------------------------------ */
-const styles = StyleSheet.create({
-  creationCard: {
-    width: CARD_WIDTH,
-    height: CARD_WIDTH,
-    borderRadius: 20,
-    backgroundColor: "#1A1A1D",
-    position: "relative",
-  },
-  creationImage: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "cover",
-    borderRadius: 20,
-  },
-  iconButton: {
-    position: "absolute",
-    top: 12,
-    left: 12,
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    overflow: "hidden",
-    zIndex: 10,
-  },
-  moreButton: {
-    left: undefined,
-    right: 12,
-  },
-  blurContainer: {
-    width: "100%",
-    height: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  menuOverlay: {
-    position: "absolute",
-    inset: 0,
-    zIndex: 15,
-  },
-  menuContainer: {
-    position: "absolute",
-    top: 56,
-    right: 12,
-    width: 160,
-    borderRadius: 14,
-    overflow: "hidden",
-    zIndex: 20,
-    elevation: 8,
-  },
-  menuBlur: {
-    padding: 6,
-  },
-  menuOption: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 14,
-    gap: 10,
-  },
-  menuOptionText: {
-    fontSize: 15,
-    color: "#FFFFFF",
-    fontWeight: "500",
-  },
-  deleteText: {
-    color: "#FF4B4B",
-  },
-  menuDivider: {
-    height: 1,
-    backgroundColor: "rgba(255,255,255,0.1)",
-    marginHorizontal: 10,
-  },
-});

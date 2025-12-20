@@ -1,4 +1,8 @@
+import React, { useMemo } from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
+
+import { useFontFamily } from "@/hooks/useFontFamily";
+import { useResponsive } from "@/hooks/useResponsive";
 
 interface FilterTabProps {
   label: string;
@@ -6,38 +10,90 @@ interface FilterTabProps {
   onPress: () => void;
 }
 
-export const FilterTab = ({ label, isActive, onPress }: FilterTabProps) => (
-  <TouchableOpacity
-    style={[styles.filterTab, isActive && styles.filterTabActive]}
-    onPress={onPress}
-    activeOpacity={0.7}
-  >
-    <Text
-      style={[styles.filterTabText, isActive && styles.filterTabTextActive]}
-    >
-      {label}
-    </Text>
-  </TouchableOpacity>
-);
+export const FilterTab: React.FC<FilterTabProps> = ({
+  label,
+  isActive,
+  onPress,
+}) => {
+  const { getResponsiveValue, getBorderRadius, isSmallScreen } =
+    useResponsive();
 
+  const fonts = useFontFamily();
+
+  // Responsive values with memoization
+  const responsiveValues = useMemo(
+    () => ({
+      // Vertical padding
+      paddingVertical: getResponsiveValue(9, 10, 10, 11, 12),
+
+      // Horizontal padding
+      paddingHorizontal: getResponsiveValue(18, 20, 22, 24, 26),
+
+      // Border radius (pill shape)
+      borderRadius: getResponsiveValue(18, 20, 22, 24, 26),
+
+      // Font size
+      fontSize: getResponsiveValue(13, 14, 14, 15, 15),
+    }),
+    [getResponsiveValue]
+  );
+
+  // Dynamic styles
+  const dynamicStyles = useMemo(
+    () => ({
+      filterTab: {
+        paddingVertical: responsiveValues.paddingVertical,
+        paddingHorizontal: responsiveValues.paddingHorizontal,
+        borderRadius: responsiveValues.borderRadius,
+      },
+      filterTabText: {
+        fontSize: responsiveValues.fontSize,
+        fontFamily: fonts.Medium,
+      },
+    }),
+    [responsiveValues, fonts]
+  );
+
+  return (
+    <TouchableOpacity
+      style={[
+        styles.filterTab,
+        dynamicStyles.filterTab,
+        isActive && styles.filterTabActive,
+      ]}
+      onPress={onPress}
+      activeOpacity={0.7}
+    >
+      <Text
+        style={[
+          styles.filterTabText,
+          dynamicStyles.filterTabText,
+          isActive && styles.filterTabTextActive,
+        ]}
+      >
+        {label}
+      </Text>
+    </TouchableOpacity>
+  );
+};
+
+// ------------------------------
+// Static base styles
+// ------------------------------
 const styles = StyleSheet.create({
   filterTab: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 20,
-    backgroundColor: "#1A1A1D",
+    backgroundColor: "#ffffff22",
+    // Dynamic padding and borderRadius applied
   },
   filterTabActive: {
-    backgroundColor: "transparent",
-    borderWidth: 1,
-    borderColor: "#FFFFFF",
+    backgroundColor: "#FFFFFF",
   },
   filterTabText: {
-    fontSize: 14,
-    fontWeight: "500",
     color: "#FFFFFF",
+    // Dynamic fontSize and fontFamily applied
   },
   filterTabTextActive: {
-    color: "#FFFFFF",
+    color: "#0D0D0F",
+    // Keep fontFamily (fonts.Medium) in active state
   },
 });

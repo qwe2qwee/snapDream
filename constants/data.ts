@@ -75,7 +75,7 @@ export const CREATIONS: Creation[] = [
   {
     id: 5,
     uri: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400",
-    type: "video",
+    type: "image",
   },
   {
     id: 6,

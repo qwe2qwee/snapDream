@@ -1,37 +1,88 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import React from "react";
+import React, { useMemo } from "react";
 import { StyleSheet, Text, View } from "react-native";
+
+import EmptyIcon from "@/assets/icons/emptyIcon.svg";
+import { useFontFamily } from "@/hooks/useFontFamily";
+import { useResponsive } from "@/hooks/useResponsive";
 
 interface EmptyStateProps {
   message?: string;
-  icon?: string;
 }
 
 export const EmptyState: React.FC<EmptyStateProps> = ({
   message = "Oops! No creations.",
-  icon = "image-off-outline",
-}) => (
-  <View style={styles.emptyState}>
-    <View style={styles.emptyIconContainer}>
-      <MaterialCommunityIcons name={icon as any} size={48} color="#6B6B6B" />
-    </View>
-    <Text style={styles.emptyText}>{message}</Text>
-  </View>
-);
+}) => {
+  const { spacing, getResponsiveValue, getIconSize, getTabBarHeight } =
+    useResponsive();
 
+  const fonts = useFontFamily();
+
+  // Responsive values with memoization
+  const responsiveValues = useMemo(
+    () => ({
+      // Icon size scales beautifully
+      iconSize: getResponsiveValue(44, 48, 52, 56, 64),
+
+      // Margin below icon
+      iconMarginBottom: spacing.md,
+
+      // Text font size
+      fontSize: getResponsiveValue(15, 16, 16, 17, 18),
+
+      // Bottom padding (to center properly above tab bar)
+      paddingBottom: getTabBarHeight(true) / 2,
+    }),
+    [spacing, getResponsiveValue, getIconSize, getTabBarHeight]
+  );
+
+  // Dynamic styles
+  const dynamicStyles = useMemo(
+    () => ({
+      emptyState: {
+        paddingBottom: responsiveValues.paddingBottom,
+      },
+      emptyIconContainer: {
+        marginBottom: responsiveValues.iconMarginBottom,
+      },
+      emptyText: {
+        fontSize: responsiveValues.fontSize,
+        fontFamily: fonts.Regular,
+      },
+    }),
+    [responsiveValues, fonts]
+  );
+
+  return (
+    <View style={[styles.emptyState, dynamicStyles.emptyState]}>
+      <View
+        style={[styles.emptyIconContainer, dynamicStyles.emptyIconContainer]}
+      >
+        <EmptyIcon
+          width={responsiveValues.iconSize}
+          height={responsiveValues.iconSize}
+        />
+      </View>
+      <Text style={[styles.emptyText, dynamicStyles.emptyText]}>{message}</Text>
+    </View>
+  );
+};
+
+// ------------------------------
+// Static base styles
+// ------------------------------
 const styles = StyleSheet.create({
   emptyState: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    paddingBottom: 100,
+    // Dynamic paddingBottom applied
   },
   emptyIconContainer: {
-    marginBottom: 16,
+    // Dynamic marginBottom applied
   },
   emptyText: {
-    fontSize: 16,
     color: "#6B6B6B",
-    fontWeight: "400",
+    textAlign: "center",
+    // Dynamic fontSize and fontFamily applied
   },
 });

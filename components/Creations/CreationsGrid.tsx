@@ -1,3 +1,4 @@
+import { useResponsive } from "@/hooks/useResponsive";
 import React from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { CreationCard } from "./CreationCard";
@@ -8,23 +9,36 @@ export interface Creation {
   type: "image" | "video";
 }
 
-export interface Creation {
-  id: number;
-  uri: string;
-  type: "image" | "video";
-}
-
 interface CreationsGridProps {
   creations: Creation[];
-  onSharePress?: (id: number) => void;
-  onMorePress?: (id: number) => void;
+  onShare?: (id: number) => void;
+  onDownload?: (id: number) => void;
+  onDelete?: (id: number) => void;
 }
 
 export const CreationsGrid: React.FC<CreationsGridProps> = ({
   creations,
-  onSharePress,
-  onMorePress,
+  onShare,
+  onDownload,
+  onDelete,
 }) => {
+  const { spacing, getResponsiveValue, safeAreaBottom } = useResponsive();
+
+  const styles = StyleSheet.create({
+    scrollView: {
+      flex: 1,
+    },
+    scrollContent: {
+      paddingHorizontal: spacing.md,
+      paddingBottom: getResponsiveValue(100, 120, 120, 140, 160),
+    },
+    grid: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      gap: getResponsiveValue(5, 5, 5, 10, 14),
+    },
+  });
+
   return (
     <ScrollView
       style={styles.scrollView}
@@ -37,26 +51,12 @@ export const CreationsGrid: React.FC<CreationsGridProps> = ({
             key={creation.id}
             uri={creation.uri}
             type={creation.type}
-            onSharePress={() => onSharePress?.(creation.id)}
-            onMorePress={() => onMorePress?.(creation.id)}
+            onShare={onShare ? () => onShare(creation.id) : undefined}
+            onDownload={onDownload ? () => onDownload(creation.id) : undefined}
+            onDelete={onDelete ? () => onDelete(creation.id) : undefined}
           />
         ))}
       </View>
     </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingHorizontal: 16,
-    paddingBottom: 120,
-  },
-  grid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 14,
-  },
-});
