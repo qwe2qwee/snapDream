@@ -11,8 +11,8 @@ export const MenuSection: React.FC<MenuSectionProps> = ({ children }) => {
 
 const styles = StyleSheet.create({
   menuSection: {
-    backgroundColor: "#141416",
-    borderRadius: 16,
+    backgroundColor: "rgb(20, 20, 22, 0.9)",
+    borderRadius: 30,
     overflow: "hidden",
     marginBottom: 16,
   },

@@ -19,12 +19,15 @@ import {
 // Import your SVG icons
 // Make sure the file names match exactly (case-sensitive)
 // ------------------------------
+import CommunityIconActive from "@/assets/icons/community-active.svg";
 import CommunityIcon from "@/assets/icons/community.svg";
 import CreateIcon from "@/assets/icons/create.svg";
+import CreationsIconActive from "@/assets/icons/creations-active.svg";
 import CreationsIcon from "@/assets/icons/creations.svg";
+import HomeIconActive from "@/assets/icons/home-active.svg";
 import HomeIcon from "@/assets/icons/home.svg";
+import ProfileIconActive from "@/assets/icons/profile-active.svg";
 import ProfileIcon from "@/assets/icons/profile.svg";
-
 type IconName = "home" | "community" | "create" | "creations" | "profile";
 
 interface TabButtonProps extends TabTriggerSlotProps {
@@ -37,18 +40,39 @@ interface TabButtonProps extends TabTriggerSlotProps {
 // ------------------------------
 // Map icon name to SVG component
 // ------------------------------
-const getIcon = (name: IconName, color: string, size: number = 22) => {
+const getIcon = (
+  name: IconName,
+  color: string,
+  size: number = 22,
+  isFocused?: boolean
+) => {
   switch (name) {
     case "home":
-      return <HomeIcon width={size} height={size} />;
+      return isFocused ? (
+        <HomeIconActive width={size} height={size} />
+      ) : (
+        <HomeIcon width={size} height={size} />
+      );
     case "community":
-      return <CommunityIcon width={size} height={size} />;
+      return isFocused ? (
+        <CommunityIconActive width={size} height={size} />
+      ) : (
+        <CommunityIcon width={size} height={size} />
+      );
     case "create":
       return <CreateIcon width={26} height={26} fill="#0D0D0F" />;
     case "creations":
-      return <CreationsIcon width={size} height={size} />;
+      return isFocused ? (
+        <CreationsIconActive width={size} height={size} />
+      ) : (
+        <CreationsIcon width={size} height={size} />
+      );
     case "profile":
-      return <ProfileIcon width={size} height={size} />;
+      return isFocused ? (
+        <ProfileIconActive width={size} height={size} />
+      ) : (
+        <ProfileIcon width={size} height={size} />
+      );
     default:
       return null;
   }
@@ -97,7 +121,7 @@ function TabButton({
         pressed && styles.tabButtonPressed,
       ]}
     >
-      {getIcon(icon, iconColor)}
+      {getIcon(icon, iconColor, 22, isFocused)}
       <Text style={[styles.tabLabel, isFocused && styles.tabLabelActive]}>
         {label}
       </Text>
@@ -181,10 +205,5 @@ const styles = StyleSheet.create({
     borderRadius: 28,
     justifyContent: "center",
     alignItems: "center",
-    shadowColor: "#FFFFFF",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 12,
-    elevation: 8,
   },
 });

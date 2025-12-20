@@ -6,7 +6,9 @@ interface MenuItemProps {
   icon: React.ReactNode;
   label: string;
   onPress?: () => void;
+  isMiddleItem?: boolean;
   isDestructive?: boolean;
+  isLastItem?: boolean;
 }
 
 export const MenuItem: React.FC<MenuItemProps> = ({
@@ -14,9 +16,15 @@ export const MenuItem: React.FC<MenuItemProps> = ({
   label,
   onPress,
   isDestructive = false,
+  isLastItem = false,
+  isMiddleItem = false,
 }) => (
   <TouchableOpacity
-    style={styles.menuItem}
+    style={[
+      styles.menuItem,
+      isMiddleItem && styles.middleItem,
+      isLastItem && styles.lastItem,
+    ]}
     onPress={onPress}
     activeOpacity={0.7}
   >
@@ -32,9 +40,15 @@ const styles = StyleSheet.create({
   menuItem: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 16,
-    paddingHorizontal: 16,
+    paddingVertical: 18,
+    paddingHorizontal: 18,
+
     gap: 14,
+  },
+  middleItem: {
+    borderTopWidth: 2,
+    borderBottomWidth: 2,
+    borderColor: "#000000ff",
   },
   menuIconContainer: {
     width: 24,
@@ -48,5 +62,9 @@ const styles = StyleSheet.create({
   },
   destructiveText: {
     color: "#E85454",
+  },
+  lastItem: {
+    borderBottomWidth: 2,
+    borderColor: "#000000ff",
   },
 });

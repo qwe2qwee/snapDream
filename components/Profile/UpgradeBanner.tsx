@@ -47,20 +47,48 @@ export const UpgradeBanner: React.FC<UpgradeBannerProps> = ({
           style={styles.bannerOverlay}
         />
         <View style={styles.bannerContent}>
-          <BlurView
-            intensity={Platform.OS === "ios" ? 30 : 80}
-            tint="dark"
-            style={styles.bannerTextContainer}
-          >
-            <Text style={styles.bannerText}>{bannerText}</Text>
-          </BlurView>
-          <BlurView
-            intensity={Platform.OS === "ios" ? 30 : 80}
-            tint="dark"
-            style={styles.bannerIconContainer}
-          >
-            <Feather name="arrow-up-right" size={16} color="#FFFFFF" />
-          </BlurView>
+          {/* Text container */}
+          {Platform.OS === "ios" ? (
+            <BlurView
+              intensity={30}
+              tint="dark"
+              style={styles.bannerTextContainer}
+            >
+              <Text style={styles.bannerText}>{bannerText}</Text>
+            </BlurView>
+          ) : (
+            <LinearGradient
+              colors={["rgba(0,0,0,0.2)", "rgba(0,0,0,0.6)"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 0, y: 1 }}
+              style={[styles.bannerTextContainer, { justifyContent: "center" }]}
+            >
+              <Text style={styles.bannerText}>{bannerText}</Text>
+            </LinearGradient>
+          )}
+
+          {/* Icon container */}
+          {Platform.OS === "ios" ? (
+            <BlurView
+              intensity={30}
+              tint="dark"
+              style={styles.bannerIconContainer}
+            >
+              <Feather name="arrow-up-right" size={16} color="#FFFFFF" />
+            </BlurView>
+          ) : (
+            <LinearGradient
+              colors={["rgba(0,0,0,0.2)", "rgba(0,0,0,0.6)"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 0, y: 1 }}
+              style={[
+                styles.bannerIconContainer,
+                { justifyContent: "center", alignItems: "center" },
+              ]}
+            >
+              <Feather name="arrow-up-right" size={16} color="#FFFFFF" />
+            </LinearGradient>
+          )}
         </View>
       </LinearGradient>
     </TouchableOpacity>

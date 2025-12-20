@@ -1,3 +1,11 @@
+import Contact from "@/assets/icons/Contact.svg";
+import Delete from "@/assets/icons/Delete.svg";
+import FeedBack from "@/assets/icons/Feedback.svg";
+import Logout from "@/assets/icons/Logout.svg";
+import Privacy from "@/assets/icons/Privacy.svg";
+import Rate from "@/assets/icons/Rate.svg";
+import Terms from "@/assets/icons/Terms.svg";
+
 import { PageHeader } from "@/components/Creations/PageHeader";
 import { GradientBackground } from "@/components/GradientBackground";
 import { MenuItem } from "@/components/Profile/MenuItem";
@@ -5,12 +13,6 @@ import { MenuSection } from "@/components/Profile/MenuSection";
 import { SectionTitle } from "@/components/Profile/SectionTitle";
 import { UpgradeBanner } from "@/components/Profile/UpgradeBanner";
 import { UserProfileCard } from "@/components/Profile/UserProfileCard";
-import {
-  Feather,
-  Ionicons,
-  MaterialCommunityIcons,
-  MaterialIcons,
-} from "@expo/vector-icons";
 import React from "react";
 import { Alert, ScrollView, StatusBar, StyleSheet, View } from "react-native";
 
@@ -59,56 +61,42 @@ export default function ProfileScreen() {
             isSubscribed={true}
           />
 
-          {/* Security Section */}
-          <SectionTitle title="Security" />
-          <MenuSection>
-            <MenuItem
-              icon={
-                <MaterialIcons name="description" size={20} color="#FFFFFF" />
-              }
-              label="Terms & Condition"
-            />
-            <MenuItem
-              icon={
-                <MaterialCommunityIcons
-                  name="shield-check"
-                  size={20}
-                  color="#FFFFFF"
-                />
-              }
-              label="Privacy Policy"
-            />
-            <MenuItem
-              icon={<Ionicons name="star" size={20} color="#FFFFFF" />}
-              label="Rate App"
-            />
-          </MenuSection>
-
           {/* Too Precious Section */}
           <SectionTitle title="Too precious!" />
           <MenuSection>
             <MenuItem
-              icon={
-                <MaterialIcons
-                  name="chat-bubble-outline"
-                  size={20}
-                  color="#FFFFFF"
-                />
-              }
+              icon={<Terms width={20} height={20} />}
+              label="Terms and Conditions"
+            />
+            <MenuItem
+              icon={<Privacy width={20} height={20} />}
+              isMiddleItem
+              label="Privacy Policy"
+            />
+            <MenuItem icon={<Rate width={20} height={20} />} label="Rate App" />
+          </MenuSection>
+
+          {/* Security Section */}
+          <SectionTitle title="Security" />
+          <MenuSection>
+            <MenuItem
+              icon={<FeedBack width={20} height={20} />}
               label="Feedback"
             />
             <MenuItem
-              icon={<Feather name="phone" size={20} color="#FFFFFF" />}
+              icon={<Contact width={20} height={20} />}
+              isMiddleItem
               label="Contact Us"
             />
             <MenuItem
-              icon={<MaterialIcons name="logout" size={20} color="#E85454" />}
+              icon={<Logout width={20} height={20} />}
               label="Log Out"
+              isLastItem
               onPress={handleLogout}
               isDestructive
             />
             <MenuItem
-              icon={<Feather name="trash-2" size={20} color="#E85454" />}
+              icon={<Delete width={20} height={20} />}
               label="Delete Account"
               onPress={handleDeleteAccount}
               isDestructive
