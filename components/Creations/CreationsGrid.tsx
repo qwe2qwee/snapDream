@@ -7,6 +7,9 @@ export interface Creation {
   id: number;
   uri: string;
   type: "image" | "video";
+  AIModel?: string;
+  prompt?: string;
+  aspectRatio?: string;
 }
 
 interface CreationsGridProps {
@@ -49,6 +52,7 @@ export const CreationsGrid: React.FC<CreationsGridProps> = ({
         {creations.map((creation) => (
           <CreationCard
             key={creation.id}
+            id={creation.id}
             uri={creation.uri}
             type={creation.type}
             onShare={onShare ? () => onShare(creation.id) : undefined}

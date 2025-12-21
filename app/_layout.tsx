@@ -37,6 +37,10 @@ export default function RootLayout() {
           name="details/community/[id]"
           options={{ headerShown: false }}
         />
+        <Stack.Screen
+          name="details/creations/[id]"
+          options={{ headerShown: false }}
+        />
 
         <Stack.Screen
           name="effects/hairstyle"

@@ -48,6 +48,9 @@ interface Creation {
   id: number;
   uri: string;
   type: "image" | "video";
+  AIModel?: string;
+  prompt?: string;
+  aspectRatio?: string;
 }
 
 // Sample creations data
@@ -56,6 +59,8 @@ export const CREATIONS: Creation[] = [
     id: 1,
     uri: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400",
     type: "image",
+    AIModel: "Flux.1 [dev]",
+    prompt: "A beautiful portrait of a woman with aesthetic lighting.",
   },
   {
     id: 2,

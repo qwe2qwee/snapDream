@@ -2,6 +2,7 @@ import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
 import { Feather } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
@@ -15,6 +16,7 @@ interface CreationCardProps {
   onDownload?: () => void;
   onShare?: () => void;
   onDelete?: () => void;
+  id?: number;
 }
 
 /* ----------------------------------------
@@ -37,7 +39,9 @@ export const CreationCard: React.FC<CreationCardProps> = ({
   onDownload,
   onShare,
   onDelete,
+  id,
 }) => {
+  const router = useRouter();
   const [showMenu, setShowMenu] = useState(false);
   const { width, spacing, getResponsiveValue, getBorderRadius, typography } =
     useResponsive();
@@ -50,6 +54,12 @@ export const CreationCard: React.FC<CreationCardProps> = ({
   const handleOptionPress = (callback?: () => void) => {
     setShowMenu(false);
     callback?.();
+  };
+
+  const handleCardPress = () => {
+    if (id) {
+      router.push(`/details/creations/${id}`);
+    }
   };
 
   const styles = StyleSheet.create({
@@ -126,7 +136,11 @@ export const CreationCard: React.FC<CreationCardProps> = ({
   });
 
   return (
-    <View style={styles.creationCard}>
+    <TouchableOpacity
+      style={styles.creationCard}
+      activeOpacity={0.9}
+      onPress={handleCardPress}
+    >
       {/* Media preview */}
       <Image source={{ uri }} style={styles.creationImage} />
 
@@ -194,6 +208,6 @@ export const CreationCard: React.FC<CreationCardProps> = ({
           </View>
         </>
       )}
-    </View>
+    </TouchableOpacity>
   );
 };
