@@ -22,10 +22,22 @@ export default function ProfileScreen() {
     useResponsive();
   const iconSize = getIconSize("medium");
 
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+
+  /*************  ✨ Windsurf Command ⭐  *************/
+  /**
+   * Handle logout action. Will show an alert asking user if they are sure to log out.
+   * @param {VoidFunction} onPress - Function to be called when user presses "Log Out".
+   */
+  /*******  3570984a-61fd-49d1-881f-865c0fc3fee8  *******/
   const handleLogout = () => {
     Alert.alert("Log Out", "Are you sure you want to log out?", [
       { text: "Cancel", style: "cancel" },
-      { text: "Log Out", style: "destructive", onPress: () => {} },
+      {
+        text: "Log Out",
+        style: "destructive",
+        onPress: () => setIsLoggedIn(false),
+      },
     ]);
   };
 
@@ -66,21 +78,28 @@ export default function ProfileScreen() {
           contentContainerStyle={styles.scrollContent}
         >
           {/* Header */}
-          <PageHeader title="Profile" />
+          <PageHeader
+            title="Profile"
+            onPress={() => setIsLoggedIn(true)}
+            isLoggedIn={isLoggedIn}
+          />
 
           {/* User Info */}
-          <UserProfileCard
-            name="Coozy"
-            email="coozy890@gmail.com"
-            avatarUri="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200"
-            loginType="Google"
-          />
+          {isLoggedIn && (
+            <UserProfileCard
+              name="Coozy"
+              email="coozy890@gmail.com"
+              avatarUri="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200"
+              loginType="Google"
+            />
+          )}
           {/* google, facebook, email*/}
 
           {/* Upgrade Banner */}
           <UpgradeBanner
             onPress={() => console.log("Upgrade pressed")}
             isSubscribed={true}
+            isLoggedIn={isLoggedIn}
           />
 
           {/* Too Precious Section */}

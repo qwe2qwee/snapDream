@@ -17,12 +17,14 @@ interface UpgradeBannerProps {
   isSubscribed?: boolean;
   imageUri?: string;
   onPress?: () => void;
+  isLoggedIn?: boolean;
 }
 
 export const UpgradeBanner: React.FC<UpgradeBannerProps> = ({
   isSubscribed = false,
   imageUri = "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600",
   onPress,
+  isLoggedIn = false,
 }) => {
   const {
     spacing,
@@ -34,9 +36,11 @@ export const UpgradeBanner: React.FC<UpgradeBannerProps> = ({
 
   const fonts = useFontFamily();
 
-  const bannerText = isSubscribed
-    ? "Manage Your Subscription"
-    : "Upgrade Now to Level Up";
+  const isUpgradeAvailable = (isLoggedIn && !isSubscribed) || !isLoggedIn;
+
+  const bannerText = isUpgradeAvailable
+    ? "Upgrade Now to Level Up"
+    : "Manage Your Subscription";
 
   const iconSize = getIconSize("medium");
 

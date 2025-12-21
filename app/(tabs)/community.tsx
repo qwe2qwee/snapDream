@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import React, { useCallback, useMemo, useState } from "react";
 import { StatusBar, StyleSheet, View } from "react-native";
 
@@ -19,8 +20,8 @@ export default function CommunityScreen() {
   }, []);
 
   const handleImagePress = (id: number) => {
-    console.log("Image pressed:", id);
-    // Add navigation or modal logic here
+    // Navigate to community-specific details page for the selected image
+    router.push(`/details/community/${id}`);
   };
 
   // Calculate tab bar height including safe area bottom

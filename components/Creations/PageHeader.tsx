@@ -1,16 +1,29 @@
 import React, { useMemo } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import { LinearGradient } from "expo-linear-gradient";
 
 interface PageHeaderProps {
   title: string;
+  onPress?: () => void;
+  isLoggedIn?: boolean;
 }
 
-export const PageHeader: React.FC<PageHeaderProps> = ({ title }) => {
-  const { spacing, getResponsiveValue, isTablet, isSmallScreen, safeAreaTop } =
-    useResponsive();
+export const PageHeader: React.FC<PageHeaderProps> = ({
+  title,
+  onPress,
+  isLoggedIn,
+}) => {
+  const {
+    spacing,
+    getResponsiveValue,
+    isTablet,
+    isSmallScreen,
+    safeAreaTop,
+    getBorderRadius,
+  } = useResponsive();
 
   const fonts = useFontFamily();
 
@@ -28,9 +41,21 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ title }) => {
 
       // Top padding (internal spacing, safe area handled by parent)
       topPadding: safeAreaTop,
+      // Credits/Button text size
+      textSize: getResponsiveValue(12, 13, 14, 14, 15),
 
       // Bottom padding
       bottomPadding: spacing.md,
+      // Vertical padding for pills
+      pillPaddingVertical: getResponsiveValue(8, 9, 10, 11, 12),
+
+      // Horizontal padding for pills
+      pillPaddingHorizontal: isTablet
+        ? spacing.lg
+        : getResponsiveValue(12, 14, 16, 16, 18),
+
+      // Border radius for pills
+      borderRadius: getBorderRadius("large"),
     }),
     [getResponsiveValue, spacing, isTablet, isSmallScreen, safeAreaTop]
   );
@@ -42,11 +67,23 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ title }) => {
         paddingHorizontal: responsiveValues.horizontalPadding,
         paddingTop: responsiveValues.topPadding,
         paddingBottom: responsiveValues.bottomPadding,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
       },
       title: {
         fontSize: responsiveValues.titleSize,
         fontFamily: fonts.Bold,
         letterSpacing: responsiveValues.letterSpacing,
+      },
+      proButton: {
+        paddingVertical: responsiveValues.pillPaddingVertical,
+        paddingHorizontal: responsiveValues.pillPaddingHorizontal,
+        borderRadius: responsiveValues.borderRadius,
+      },
+      proButtonText: {
+        fontSize: responsiveValues.textSize,
+        fontFamily: fonts.Bold,
       },
     }),
     [responsiveValues, fonts]
@@ -55,6 +92,20 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ title }) => {
   return (
     <View style={[styles.header, dynamicStyles.header]}>
       <Text style={[styles.title, dynamicStyles.title]}>{title}</Text>
+      {!isLoggedIn && (
+        <TouchableOpacity onPress={onPress} activeOpacity={0.85}>
+          <LinearGradient
+            colors={["#f5550b", "#ffa47add"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 0, y: 1 }}
+            style={[styles.proButton, dynamicStyles.proButton]}
+          >
+            <Text style={[styles.proButtonText, dynamicStyles.proButtonText]}>
+              Log In
+            </Text>
+          </LinearGradient>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -69,5 +120,20 @@ const styles = StyleSheet.create({
   title: {
     color: "#FFFFFF",
     // Dynamic font properties applied
+  },
+  backText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+  },
+  proButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 6,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  proButtonText: {
+    color: "#FFFFFF",
+    fontSize: 16,
   },
 });

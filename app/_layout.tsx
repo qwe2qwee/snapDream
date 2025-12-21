@@ -33,6 +33,10 @@ export default function RootLayout() {
         <Stack.Screen name="effects/video" options={{ headerShown: false }} />
         <Stack.Screen name="effects/image" options={{ headerShown: false }} />
         <Stack.Screen name="Upgrade" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="details/community/[id]"
+          options={{ headerShown: false }}
+        />
 
         <Stack.Screen
           name="effects/hairstyle"

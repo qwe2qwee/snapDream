@@ -32,7 +32,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
 
   const styles = StyleSheet.create({
     card: {
-      backgroundColor: "rgba(26, 26, 31, 0.8)",
+      backgroundColor: "rgba(255, 255, 255, 0.05)",
 
       padding: spacing.md,
     },

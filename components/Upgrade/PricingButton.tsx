@@ -28,7 +28,7 @@ export const PricingButton: React.FC<PricingButtonProps> = ({
     },
     buttonText: {
       fontSize: textSize,
-      fontFamily: fonts.Bold,
+      fontFamily: fonts.Medium,
       color: "#0D0D0F",
     },
   });
