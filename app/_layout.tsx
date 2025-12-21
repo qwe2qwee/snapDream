@@ -30,6 +30,16 @@ export default function RootLayout() {
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="details/[id]" options={{ headerShown: false }} />
+        <Stack.Screen name="effects/video" options={{ headerShown: false }} />
+        <Stack.Screen name="effects/image" options={{ headerShown: false }} />
+        <Stack.Screen name="Upgrade" options={{ headerShown: false }} />
+
+        <Stack.Screen
+          name="effects/hairstyle"
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen name="effects/tryon" options={{ headerShown: false }} />
+
         <Stack.Screen
           name="modal"
           options={{ presentation: "modal", title: "Modal" }}

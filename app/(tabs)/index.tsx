@@ -55,7 +55,7 @@ export default function HomeScreen() {
         <StatusBar barStyle="light-content" backgroundColor="#0D0D0F" />
 
         {/* Header */}
-        <Header credits={5000} onProPress={() => {}} isSubscribed />
+        <Header credits={5000} onProPress={() => router.push("/Upgrade")} />
 
         <ScrollView
           style={styles.scrollView}
@@ -83,7 +83,7 @@ export default function HomeScreen() {
           <EffectsSection
             title="Video Effects"
             effects={videoEffects}
-            onSeeAll={() => {}}
+            onSeeAll={() => router.push("/effects/video")}
             onEffectPress={handleEffectPress}
           />
 
@@ -91,7 +91,7 @@ export default function HomeScreen() {
           <EffectsSection
             title="Image Effects"
             effects={imageEffects}
-            onSeeAll={() => {}}
+            onSeeAll={() => router.push("/effects/image")}
             onEffectPress={handleEffectPress}
           />
 
@@ -99,7 +99,7 @@ export default function HomeScreen() {
           <EffectsSection
             title="Hairstyle Changer"
             effects={hairstyleEffects}
-            onSeeAll={() => {}}
+            onSeeAll={() => router.push("/effects/hairstyle")}
             onEffectPress={handleEffectPress}
           />
 
@@ -107,7 +107,7 @@ export default function HomeScreen() {
           <EffectsSection
             title="Try-on Clothes"
             effects={tryOnEffects}
-            onSeeAll={() => {}}
+            onSeeAll={() => router.push("/effects/tryon")}
             onEffectPress={handleEffectPress}
           />
         </ScrollView>
