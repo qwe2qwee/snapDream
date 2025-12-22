@@ -1,34 +1,38 @@
+import Delete from "@/assets/icons/Dele.svg";
+import * as Clipboard from "expo-clipboard";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import React, { useState } from "react";
+import { Alert, ScrollView, StyleSheet, View } from "react-native";
+
 import { ActionButtons } from "@/components/CreationDetails/ActionButtons";
 import { ImageInfoBar } from "@/components/CreationDetails/ImageInfoBar";
 import { PromptSection } from "@/components/CreationDetails/PromptSection";
 import { ResultHeader } from "@/components/CreationDetails/ResultHeader";
 import { ResultImage } from "@/components/CreationDetails/ResultImage";
 import { GradientBackground } from "@/components/GradientBackground";
+import { ConfirmModal } from "@/components/Modals/modal";
+import { ShareModal } from "@/components/Modals/shareModal";
 import { CREATIONS } from "@/constants/data";
 import { useResponsive } from "@/hooks/useResponsive";
-import * as Clipboard from "expo-clipboard";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import React from "react";
-import { Alert, ScrollView, Share, StyleSheet, View } from "react-native";
 
 export default function CreationDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const numericId = Number(id);
+
   // Find the item in CREATIONS data
   const item = CREATIONS.find((it) => it.id === numericId);
 
-  const { spacing, safeAreaTop, safeAreaBottom } = useResponsive();
+  const { spacing, safeAreaTop, safeAreaBottom, getResponsiveValue } =
+    useResponsive();
 
-  const handleShare = async () => {
-    try {
-      await Share.share({
-        message: `Check out my AI creation!`,
-        url: item?.uri || "",
-      });
-    } catch (error) {
-      Alert.alert("Error", "Failed to share");
-    }
+  // Modal state
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [shareModalVisible, setShareModalVisible] = useState(false);
+
+  const handleShare = () => {
+    // Show share modal instead of native share
+    setShareModalVisible(true);
   };
 
   const handleRegenerate = () => {
@@ -40,26 +44,19 @@ export default function CreationDetailScreen() {
   };
 
   const handleDelete = () => {
-    Alert.alert(
-      "Delete Creation",
-      "Are you sure you want to delete this creation?",
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Delete",
-          style: "destructive",
-          onPress: () => {
-            // In a real app, you would call an API or update state here
-            Alert.alert("Deleted", "Creation has been removed");
-            router.back();
-          },
-        },
-      ]
-    );
+    // Show modal instead of Alert
+    setDeleteModalVisible(true);
+  };
+
+  const confirmDelete = () => {
+    // In a real app, you would call an API or update state here
+    // Example: await deleteCreationAPI(numericId);
+
+    Alert.alert("Deleted", "Creation has been removed");
+    router.back();
   };
 
   const copyPrompt = async () => {
-    // If prompt exists, copy it
     if (item?.prompt) {
       await Clipboard.setStringAsync(item.prompt);
       Alert.alert("Copied!", "Prompt copied to clipboard");
@@ -76,8 +73,7 @@ export default function CreationDetailScreen() {
     },
   });
 
-  // Mocking extra fields if they're not in the data but we want to show conditional rendering
-  // Real data would have these fields optionally
+  // Determine what to show
   const itemPrompt = item?.prompt;
   const itemAIModel = item?.AIModel;
   const itemAspectRatio = item?.aspectRatio || "3:4 Aspect Ratio";
@@ -85,6 +81,12 @@ export default function CreationDetailScreen() {
   const showInfo = !!itemAIModel;
   const showPrompt = !!itemPrompt;
   const isExpanded = !showInfo && !showPrompt;
+
+  // Share data
+  const shareUrl = `https://myapp.com/creation/${numericId}`;
+  const shareText = item?.prompt
+    ? `Check out my AI creation: "${item.prompt}"`
+    : "Check out my amazing AI creation!";
 
   return (
     <GradientBackground>
@@ -121,6 +123,36 @@ export default function CreationDetailScreen() {
           />
         </View>
       </ScrollView>
+
+      {/* Share Modal */}
+      <ShareModal
+        isVisible={shareModalVisible}
+        onClose={() => setShareModalVisible(false)}
+        shareUrl={shareUrl}
+        shareText={shareText}
+        title="Share"
+      />
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmModal
+        isVisible={deleteModalVisible}
+        onClose={() => setDeleteModalVisible(false)}
+        icon={
+          <Delete
+            color="#FFFFFF"
+            width={getResponsiveValue(24, 26, 28, 30, 32)}
+            height={getResponsiveValue(24, 26, 28, 30, 32)}
+          />
+        }
+        onConfirm={confirmDelete}
+        iconName="trash-2"
+        iconColor="#FFFFFF"
+        iconBackgroundColor="rgba(255, 255, 255, 0.05)"
+        title="Delete Creation"
+        subtitle="Are you sure you want to delete this creation? This action cannot be undone."
+        confirmText="Delete"
+        showCloseButton={true}
+      />
     </GradientBackground>
   );
 }

@@ -48,6 +48,8 @@ export default function RootLayout() {
         />
         <Stack.Screen name="effects/tryon" options={{ headerShown: false }} />
 
+        <Stack.Screen name="(auth)/login" options={{ headerShown: false }} />
+        <Stack.Screen name="(auth)/register" options={{ headerShown: false }} />
         <Stack.Screen
           name="modal"
           options={{ presentation: "modal", title: "Modal" }}

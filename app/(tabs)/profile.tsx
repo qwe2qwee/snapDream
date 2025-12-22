@@ -1,55 +1,65 @@
+import React, { useState } from "react";
+import { Alert, ScrollView, StatusBar, StyleSheet, View } from "react-native";
+
 import Contact from "@/assets/icons/Contact.svg";
+import Delete2 from "@/assets/icons/Dele.svg";
 import Delete from "@/assets/icons/Delete.svg";
 import FeedBack from "@/assets/icons/Feedback.svg";
 import Logout from "@/assets/icons/Logout.svg";
+import Logout2 from "@/assets/icons/Logout2.svg";
 import Privacy from "@/assets/icons/Privacy.svg";
 import Rate from "@/assets/icons/Rate.svg";
 import Terms from "@/assets/icons/Terms.svg";
 
 import { PageHeader } from "@/components/Creations/PageHeader";
 import { GradientBackground } from "@/components/GradientBackground";
+import { ConfirmModal } from "@/components/Modals/modal";
 import { MenuItem } from "@/components/Profile/MenuItem";
 import { MenuSection } from "@/components/Profile/MenuSection";
 import { SectionTitle } from "@/components/Profile/SectionTitle";
 import { UpgradeBanner } from "@/components/Profile/UpgradeBanner";
 import { UserProfileCard } from "@/components/Profile/UserProfileCard";
 import { useResponsive } from "@/hooks/useResponsive";
-import React from "react";
-import { Alert, ScrollView, StatusBar, StyleSheet, View } from "react-native";
 
 export default function ProfileScreen() {
   const { spacing, getResponsiveValue, safeAreaBottom, getIconSize } =
     useResponsive();
   const iconSize = getIconSize("medium");
 
-  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  /*************  ✨ Windsurf Command ⭐  *************/
-  /**
-   * Handle logout action. Will show an alert asking user if they are sure to log out.
-   * @param {VoidFunction} onPress - Function to be called when user presses "Log Out".
-   */
-  /*******  3570984a-61fd-49d1-881f-865c0fc3fee8  *******/
+  // Modal states
+  const [logoutModalVisible, setLogoutModalVisible] = useState(false);
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+
   const handleLogout = () => {
-    Alert.alert("Log Out", "Are you sure you want to log out?", [
-      { text: "Cancel", style: "cancel" },
-      {
-        text: "Log Out",
-        style: "destructive",
-        onPress: () => setIsLoggedIn(false),
-      },
-    ]);
+    // Show logout modal instead of Alert
+    setLogoutModalVisible(true);
+  };
+
+  const confirmLogout = () => {
+    // Perform logout action
+    setIsLoggedIn(false);
+    Alert.alert("Logged Out", "You have been successfully logged out");
   };
 
   const handleDeleteAccount = () => {
-    Alert.alert(
-      "Delete Account",
-      "Are you sure you want to delete your account? This action cannot be undone.",
-      [
-        { text: "Cancel", style: "cancel" },
-        { text: "Delete", style: "destructive", onPress: () => {} },
-      ]
-    );
+    // Show delete modal instead of Alert
+    setDeleteModalVisible(true);
+  };
+
+  const confirmDeleteAccount = async () => {
+    // In a real app, call your delete account API here
+    try {
+      // await deleteAccountAPI();
+      Alert.alert(
+        "Account Deleted",
+        "Your account has been permanently deleted"
+      );
+      setIsLoggedIn(false);
+    } catch (error) {
+      Alert.alert("Error", "Failed to delete account");
+    }
   };
 
   const styles = StyleSheet.create({
@@ -93,7 +103,6 @@ export default function ProfileScreen() {
               loginType="Google"
             />
           )}
-          {/* google, facebook, email*/}
 
           {/* Upgrade Banner */}
           <UpgradeBanner
@@ -147,6 +156,32 @@ export default function ProfileScreen() {
             />
           </MenuSection>
         </ScrollView>
+
+        {/* Logout Confirmation Modal */}
+        <ConfirmModal
+          isVisible={logoutModalVisible}
+          onClose={() => setLogoutModalVisible(false)}
+          onConfirm={confirmLogout}
+          iconName="log-out"
+          icon={<Logout2 width={iconSize} height={iconSize} />}
+          title="Log Out"
+          subtitle="Do you really want to log out?"
+          confirmText="Log Out"
+          showCloseButton={true}
+        />
+
+        {/* Delete Account Confirmation Modal */}
+        <ConfirmModal
+          isVisible={deleteModalVisible}
+          onClose={() => setDeleteModalVisible(false)}
+          onConfirm={confirmDeleteAccount}
+          icon={<Delete2 width={iconSize} height={iconSize} />}
+          iconName="trash-2"
+          title="Delete Account"
+          subtitle="Permanently delete account?  Everything will be lost."
+          confirmText="Delete"
+          showCloseButton={true}
+        />
       </GradientBackground>
     </View>
   );
