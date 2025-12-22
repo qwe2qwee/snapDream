@@ -1,5 +1,6 @@
 import { useFontFamily } from "@/hooks/useFontFamily";
-import { StyleSheet, Text, View } from "react-native";
+import { router } from "expo-router";
+import { Button, StyleSheet, Text, View } from "react-native";
 
 export default function Create() {
   const fonts = useFontFamily();
@@ -7,6 +8,7 @@ export default function Create() {
   return (
     <View style={styles.container}>
       <Text style={[styles.text, { fontFamily: fonts.SemiBold }]}>Create</Text>
+      <Button title="Open Modal" onPress={() => router.push("/(auth)/login")} />
     </View>
   );
 }

@@ -49,7 +49,7 @@ export default function CommunityScreen() {
         <StatusBar barStyle="light-content" backgroundColor="#0D0D0F" />
 
         {/* Header */}
-        <PageHeader title="Community" />
+        <PageHeader title="Community" isLoggedIn={true} />
 
         {/* Masonry Grid - Pass tab bar height for proper bottom padding */}
         <MasonryGrid

@@ -69,6 +69,7 @@ export const CreationCard: React.FC<CreationCardProps> = ({
       borderRadius: getBorderRadius("large"),
       backgroundColor: "#1A1A1D",
       position: "relative",
+      zIndex: showMenu ? 1000 : 1,
     },
     creationImage: {
       width: "100%",
@@ -98,8 +99,11 @@ export const CreationCard: React.FC<CreationCardProps> = ({
     },
     menuOverlay: {
       position: "absolute",
-      inset: 0,
-      zIndex: 15,
+      top: -1000,
+      left: -1000,
+      right: -1000,
+      bottom: -1000,
+      zIndex: 1500000,
     },
     menuContainer: {
       position: "absolute",
@@ -108,7 +112,7 @@ export const CreationCard: React.FC<CreationCardProps> = ({
       width: getResponsiveValue(120, 130, 140, 150, 160),
       borderRadius: getBorderRadius("large") + 2,
       overflow: "hidden",
-      zIndex: 20,
+      zIndex: 2000,
     },
     menuBlur: {
       padding: spacing.xs + 2,
@@ -119,6 +123,7 @@ export const CreationCard: React.FC<CreationCardProps> = ({
       paddingVertical: spacing.sm + spacing.xs,
       paddingHorizontal: spacing.sm + 2,
       gap: spacing.sm + 2,
+      zIndex: 99999,
     },
     menuOptionText: {
       fontSize: typography.body,

@@ -55,7 +55,7 @@ export default function CreationsScreen() {
         <StatusBar barStyle="light-content" backgroundColor="#0D0D0F" />
 
         {/* Header */}
-        <PageHeader title="Creations" />
+        <PageHeader title="Creations" isLoggedIn={true} />
 
         {/* Filter Tabs */}
         <FilterTabs
