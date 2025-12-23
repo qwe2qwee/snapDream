@@ -9,38 +9,177 @@ export const IMAGES = {
   anime: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=200",
 };
 
-export const videoEffects = [
-  { id: 1, title: "Hugging", image: IMAGES.hugging, isPremium: true },
-  { id: 2, title: "AI Dance", image: IMAGES.aiDance, isPremium: true },
-  { id: 3, title: "Video", image: IMAGES.video, isPremium: true },
-  { id: 4, title: "Motion", image: IMAGES.hugging, isPremium: false },
+// 1. Clothes Swap
+export const clothesSwapEffect = {
+  id: 1,
+  title: "Clothes Swap",
+  image: IMAGES.imageGen,
+  isPremium: false,
+  description: "Change clothes on the same model.",
+};
+
+// 2. Color Change
+export const colorChangeEffect = {
+  id: 2,
+  title: "Color Change",
+  image: IMAGES.christmas,
+  isPremium: false,
+  description: "Change color or pattern of the item.",
+};
+
+// 3. Model Swap
+export const modelSwapEffect = {
+  id: 3,
+  title: "Model Swap",
+  image: IMAGES.aiDance,
+  isPremium: true,
+  description: "Keep clothes, change the model.",
+};
+
+// 4. Face Swap
+export const faceSwapEffect = {
+  id: 4,
+  title: "Face Swap",
+  image: IMAGES.hugging,
+  isPremium: true,
+  description: "Change the face only.",
+};
+
+// 5. Background Changer
+export const backgroundChangerEffect = {
+  id: 5,
+  title: "Background Changer",
+  image: IMAGES.ghibli,
+  isPremium: false,
+  description: "Change the scene.",
+};
+
+// 6. Pose Generator
+export const poseGeneratorEffect = {
+  id: 6,
+  title: "Pose Generator",
+  image: IMAGES.video,
+  isPremium: true,
+  description: "Change the pose.",
+};
+
+// 7. Camera Angle Change
+export const cameraAngleEffect = {
+  id: 7,
+  title: "Camera Angle",
+  image: IMAGES.videoGen,
+  isPremium: false,
+  description: "Change camera angle.",
+};
+
+// 8. Prompt to Image
+export const promptToImageEffect = {
+  id: 8,
+  title: "Prompt to Image",
+  image: IMAGES.imageGen,
+  isPremium: false,
+  description: "Generate image from text.",
+};
+
+// 9. Sketch to Image
+export const sketchToImageEffect = {
+  id: 9,
+  title: "Sketch to Image",
+  image: IMAGES.anime,
+  isPremium: true,
+  description: "Turn sketch into realistic image.",
+};
+
+// 10. Static Image to Video
+export const imageToVideoEffect = {
+  id: 10,
+  title: "Image to Video",
+  image: IMAGES.video,
+  isPremium: true,
+  description: "Animate a static image.",
+};
+
+// 11. Video Styles
+export const videoStylesEffect = {
+  id: 11,
+  title: "Video Styles",
+  image: IMAGES.aiDance,
+  isPremium: false,
+  description: "Apply styles to video.",
+};
+
+// 12. 4K Upscaler
+export const upscalerEffect = {
+  id: 12,
+  title: "4K Upscaler",
+  image: IMAGES.christmas,
+  isPremium: true,
+  description: "Enhance image quality.",
+};
+
+// 13. Model Consistency
+export const modelConsistencyEffect = {
+  id: 13,
+  title: "Model Consistency",
+  image: IMAGES.hugging,
+  isPremium: true,
+  description: "Train a consistent model.",
+};
+
+// 14. Outfit Variations
+export const outfitVariationsEffect = {
+  id: 14,
+  title: "Outfit Variations",
+  image: IMAGES.ghibli,
+  isPremium: true,
+  description: "One model, many outfits.",
+};
+
+// 15. Lighting Adaptation
+export const lightingEffect = {
+  id: 15,
+  title: "Lighting Adaptation",
+  image: IMAGES.videoGen,
+  isPremium: false,
+  description: "Change lighting conditions.",
+};
+
+// 16. Hair Style
+export const hairStyleEffect = {
+  id: 16,
+  title: "Hair Style",
+  image: IMAGES.imageGen, // Using placeholder for now
+  isPremium: false,
+  description: "Change hairstyle.",
+};
+
+// Categorized for UI display
+export const tryOnEffects = [
+  clothesSwapEffect,
+  modelSwapEffect,
+  outfitVariationsEffect,
+  faceSwapEffect,
 ];
 
 export const imageEffects = [
-  { id: 1, title: "Ghibli Style", image: IMAGES.ghibli, isPremium: false },
-  { id: 2, title: "Christmas", image: IMAGES.christmas, isPremium: true },
-  { id: 3, title: "Anime", image: IMAGES.anime, isPremium: true },
-  { id: 4, title: "Cartoon", image: IMAGES.ghibli, isPremium: false },
+  promptToImageEffect,
+  backgroundChangerEffect,
+  colorChangeEffect,
+  sketchToImageEffect,
+  upscalerEffect,
+  lightingEffect,
 ];
 
-export const hairstyleEffects = [
-  { id: 11, title: "Short Bob", image: IMAGES.hugging, isPremium: false },
-  { id: 12, title: "Long Waves", image: IMAGES.aiDance, isPremium: true },
-  { id: 13, title: "Ponytail", image: IMAGES.ghibli, isPremium: false },
-  { id: 14, title: "Undercut", image: IMAGES.anime, isPremium: true },
+export const videoEffects = [
+  imageToVideoEffect,
+  videoStylesEffect,
+  poseGeneratorEffect, // Putting pose here as it implies movement/3D
+  cameraAngleEffect,
+  modelConsistencyEffect,
 ];
 
-export const tryOnEffects = [
-  { id: 21, title: "Jacket", image: IMAGES.videoGen, isPremium: false },
-  {
-    id: 22,
-    title: "Summer Dress",
-    image: IMAGES.christmas,
-    isPremium: false,
-  },
-  { id: 23, title: "Tuxedo", image: IMAGES.ghibli, isPremium: true },
-  { id: 24, title: "Casual Tee", image: IMAGES.imageGen, isPremium: false },
-];
+// Deprecated or unused but kept to avoid breaking other imports (empty or aliased)
+export const hairstyleEffects = [hairStyleEffect];
 
 // constants/data.ts --- IGNORE ---
 

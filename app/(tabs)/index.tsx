@@ -27,7 +27,34 @@ export default function HomeScreen() {
   } = useResponsive();
 
   const handleEffectPress = (id: number) => {
-    router.push(`/details/${id}`);
+    switch (id) {
+      case 1: // Clothes Swap
+        router.push("/cloth-swap");
+        break;
+      case 4: // Face Swap
+        router.push("/face-swap");
+        break;
+      case 8: // Prompt to Image
+        router.push("/image-generation");
+        break;
+      case 9: // Sketch to Image
+        router.push("/sketch-to-image");
+        break;
+      case 13: // Model Consistency
+        router.push("/multiple-image-upload"); // Using multi-upload for now
+        break;
+      case 14: // Outfit Variations
+        router.push("/outfit-variations");
+        break;
+      case 16: // Hair Style
+        router.push("/details/16");
+        break;
+      default:
+        // Generic detail page for single image processing
+        // Covers: Color Change (2), Model Swap (3), Background (5), Pose (6),
+        // Camera (7), Video (10), Styles (11), Upscaler (12), Lighting (15)
+        router.push(`/details/${id}`);
+    }
   };
 
   // Responsive dynamic styles
@@ -71,11 +98,33 @@ export default function HomeScreen() {
               title="Image Generation"
               gradient={["#1E3A5F", "#0D7377"]}
               image={require("../../assets/icons/imageGen.png")}
+              onPress={() => router.push("/image-generation")}
             />
             <FeatureCard
               title="Video Generation"
               gradient={["#2D1B4E", "#1E3A5F"]}
               image={require("../../assets/icons/videoGen.png")}
+              onPress={() => router.push("/multiple-image-upload")}
+            />
+          </View>
+          <View
+            style={[
+              styles.featureCards,
+              dynamicStyles.featureCards,
+              { marginTop: -10 },
+            ]}
+          >
+            <FeatureCard
+              title="Cloth Swap"
+              gradient={["#4A148C", "#880E4F"]}
+              image={require("../../assets/icons/imageGen.png")}
+              onPress={() => router.push("/cloth-swap")}
+            />
+            <FeatureCard
+              title="Hair Style"
+              gradient={["#FF6B6B", "#556270"]}
+              image={require("../../assets/icons/imageGen.png")} // Placeholder
+              onPress={() => router.push("/details/16")}
             />
           </View>
 

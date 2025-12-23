@@ -20,6 +20,7 @@ import { SectionTitle } from "@/components/Profile/SectionTitle";
 import { UpgradeBanner } from "@/components/Profile/UpgradeBanner";
 import { UserProfileCard } from "@/components/Profile/UserProfileCard";
 import { useResponsive } from "@/hooks/useResponsive";
+import { router } from "expo-router";
 
 export default function ProfileScreen() {
   const { spacing, getResponsiveValue, safeAreaBottom, getIconSize } =
@@ -27,6 +28,7 @@ export default function ProfileScreen() {
   const iconSize = getIconSize("medium");
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isSubscribed, setIsSubscribed] = useState(true);
 
   // Modal states
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
@@ -40,7 +42,16 @@ export default function ProfileScreen() {
   const confirmLogout = () => {
     // Perform logout action
     setIsLoggedIn(false);
-    Alert.alert("Logged Out", "You have been successfully logged out");
+  };
+
+  const handleUpgradePress = () => {
+    // Perform upgrade action
+    if (isLoggedIn && !isSubscribed) {
+      router.push("/Upgrade");
+    } else if (!isLoggedIn) {
+      router.push("/(auth)/login");
+    }
+    return;
   };
 
   const handleDeleteAccount = () => {
@@ -52,10 +63,6 @@ export default function ProfileScreen() {
     // In a real app, call your delete account API here
     try {
       // await deleteAccountAPI();
-      Alert.alert(
-        "Account Deleted",
-        "Your account has been permanently deleted"
-      );
       setIsLoggedIn(false);
     } catch (error) {
       Alert.alert("Error", "Failed to delete account");
@@ -106,7 +113,7 @@ export default function ProfileScreen() {
 
           {/* Upgrade Banner */}
           <UpgradeBanner
-            onPress={() => console.log("Upgrade pressed")}
+            onPress={handleUpgradePress}
             isSubscribed={true}
             isLoggedIn={isLoggedIn}
           />

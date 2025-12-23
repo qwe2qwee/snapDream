@@ -1,8 +1,17 @@
-// ImageUpscaleScreen.js
+import {
+  clothesSwapEffect,
+  faceSwapEffect,
+  hairStyleEffect,
+  imageEffects,
+  modelConsistencyEffect,
+  outfitVariationsEffect,
+  tryOnEffects,
+  videoEffects,
+} from "@/constants/data";
 import { Feather } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { router, useLocalSearchParams } from "expo-router";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   Dimensions,
   Image,
@@ -17,13 +26,28 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 const { width } = Dimensions.get("window");
 
-export default function ImageUpscaleScreen() {
-  const [selectedImage, setSelectedImage] = useState(null);
+export default function GenericEffectScreen() {
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isModalVisible, setModalVisible] = useState(false);
-  const [enhanceModel, setEnhanceModel] = useState("Classic");
-  const [upscaleLevel, setUpscaleLevel] = useState("4x");
+  const [enhanceModel, setEnhanceModel] = useState("Standard");
+  const [upscaleLevel, setUpscaleLevel] = useState("High");
   const [credits] = useState(10);
   const { id } = useLocalSearchParams<{ id: string }>();
+
+  // Find the current effect logic
+  const currentEffect = useMemo(() => {
+    const allEffects = [
+      ...imageEffects,
+      ...videoEffects,
+      ...tryOnEffects,
+      clothesSwapEffect,
+      faceSwapEffect,
+      outfitVariationsEffect,
+      modelConsistencyEffect,
+      hairStyleEffect,
+    ];
+    return allEffects.find((e) => e.id === Number(id));
+  }, [id]);
 
   const handleImageUpload = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -51,6 +75,10 @@ export default function ImageUpscaleScreen() {
   const handleGenerate = () => {
     console.log("Generating with:", { enhanceModel, upscaleLevel });
     // Add your generation logic here
+    setTimeout(() => {
+      setModalVisible(false);
+      // Navigate or show success
+    }, 2000);
   };
 
   return (
@@ -64,7 +92,9 @@ export default function ImageUpscaleScreen() {
         >
           <Feather name="chevron-left" size={24} color="#fff" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Image Upscale</Text>
+        <Text style={styles.headerTitle}>
+          {currentEffect?.title || "Effect Details"}
+        </Text>
         <View style={styles.backButton} />
       </View>
 
@@ -157,24 +187,27 @@ export default function ImageUpscaleScreen() {
             </TouchableOpacity>
           </View>
 
-          {/* Enhance Model */}
+          {/* Generic Option 1: Style/Model */}
           <View style={styles.section}>
-            <Text style={styles.sectionLabel}>Enhance Model</Text>
+            <Text style={styles.sectionLabel}>
+              {Number(id) === 12 ? "Enhance Model" : "Style"}
+            </Text>
             <View style={styles.buttonGroup}>
               <TouchableOpacity
                 style={[
                   styles.optionButton,
-                  enhanceModel === "Classic" && styles.optionButtonActive,
+                  enhanceModel === "Standard" && styles.optionButtonActive,
                 ]}
-                onPress={() => setEnhanceModel("Classic")}
+                onPress={() => setEnhanceModel("Standard")}
               >
                 <Text
                   style={[
                     styles.optionButtonText,
-                    enhanceModel === "Classic" && styles.optionButtonTextActive,
+                    enhanceModel === "Standard" &&
+                      styles.optionButtonTextActive,
                   ]}
                 >
-                  Classic
+                  Standard
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -196,56 +229,59 @@ export default function ImageUpscaleScreen() {
               <TouchableOpacity
                 style={[
                   styles.optionButton,
-                  enhanceModel === "Flash" && styles.optionButtonActive,
+                  enhanceModel === "Creative" && styles.optionButtonActive,
                 ]}
-                onPress={() => setEnhanceModel("Flash")}
+                onPress={() => setEnhanceModel("Creative")}
               >
                 <Text
                   style={[
                     styles.optionButtonText,
-                    enhanceModel === "Flash" && styles.optionButtonTextActive,
+                    enhanceModel === "Creative" &&
+                      styles.optionButtonTextActive,
                   ]}
                 >
-                  Flash
+                  Creative
                 </Text>
               </TouchableOpacity>
             </View>
           </View>
 
-          {/* Upscale */}
+          {/* Generic Option 2: Quality/Strength */}
           <View style={styles.section}>
-            <Text style={styles.sectionLabel}>Upscale</Text>
+            <Text style={styles.sectionLabel}>
+              {Number(id) === 12 ? "Upscale Factor" : "Quality"}
+            </Text>
             <View style={styles.buttonGroup}>
               <TouchableOpacity
                 style={[
                   styles.upscaleButton,
-                  upscaleLevel === "2x" && styles.upscaleButtonActive,
+                  upscaleLevel === "Fast" && styles.upscaleButtonActive,
                 ]}
-                onPress={() => setUpscaleLevel("2x")}
+                onPress={() => setUpscaleLevel("Fast")}
               >
                 <Text
                   style={[
                     styles.upscaleButtonText,
-                    upscaleLevel === "2x" && styles.upscaleButtonTextActive,
+                    upscaleLevel === "Fast" && styles.upscaleButtonTextActive,
                   ]}
                 >
-                  2x
+                  {Number(id) === 12 ? "2x" : "Fast"}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[
                   styles.upscaleButton,
-                  upscaleLevel === "4x" && styles.upscaleButtonActive,
+                  upscaleLevel === "High" && styles.upscaleButtonActive,
                 ]}
-                onPress={() => setUpscaleLevel("4x")}
+                onPress={() => setUpscaleLevel("High")}
               >
                 <Text
                   style={[
                     styles.upscaleButtonText,
-                    upscaleLevel === "4x" && styles.upscaleButtonTextActive,
+                    upscaleLevel === "High" && styles.upscaleButtonTextActive,
                   ]}
                 >
-                  4x
+                  {Number(id) === 12 ? "4x" : "High"}
                 </Text>
               </TouchableOpacity>
             </View>
