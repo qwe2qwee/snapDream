@@ -70,7 +70,7 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
       },
       title: {
         fontSize: responsiveValues.titleSize,
-        fontFamily: fonts.SemiBold,
+        fontFamily: fonts.Bold,
         marginBottom: spacing.sm,
       },
       subtitle: {

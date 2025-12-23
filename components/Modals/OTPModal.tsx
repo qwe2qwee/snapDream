@@ -136,7 +136,6 @@ export const OTPModal: React.FC<OTPModalProps> = ({
   return (
     <Modal
       isVisible={isVisible}
-      onBackdropPress={onClose}
       onBackButtonPress={onClose}
       onModalHide={onModalHide}
       backdropOpacity={0.7}

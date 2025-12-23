@@ -5,7 +5,15 @@ import { useRouter } from "expo-router";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-export const LoginHeader: React.FC = () => {
+interface LoginHeaderProps {
+  title?: string;
+  subtitle?: string;
+}
+
+export const LoginHeader: React.FC<LoginHeaderProps> = ({
+  title = "Hey, welcome back!",
+  subtitle = "",
+}) => {
   const router = useRouter();
   const fonts = useFontFamily();
   const { spacing, getResponsiveValue, safeAreaTop } = useResponsive();
@@ -32,9 +40,9 @@ export const LoginHeader: React.FC = () => {
       marginTop: safeAreaTop,
     },
     subtitle: {
-      fontSize: getResponsiveValue(26, 28, 30, 32, 34),
+      fontSize: getResponsiveValue(6, 8, 10, 12, 14),
       fontFamily: fonts.Bold,
-      color: "#FFFFFF",
+      color: "rgba(255, 255, 255, 0.8)",
     },
   });
 
@@ -48,8 +56,8 @@ export const LoginHeader: React.FC = () => {
         <Feather name="chevron-left" size={28} color="#FFFFFF" />
       </TouchableOpacity>
 
-      <Text style={styles.welcomeText}>Hey, welcome back!</Text>
-      <Text style={styles.subtitle}>Good to see you again!</Text>
+      <Text style={styles.welcomeText}>{title}</Text>
+      <Text style={styles.subtitle}>{subtitle}</Text>
     </View>
   );
 };
