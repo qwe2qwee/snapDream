@@ -1,3 +1,4 @@
+import Delete from "@/assets/icons/Dele.svg";
 import { ActionButtons } from "@/components/CreationDetails/ActionButtons";
 import { GradientBackground } from "@/components/GradientBackground";
 import { GeneratedImageCard } from "@/components/Imagegen/GeneratedImageCard";
@@ -6,16 +7,21 @@ import { ImageGenHeader } from "@/components/Imagegen/ImageGenHeader";
 import { PromptDisplay } from "@/components/Imagegen/PromptDisplay";
 import { SuccessModal } from "@/components/Modals/AproveModal";
 import { LoadingModal } from "@/components/Modals/LoadingModal";
+import { ConfirmModal } from "@/components/Modals/modal";
 import { ShareModal } from "@/components/Modals/shareModal";
-import { useLocalSearchParams } from "expo-router";
+import { useResponsive } from "@/hooks/useResponsive";
+import { useLocalSearchParams, useRouter } from "expo-router";
 
 import React from "react";
-import { Alert, ScrollView, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 
 export default function ResultScreen() {
   const { type } = useLocalSearchParams<{ type: "image" | "video" }>();
+  const router = useRouter();
+  const { getResponsiveValue } = useResponsive();
   const [isShareVisible, setShareVisible] = React.useState(false);
   const [isSuccessVisible, setSuccessVisible] = React.useState(false);
+  const [isDeleteVisible, setDeleteVisible] = React.useState(false);
   const [isLoading, setLoading] = React.useState(false);
   const [successMessage, setSuccessMessage] = React.useState({
     title: "",
@@ -35,14 +41,12 @@ export default function ResultScreen() {
   };
 
   const handleDelete = () => {
-    Alert.alert("Delete", "Are you sure you want to delete this?", [
-      { text: "Cancel", style: "cancel" },
-      {
-        text: "Delete",
-        style: "destructive",
-        onPress: () => console.log("Deleted"),
-      },
-    ]);
+    setDeleteVisible(true);
+  };
+
+  const confirmDelete = () => {
+    setDeleteVisible(false);
+    router.back();
   };
 
   const handleRegenerate = () => {
@@ -105,6 +109,26 @@ export default function ResultScreen() {
           title={successMessage.title}
           subtitle={successMessage.subtitle}
           buttonText="Continue"
+        />
+
+        <ConfirmModal
+          isVisible={isDeleteVisible}
+          onClose={() => setDeleteVisible(false)}
+          icon={
+            <Delete
+              color="#FFFFFF"
+              width={getResponsiveValue(24, 26, 28, 30, 32)}
+              height={getResponsiveValue(24, 26, 28, 30, 32)}
+            />
+          }
+          onConfirm={confirmDelete}
+          iconName="trash-2"
+          iconColor="#FFFFFF"
+          iconBackgroundColor="rgba(255, 255, 255, 0.05)"
+          title="Delete Creation"
+          subtitle="Are you sure you want to delete this creation? This action cannot be undone."
+          confirmText="Delete"
+          showCloseButton={true}
         />
 
         <LoadingModal isVisible={isLoading} />
