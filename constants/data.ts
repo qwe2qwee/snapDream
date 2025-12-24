@@ -36,15 +36,6 @@ export const modelSwapEffect = {
   description: "Keep clothes, change the model.",
 };
 
-// 4. Face Swap
-export const faceSwapEffect = {
-  id: 4,
-  title: "Face Swap",
-  image: IMAGES.hugging,
-  isPremium: true,
-  description: "Change the face only.",
-};
-
 // 5. Background Changer
 export const backgroundChangerEffect = {
   id: 5,
@@ -158,7 +149,6 @@ export const tryOnEffects = [
   clothesSwapEffect,
   modelSwapEffect,
   outfitVariationsEffect,
-  faceSwapEffect,
 ];
 
 export const imageEffects = [

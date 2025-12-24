@@ -32,7 +32,6 @@ export default function HomeScreen() {
         router.push("/cloth-swap");
         break;
       case 4: // Face Swap
-        router.push("/face-swap");
         break;
       case 8: // Prompt to Image
         router.push("/image-generation");
@@ -49,10 +48,13 @@ export default function HomeScreen() {
       case 16: // Hair Style
         router.push("/hairstyle");
         break;
+      case 12: // Upscaler
+        router.push("/image-upscale");
+        break;
       default:
         // Generic detail page for single image processing
         // Covers: Color Change (2), Model Swap (3), Background (5), Pose (6),
-        // Camera (7), Video (10), Styles (11), Upscaler (12), Lighting (15)
+        // Camera (7), Video (10), Styles (11), Lighting (15)
         router.push(`/details/${id}`);
     }
   };
