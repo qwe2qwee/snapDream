@@ -1,4 +1,3 @@
-import UploadImageIcon from "@/assets/icons/Upload.svg";
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
 import React from "react";
@@ -14,7 +13,8 @@ export const ReferenceImageUploader: React.FC<ReferenceImageUploaderProps> = ({
   images = [],
 }) => {
   const fonts = useFontFamily();
-  const { spacing, typography, getBorderRadius } = useResponsive();
+  const { spacing, typography, getBorderRadius, getResponsiveValue } =
+    useResponsive();
 
   const styles = StyleSheet.create({
     container: {
@@ -38,6 +38,10 @@ export const ReferenceImageUploader: React.FC<ReferenceImageUploaderProps> = ({
       alignItems: "center",
       justifyContent: "center",
       minHeight: 200,
+    },
+    emptyImage: {
+      width: getResponsiveValue(150, 160, 170, 180, 190),
+      height: getResponsiveValue(80, 100, 120, 140, 160),
     },
     innerUploadArea: {
       alignItems: "center",
@@ -97,7 +101,11 @@ export const ReferenceImageUploader: React.FC<ReferenceImageUploaderProps> = ({
               ))}
             </View>
           )}
-          <UploadImageIcon color="#8E8E93" />
+          <Image
+            source={require("@/assets/images/Group.png")}
+            style={styles.emptyImage}
+            resizeMode="contain"
+          />
           <Text style={styles.uploadText}>Upload Image</Text>
         </View>
       </TouchableOpacity>

@@ -1,236 +1,125 @@
+import { ClothSwapGenerateButton } from "@/components/ClothSwap/ClothSwapGenerateButton";
+import { ClothSwapHeader } from "@/components/ClothSwap/ClothSwapHeader";
+import { ImageUploadBox } from "@/components/ClothSwap/ImageUploadBox";
 import { GradientBackground } from "@/components/GradientBackground";
-import { useFontFamily } from "@/hooks/useFontFamily";
-import { useResponsive } from "@/hooks/useResponsive";
 import * as ImagePicker from "expo-image-picker";
-import { useRouter } from "expo-router";
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import {
-  ActivityIndicator,
-  DimensionValue,
-  Image,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
   ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
+  StyleSheet,
 } from "react-native";
-import BackIcon from "../assets/icons/BackIcon.svg";
 
 export default function ClothSwapScreen() {
-  const router = useRouter();
-  const fonts = useFontFamily();
-  const { spacing, safeAreaTop, getResponsiveValue, getBorderRadius } =
-    useResponsive();
+  const [modelImage, setModelImage] = useState<string | undefined>(undefined);
+  const [clothImage, setClothImage] = useState<string | undefined>(undefined);
 
-  const [personImage, setPersonImage] = useState<string | null>(null);
-  const [clothImage, setClothImage] = useState<string | null>(null);
-  const [isGenerating, setIsGenerating] = useState(false);
-
-  // Responsive values
-  const responsiveValues = useMemo(
-    () => ({
-      backIconSize: getResponsiveValue(42, 45, 48, 50, 52),
-      titleSize: getResponsiveValue(18, 20, 22, 24, 26),
-      headerPaddingVertical: spacing.md,
-      buttonHeight: getResponsiveValue(50, 52, 54, 56, 58),
-      uploadBoxHeight: getResponsiveValue(180, 200, 220, 240, 260),
-    }),
-    [getResponsiveValue, spacing]
-  );
-
-  const pickImage = async (type: "person" | "cloth") => {
-    let result = await ImagePicker.launchImageLibraryAsync({
+  const pickImage = async (type: "model" | "cloth") => {
+    const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [3, 4],
+      aspect: type === "model" ? [3, 4] : [1, 1],
       quality: 1,
     });
 
     if (!result.canceled) {
-      if (type === "person") {
-        setPersonImage(result.assets[0].uri);
+      if (type === "model") {
+        setModelImage(result.assets[0].uri);
       } else {
         setClothImage(result.assets[0].uri);
       }
     }
   };
 
-  const handleSwap = () => {
-    if (!personImage || !clothImage) return;
-    setIsGenerating(true);
-    // Simulate processing
-    setTimeout(() => {
-      setIsGenerating(false);
-      // Logic to show result would go here
-    }, 2500);
+  const handleGenerate = () => {
+    if (!modelImage || !clothImage) {
+      Alert.alert(
+        "Missing Images",
+        "Please upload both model and cloth images"
+      );
+      return;
+    }
+
+    Alert.alert("Generate", "Starting cloth swap generation...");
+    // Implement generation logic here
   };
 
-  const dynamicStyles = useMemo(
-    () => ({
-      container: {
-        paddingTop: safeAreaTop,
-        paddingHorizontal: spacing.md,
-        flex: 1,
+  const handleRemoveModelImage = () => {
+    Alert.alert("Remove Image", "Are you sure you want to remove this image?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Remove",
+        style: "destructive",
+        onPress: () => setModelImage(undefined),
       },
-      header: {
-        flexDirection: "row" as const,
-        alignItems: "center" as const,
-        justifyContent: "space-between" as const,
-        paddingVertical: responsiveValues.headerPaddingVertical,
-        marginBottom: spacing.lg,
+    ]);
+  };
+
+  const handleRemoveClothImage = () => {
+    Alert.alert("Remove Image", "Are you sure you want to remove this image?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Remove",
+        style: "destructive",
+        onPress: () => setClothImage(undefined),
       },
-      title: {
-        fontSize: responsiveValues.titleSize,
-        fontFamily: fonts.Bold,
-        color: "#FFFFFF",
-      },
-      backButton: {
-        width: responsiveValues.backIconSize,
-        height: responsiveValues.backIconSize,
-        justifyContent: "center" as const,
-        alignItems: "center" as const,
-      },
-      uploadSection: {
-        marginBottom: spacing.xl,
-      },
-      sectionTitle: {
-        fontSize: 16,
-        fontFamily: fonts.Medium,
-        color: "#FFFFFF",
-        marginBottom: spacing.sm,
-      },
-      uploadBox: {
-        height: responsiveValues.uploadBoxHeight,
-        backgroundColor: "rgba(255, 255, 255, 0.1)",
-        borderRadius: getBorderRadius("large"),
-        borderWidth: 2,
-        borderColor: "rgba(255, 255, 255, 0.2)",
-        borderStyle: "dashed" as const,
-        justifyContent: "center" as const,
-        alignItems: "center" as const,
-        overflow: "hidden" as const,
-      },
-      uploadPlaceholderText: {
-        color: "rgba(255, 255, 255, 0.6)",
-        marginTop: spacing.sm,
-        fontFamily: fonts.Regular,
-      },
-      imagePreview: {
-        width: "100%" as DimensionValue,
-        height: "100%" as DimensionValue,
-      },
-      swapButton: {
-        backgroundColor: "#6366F1",
-        height: responsiveValues.buttonHeight,
-        borderRadius: getBorderRadius("large"),
-        justifyContent: "center" as const,
-        alignItems: "center" as const,
-        marginTop: spacing.md,
-        marginBottom: spacing.xl,
-        opacity: isGenerating || !personImage || !clothImage ? 0.7 : 1,
-      },
-      buttonText: {
-        color: "#FFFFFF",
-        fontFamily: fonts.Bold,
-        fontSize: 18,
-      },
-    }),
-    [
-      safeAreaTop,
-      spacing,
-      responsiveValues,
-      fonts,
-      getBorderRadius,
-      isGenerating,
-      personImage,
-      clothImage,
-    ]
-  );
+    ]);
+  };
+
+  const canGenerate = modelImage && clothImage;
 
   return (
     <GradientBackground>
-      <View style={{ flex: 1 }}>
-        <ScrollView style={dynamicStyles.container}>
-          {/* Header */}
-          <View style={dynamicStyles.header}>
-            <TouchableOpacity
-              onPress={() => router.back()}
-              style={dynamicStyles.backButton}
-              activeOpacity={0.7}
-            >
-              <BackIcon
-                width={responsiveValues.backIconSize}
-                height={responsiveValues.backIconSize}
-              />
-            </TouchableOpacity>
-            <Text style={dynamicStyles.title}>Cloth Swap</Text>
-            <View style={{ width: responsiveValues.backIconSize }} />
-          </View>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      >
+        <ScrollView
+          style={styles.container}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContent}
+        >
+          <ClothSwapHeader />
 
-          {/* Person Image Upload */}
-          <View style={dynamicStyles.uploadSection}>
-            <Text style={dynamicStyles.sectionTitle}>1. Upload Person</Text>
-            <TouchableOpacity
-              style={dynamicStyles.uploadBox}
-              onPress={() => pickImage("person")}
-              activeOpacity={0.8}
-            >
-              {personImage ? (
-                <Image
-                  source={{ uri: personImage }}
-                  style={dynamicStyles.imagePreview}
-                  resizeMode="cover"
-                />
-              ) : (
-                <View style={{ alignItems: "center" }}>
-                  <Text style={{ fontSize: 30 }}>👤</Text>
-                  <Text style={dynamicStyles.uploadPlaceholderText}>
-                    Tap to upload person
-                  </Text>
-                </View>
-              )}
-            </TouchableOpacity>
-          </View>
+          {/* Model Image Upload */}
+          <ImageUploadBox
+            label="Model Image"
+            optional={true}
+            type="model"
+            selectedImage={modelImage}
+            onUpload={() => pickImage("model")}
+            onRemove={handleRemoveModelImage}
+          />
 
           {/* Cloth Image Upload */}
-          <View style={dynamicStyles.uploadSection}>
-            <Text style={dynamicStyles.sectionTitle}>2. Upload Cloth</Text>
-            <TouchableOpacity
-              style={dynamicStyles.uploadBox}
-              onPress={() => pickImage("cloth")}
-              activeOpacity={0.8}
-            >
-              {clothImage ? (
-                <Image
-                  source={{ uri: clothImage }}
-                  style={dynamicStyles.imagePreview}
-                  resizeMode="cover"
-                />
-              ) : (
-                <View style={{ alignItems: "center" }}>
-                  <Text style={{ fontSize: 30 }}>👕</Text>
-                  <Text style={dynamicStyles.uploadPlaceholderText}>
-                    Tap to upload cloth
-                  </Text>
-                </View>
-              )}
-            </TouchableOpacity>
-          </View>
-
-          {/* Generate Button */}
-          <TouchableOpacity
-            style={dynamicStyles.swapButton}
-            onPress={handleSwap}
-            disabled={isGenerating || !personImage || !clothImage}
-            activeOpacity={0.8}
-          >
-            {isGenerating ? (
-              <ActivityIndicator color="#FFFFFF" />
-            ) : (
-              <Text style={dynamicStyles.buttonText}>Swap Clothes</Text>
-            )}
-          </TouchableOpacity>
+          <ImageUploadBox
+            label="Cloth Image"
+            optional={true}
+            type="cloth"
+            selectedImage={clothImage}
+            onUpload={() => pickImage("cloth")}
+            onRemove={handleRemoveClothImage}
+          />
         </ScrollView>
-      </View>
+
+        {/* Generate Button */}
+        <ClothSwapGenerateButton
+          onPress={handleGenerate}
+          credits={10}
+          disabled={!canGenerate}
+        />
+      </KeyboardAvoidingView>
     </GradientBackground>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingBottom: 100,
+  },
+});
