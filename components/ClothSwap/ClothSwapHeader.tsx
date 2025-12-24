@@ -1,6 +1,6 @@
+import BackButton from "@/assets/icons/BackIcon.svg";
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
-import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -40,7 +40,7 @@ export const ClothSwapHeader: React.FC<ClothSwapHeaderProps> = ({
     },
     title: {
       fontSize: typography.h4,
-      fontFamily: fonts.SemiBold,
+      fontFamily: fonts.Bold,
       color: "#FFFFFF",
       position: "absolute",
       left: 0,
@@ -60,11 +60,9 @@ export const ClothSwapHeader: React.FC<ClothSwapHeaderProps> = ({
           onPress={() => router.back()}
           activeOpacity={0.7}
         >
-          <Feather name="chevron-left" size={24} color="#FFFFFF" />
+          <BackButton width={backButtonSize} height={backButtonSize} />
         </TouchableOpacity>
-
         <Text style={styles.title}>{title}</Text>
-
         <View style={styles.spacer} />
       </View>
     </View>

@@ -47,7 +47,9 @@ export default function ImageGenScreen() {
     <GradientBackground>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
+        style={{
+          flex: 1,
+        }}
       >
         <ScrollView
           style={styles.container}
@@ -69,13 +71,12 @@ export default function ImageGenScreen() {
             onChangeText={setPrompt}
             onAIGenerate={handleAIGenerate}
           />
+          <GenerateButton
+            onPress={handleGenerate}
+            credits={10}
+            onOptionsPress={() => setShowOptions(true)}
+          />
         </ScrollView>
-
-        <GenerateButton
-          onPress={handleGenerate}
-          credits={10}
-          onOptionsPress={() => setShowOptions(true)}
-        />
 
         <OptionsBottomSheet
           isVisible={showOptions}

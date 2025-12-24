@@ -2,7 +2,9 @@ import { ClothSwapGenerateButton } from "@/components/ClothSwap/ClothSwapGenerat
 import { ClothSwapHeader } from "@/components/ClothSwap/ClothSwapHeader";
 import { ImageUploadBox } from "@/components/ClothSwap/ImageUploadBox";
 import { GradientBackground } from "@/components/GradientBackground";
+import { LoadingModal } from "@/components/Modals/LoadingModal";
 import * as ImagePicker from "expo-image-picker";
+import { router } from "expo-router";
 import React, { useState } from "react";
 import {
   Alert,
@@ -13,6 +15,7 @@ import {
 } from "react-native";
 
 export default function ClothSwapScreen() {
+  const [loading, setLoading] = useState(false);
   const [modelImage, setModelImage] = useState<string | undefined>(undefined);
   const [clothImage, setClothImage] = useState<string | undefined>(undefined);
 
@@ -33,7 +36,7 @@ export default function ClothSwapScreen() {
     }
   };
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     if (!modelImage || !clothImage) {
       Alert.alert(
         "Missing Images",
@@ -42,8 +45,12 @@ export default function ClothSwapScreen() {
       return;
     }
 
-    Alert.alert("Generate", "Starting cloth swap generation...");
+    setLoading(true);
     // Implement generation logic here
+    setTimeout(() => {
+      setLoading(false);
+      router.push("/image-result");
+    }, 2000);
   };
 
   const handleRemoveModelImage = () => {
@@ -102,15 +109,15 @@ export default function ClothSwapScreen() {
             onUpload={() => pickImage("cloth")}
             onRemove={handleRemoveClothImage}
           />
+          {/* Generate Button */}
+          <ClothSwapGenerateButton
+            onPress={handleGenerate}
+            credits={10}
+            disabled={!canGenerate}
+          />
         </ScrollView>
-
-        {/* Generate Button */}
-        <ClothSwapGenerateButton
-          onPress={handleGenerate}
-          credits={10}
-          disabled={!canGenerate}
-        />
       </KeyboardAvoidingView>
+      <LoadingModal isVisible={loading} />
     </GradientBackground>
   );
 }
@@ -120,6 +127,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 100,
+    paddingBottom: 0,
   },
 });

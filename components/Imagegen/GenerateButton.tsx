@@ -17,13 +17,8 @@ export const GenerateButton: React.FC<GenerateButtonProps> = ({
   onOptionsPress,
 }) => {
   const fonts = useFontFamily();
-  const {
-    spacing,
-    typography,
-    getResponsiveValue,
-    getBorderRadius,
-    safeAreaBottom,
-  } = useResponsive();
+  const { spacing, typography, getResponsiveValue, getBorderRadius } =
+    useResponsive();
 
   const buttonHeight = getResponsiveValue(54, 58, 62, 66, 70);
 
@@ -31,8 +26,8 @@ export const GenerateButton: React.FC<GenerateButtonProps> = ({
     container: {
       flexDirection: "row",
       paddingHorizontal: spacing.lg,
-      paddingBottom: safeAreaBottom + spacing.md,
       gap: spacing.md,
+      marginTop: spacing.xl,
     },
     optionsButton: {
       width: buttonHeight,

@@ -74,13 +74,12 @@ export default function VideoGenScreen() {
             onChangeText={setPrompt}
             onAIGenerate={handleAIGenerate}
           />
+          <GenerateButton
+            onPress={handleGenerate}
+            credits={20} // Video might cost more?
+            onOptionsPress={() => setShowOptions(true)}
+          />
         </ScrollView>
-
-        <GenerateButton
-          onPress={handleGenerate}
-          credits={20} // Video might cost more?
-          onOptionsPress={() => setShowOptions(true)}
-        />
 
         <OptionsBottomSheet
           isVisible={showOptions}

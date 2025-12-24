@@ -23,7 +23,9 @@ export const ClothSwapGenerateButton: React.FC<
     container: {
       paddingHorizontal: spacing.lg,
       paddingBottom: safeAreaBottom + spacing.md,
+      marginTop: spacing.xl,
     },
+
     button: {
       height: buttonHeight,
       borderRadius: buttonHeight / 2,
@@ -43,7 +45,7 @@ export const ClothSwapGenerateButton: React.FC<
     },
     creditsText: {
       fontSize: typography.body,
-      fontFamily: fonts.SemiBold,
+      fontFamily: fonts.Bold,
       color: "#0D0D0F",
     },
     generateText: {

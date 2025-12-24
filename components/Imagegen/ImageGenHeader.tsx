@@ -1,6 +1,6 @@
+import BackButton from "@/assets/icons/BackIcon.svg";
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
-import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -55,12 +55,8 @@ export const ImageGenHeader: React.FC<ImageGenHeaderProps> = ({
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.back()}
-          activeOpacity={0.7}
-        >
-          <Feather name="chevron-left" size={24} color="#FFFFFF" />
+        <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7}>
+          <BackButton width={backButtonSize} height={backButtonSize} />
         </TouchableOpacity>
 
         <Text style={styles.title}>{title}</Text>
