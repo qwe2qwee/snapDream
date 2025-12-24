@@ -47,7 +47,7 @@ export default function HomeScreen() {
         router.push("/outfit-variations");
         break;
       case 16: // Hair Style
-        router.push("/details/16");
+        router.push("/hairstyle");
         break;
       default:
         // Generic detail page for single image processing
@@ -124,7 +124,7 @@ export default function HomeScreen() {
               title="Hair Style"
               gradient={["#FF6B6B", "#556270"]}
               image={require("../../assets/icons/imageGen.png")} // Placeholder
-              onPress={() => router.push("/details/16")}
+              onPress={() => router.push("/hairstyle")}
             />
           </View>
 
