@@ -34,6 +34,12 @@ export default function RootLayout() {
         <Stack.Screen name="effects/image" options={{ headerShown: false }} />
         <Stack.Screen name="Upgrade" options={{ headerShown: false }} />
         <Stack.Screen name="image-result" options={{ headerShown: false }} />
+        <Stack.Screen name="video-result" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="video-generation"
+          options={{ headerShown: false }}
+        />
+
         <Stack.Screen
           name="image-generation"
           options={{ headerShown: false }}

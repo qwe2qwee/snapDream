@@ -104,7 +104,7 @@ export default function HomeScreen() {
               title="Video Generation"
               gradient={["#2D1B4E", "#1E3A5F"]}
               image={require("../../assets/icons/videoGen.png")}
-              onPress={() => router.push("/multiple-image-upload")}
+              onPress={() => router.push("/video-generation")}
             />
           </View>
           <View

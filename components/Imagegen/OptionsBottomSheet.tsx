@@ -129,4 +129,47 @@ export const OptionsBottomSheet: React.FC<OptionsBottomSheetProps> = ({
                 label="Resolutions"
                 options={["1K", "2K", "3K"]}
                 selectedValue={resolution}
-      
+                onSelect={onResolutionChange}
+              />
+            </>
+          ) : (
+            <>
+              {/* Video Options */}
+              <OptionsPicker
+                label="Aspect Ratio"
+                options={["16:9", "9:16", "1:1"]}
+                selectedValue={aspectRatio}
+                onSelect={onAspectRatioChange}
+              />
+
+              {duration && onDurationChange && (
+                <OptionsPicker
+                  label="Duration (sec)"
+                  options={["3s", "5s", "10s"]}
+                  selectedValue={duration}
+                  onSelect={onDurationChange}
+                />
+              )}
+
+              {fps && onFpsChange && (
+                <OptionsPicker
+                  label="Frame Rate"
+                  options={["24", "30", "60"]}
+                  selectedValue={fps}
+                  onSelect={onFpsChange}
+                />
+              )}
+
+              <OptionsPicker
+                label="Resolution"
+                options={["720p", "1080p", "4K"]}
+                selectedValue={resolution}
+                onSelect={onResolutionChange}
+              />
+            </>
+          )}
+        </ScrollView>
+      </View>
+    </Modal>
+  );
+};
