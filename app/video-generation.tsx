@@ -30,10 +30,7 @@ export default function VideoGenScreen() {
       resolution,
       duration,
     });
-    router.push({
-      pathname: "/image-result",
-      params: { type: "video" },
-    });
+    router.push("/video-result");
   };
 
   const handleAIGenerate = () => {

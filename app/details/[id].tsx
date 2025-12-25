@@ -7,7 +7,6 @@ import { EffectsModal } from "@/components/Shared/EffectsModal";
 import { UploadView } from "@/components/Shared/UploadView";
 import {
   clothesSwapEffect,
-  faceSwapEffect,
   hairStyleEffect,
   imageEffects,
   modelConsistencyEffect,
@@ -47,7 +46,6 @@ export default function GenericEffectScreen() {
       ...videoEffects,
       ...tryOnEffects,
       clothesSwapEffect,
-      faceSwapEffect,
       outfitVariationsEffect,
       modelConsistencyEffect,
       hairStyleEffect,
@@ -77,9 +75,14 @@ export default function GenericEffectScreen() {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      // Navigate or show result
-      // For now, let's just go to image-result as a placeholder destination
-      router.push("/image-result");
+      // Determine if it's a video effect
+      const isVideoEffect = videoEffects.some((e) => e.id === Number(id));
+
+      if (isVideoEffect) {
+        router.push("/video-result");
+      } else {
+        router.push("/image-result");
+      }
     }, 2000);
   };
 
