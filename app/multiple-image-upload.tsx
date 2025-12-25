@@ -1,195 +1,153 @@
 import { GradientBackground } from "@/components/GradientBackground";
-import { useFontFamily } from "@/hooks/useFontFamily";
+import { ImageGenHeader } from "@/components/Imagegen/ImageGenHeader";
+import { ModelSelector } from "@/components/Imagegen/ModelSelector";
+import { OptionsBottomSheet } from "@/components/Imagegen/OptionsBottomSheet";
+import { PromptInput } from "@/components/Imagegen/PromptInput";
+import { GenerateButton } from "@/components/MultiImage/GenerateButton";
+import { MultiImageUpload } from "@/components/MultiImage/MultiImageUpload";
 import { useResponsive } from "@/hooks/useResponsive";
 import * as ImagePicker from "expo-image-picker";
-import { useRouter } from "expo-router";
-import React, { useMemo, useState } from "react";
-import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
-import BackIcon from "../assets/icons/BackIcon.svg";
+import React, { useState } from "react";
+import {
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+} from "react-native";
 
-export default function MultipleImageUploadScreen() {
-  const router = useRouter();
-  const fonts = useFontFamily();
-  const { spacing, safeAreaTop, getResponsiveValue, getBorderRadius } =
-    useResponsive();
+export default function ImageGenScreen() {
+  const [images, setImages] = useState<string[]>([]);
+  const [prompt, setPrompt] = useState("");
+  const [showOptions, setShowOptions] = useState(false);
+  const [numberOfImages, setNumberOfImages] = useState(1);
+  const [aspectRatio, setAspectRatio] = useState("2:3");
+  const [resolution, setResolution] = useState("2K");
+  const { spacing, safeAreaBottom } = useResponsive();
 
-  const [selectedImages, setSelectedImages] = useState<string[]>([]);
+  const handleAddImage = async () => {
+    if (images.length >= 10) {
+      Alert.alert("Maximum Reached", "You can upload up to 10 images only");
+      return;
+    }
 
-  // Responsive values
-  const responsiveValues = useMemo(
-    () => ({
-      backIconSize: getResponsiveValue(42, 45, 48, 50, 52),
-      titleSize: getResponsiveValue(18, 20, 22, 24, 26),
-      headerPaddingVertical: spacing.md,
-      buttonHeight: getResponsiveValue(50, 52, 54, 56, 58),
-      imageSize: getResponsiveValue(100, 110, 120, 130, 140),
-    }),
-    [getResponsiveValue, spacing]
-  );
-
-  const pickImages = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
+    const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsMultipleSelection: true,
-      selectionLimit: 10, // Example limit
+      allowsEditing: true,
+      aspect: [3, 4],
       quality: 1,
     });
 
     if (!result.canceled) {
-      setSelectedImages((prev) => [
-        ...prev,
-        ...result.assets.map((asset) => asset.uri),
-      ]);
+      setImages([...images, result.assets[0].uri]);
     }
   };
 
-  const removeImage = (uri: string) => {
-    setSelectedImages((prev) => prev.filter((img) => img !== uri));
+  const handleRemoveImage = (index: number) => {
+    Alert.alert("Remove Image", "Are you sure you want to remove this image?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Remove",
+        style: "destructive",
+        onPress: () => {
+          const newImages = images.filter((_, i) => i !== index);
+          setImages(newImages);
+        },
+      },
+    ]);
   };
 
-  const dynamicStyles = useMemo(
-    () => ({
-      container: {
-        paddingTop: safeAreaTop,
-        paddingHorizontal: spacing.md,
-        flex: 1,
-      },
-      header: {
-        flexDirection: "row" as const,
-        alignItems: "center" as const,
-        justifyContent: "space-between" as const,
-        paddingVertical: responsiveValues.headerPaddingVertical,
-        marginBottom: spacing.lg,
-      },
-      title: {
-        fontSize: responsiveValues.titleSize,
-        fontFamily: fonts.Bold,
-        color: "#FFFFFF",
-      },
-      backButton: {
-        width: responsiveValues.backIconSize,
-        height: responsiveValues.backIconSize,
-        justifyContent: "center" as const,
-        alignItems: "center" as const,
-      },
-      actionButton: {
-        backgroundColor: "#6366F1",
-        height: responsiveValues.buttonHeight,
-        borderRadius: getBorderRadius("large"),
-        justifyContent: "center" as const,
-        alignItems: "center" as const,
-        marginBottom: spacing.lg,
-      },
-      buttonText: {
-        color: "#FFFFFF",
-        fontFamily: fonts.Bold,
-        fontSize: 16,
-      },
-      imageContainer: {
-        flex: 1,
-        marginBottom: spacing.md,
-      },
-      imageWrapper: {
-        margin: spacing.xs,
-        position: "relative" as const,
-      },
-      image: {
-        width: responsiveValues.imageSize,
-        height: responsiveValues.imageSize,
-        borderRadius: getBorderRadius("medium"),
-      },
-      removeButton: {
-        position: "absolute" as const,
-        top: -5,
-        right: -5,
-        backgroundColor: "rgba(0,0,0,0.6)",
-        borderRadius: 12,
-        width: 24,
-        height: 24,
-        justifyContent: "center" as const,
-        alignItems: "center" as const,
-        zIndex: 1,
-      },
-      removeText: {
-        color: "#FFF",
-        fontSize: 14,
-        fontWeight: "bold" as const,
-      },
-    }),
-    [safeAreaTop, spacing, responsiveValues, fonts, getBorderRadius]
-  );
+  const handleGenerate = () => {
+    if (images.length === 0) {
+      Alert.alert("No Images", "Please upload at least one image");
+      return;
+    }
 
-  const renderImageItem = ({ item }: { item: string }) => (
-    <View style={dynamicStyles.imageWrapper}>
-      <TouchableOpacity
-        style={dynamicStyles.removeButton}
-        onPress={() => removeImage(item)}
-      >
-        <Text style={dynamicStyles.removeText}>×</Text>
-      </TouchableOpacity>
-      <Image source={{ uri: item }} style={dynamicStyles.image} />
-    </View>
-  );
+    if (!prompt.trim()) {
+      Alert.alert("No Prompt", "Please enter a prompt");
+      return;
+    }
+
+    console.log("Generate with:", {
+      images,
+      prompt,
+      numberOfImages,
+      aspectRatio,
+      resolution,
+    });
+
+    Alert.alert("Generate", "Starting image generation...");
+  };
+
+  const handleAIGenerate = () => {
+    Alert.alert("AI Generate", "Generating prompt with AI...");
+    // Implement AI prompt generation
+  };
+
+  const handleModelSelect = () => {
+    Alert.alert("Model Selection", "Select AI model");
+    // Navigate to model selection screen
+  };
 
   return (
     <GradientBackground>
-      <View style={dynamicStyles.container}>
-        {/* Header */}
-        <View style={dynamicStyles.header}>
-          <TouchableOpacity
-            onPress={() => router.back()}
-            style={dynamicStyles.backButton}
-            activeOpacity={0.7}
-          >
-            <BackIcon
-              width={responsiveValues.backIconSize}
-              height={responsiveValues.backIconSize}
-            />
-          </TouchableOpacity>
-          <Text style={dynamicStyles.title}>Upload Images</Text>
-          <View style={{ width: responsiveValues.backIconSize }} />
-        </View>
-
-        {/* Action Button */}
-        <TouchableOpacity
-          style={dynamicStyles.actionButton}
-          onPress={pickImages}
-          activeOpacity={0.8}
-        >
-          <Text style={dynamicStyles.buttonText}>
-            {selectedImages.length > 0 ? "Add More Images" : "Select Images"}
-          </Text>
-        </TouchableOpacity>
-
-        {/* Images Grid */}
-        <FlatList
-          data={selectedImages}
-          renderItem={renderImageItem}
-          keyExtractor={(item) => item}
-          numColumns={3}
-          contentContainerStyle={dynamicStyles.imageContainer}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      >
+        <ScrollView
+          style={styles.container}
           showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={{
+            paddingBottom: safeAreaBottom,
+          }}
+        >
+          <ImageGenHeader />
+
+          <ModelSelector
+            modelName="Nano Banana Pro"
+            modelIcon="https://via.placeholder.com/32"
+            onPress={handleModelSelect}
+          />
+
+          <MultiImageUpload
+            images={images}
+            maxImages={10}
+            onAddImage={handleAddImage}
+            onRemoveImage={handleRemoveImage}
+          />
+
+          <PromptInput
+            value={prompt}
+            onChangeText={setPrompt}
+            onAIGenerate={handleAIGenerate}
+          />
+        </ScrollView>
+
+        <GenerateButton
+          onPress={handleGenerate}
+          credits={10}
+          onOptionsPress={() => setShowOptions(true)}
         />
 
-        {selectedImages.length > 0 && (
-          <TouchableOpacity
-            style={[
-              dynamicStyles.actionButton,
-              { backgroundColor: "#34D399", marginTop: spacing.sm },
-            ]} // Success color
-            onPress={() => {
-              // Handle upload logic
-              alert("Ready to upload " + selectedImages.length + " images!");
-            }}
-            activeOpacity={0.8}
-          >
-            <Text style={dynamicStyles.buttonText}>
-              Upload {selectedImages.length} Images
-            </Text>
-          </TouchableOpacity>
-        )}
-      </View>
+        <OptionsBottomSheet
+          isVisible={showOptions}
+          onClose={() => setShowOptions(false)}
+          numberOfImages={numberOfImages}
+          onNumberOfImagesChange={setNumberOfImages}
+          aspectRatio={aspectRatio}
+          onAspectRatioChange={setAspectRatio}
+          resolution={resolution}
+          onResolutionChange={setResolution}
+        />
+      </KeyboardAvoidingView>
     </GradientBackground>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});

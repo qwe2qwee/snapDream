@@ -1,8 +1,7 @@
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
-import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface UploadViewProps {
   onUpload: () => void;
@@ -41,8 +40,8 @@ export const UploadView: React.FC<UploadViewProps> = ({
     },
     stackContainer: {
       position: "relative",
-      width: cardWidth * 2.5,
-      height: cardWidth * 1.5,
+      width: cardWidth * 2,
+      height: cardWidth * 1,
       justifyContent: "center",
       alignItems: "center",
       marginBottom: spacing.lg,
@@ -73,37 +72,41 @@ export const UploadView: React.FC<UploadViewProps> = ({
       shadowRadius: 20,
       elevation: 10,
     },
+    innerUploadArea: {
+      flexGrow: 1,
+      alignItems: "center",
+      justifyContent: "center",
+    },
     uploadText: {
       fontSize: typography.body,
       fontFamily: fonts.Medium,
       color: "#FFFFFF",
       marginTop: spacing.md,
     },
+    emptyImage: {
+      width: "100%",
+      height: "100%",
+    },
   });
-
-  const MockCard = ({ style, color }: { style: any; color: string }) => (
-    <View style={[styles.card, style, { backgroundColor: color }]}>
-      <LinearGradient
-        colors={["transparent", "rgba(0,0,0,0.3)"]}
-        style={{ width: "100%", height: "100%" }}
-      />
-    </View>
-  );
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.dashedBorder}
-        onPress={onUpload}
-        activeOpacity={0.8}
-      >
-        <View style={styles.stackContainer}>
-          <MockCard style={styles.card1} color="#6A4BC6" />
-          <MockCard style={styles.card2} color="#4A90E2" />
-          <MockCard style={styles.card3} color="#D95698" />
-        </View>
-        <Text style={styles.uploadText}>{label}</Text>
-      </TouchableOpacity>
+      <View style={[styles.innerUploadArea, styles.dashedBorder]}>
+        <TouchableOpacity
+          style={styles.dashedBorder}
+          onPress={onUpload}
+          activeOpacity={0.8}
+        >
+          <View style={styles.stackContainer}>
+            <Image
+              source={require("@/assets/images/Group.png")}
+              style={styles.emptyImage}
+              resizeMode="contain"
+            />
+          </View>
+          <Text style={styles.uploadText}>{label}</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };

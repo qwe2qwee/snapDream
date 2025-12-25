@@ -34,9 +34,15 @@ export default function RootLayout() {
         <Stack.Screen name="effects/image" options={{ headerShown: false }} />
         <Stack.Screen name="Upgrade" options={{ headerShown: false }} />
         <Stack.Screen name="image-result" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="multiple-image-upload"
+          options={{ headerShown: false }}
+        />
+
         <Stack.Screen name="video-result" options={{ headerShown: false }} />
         <Stack.Screen name="cloth-swap" options={{ headerShown: false }} />
         <Stack.Screen name="hairstyle/index" options={{ headerShown: false }} />
+
         <Stack.Screen
           name="hairstyle/result"
           options={{ headerShown: false }}
@@ -48,6 +54,10 @@ export default function RootLayout() {
 
         <Stack.Screen
           name="image-generation"
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="outfit-variations"
           options={{ headerShown: false }}
         />
         <Stack.Screen

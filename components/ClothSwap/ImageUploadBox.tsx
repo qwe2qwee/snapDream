@@ -84,8 +84,7 @@ export const ImageUploadBox: React.FC<ImageUploadBoxProps> = ({
     },
     emptyImage: {
       width: emptyImageSize,
-      height: emptyImageSize,
-      marginBottom: spacing.md,
+      height: emptyImageSize - spacing.md,
     },
     uploadText: {
       fontSize: typography.body,

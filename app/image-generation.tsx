@@ -4,7 +4,7 @@ import { ImageGenHeader } from "@/components/Imagegen/ImageGenHeader";
 import { ModelSelector } from "@/components/Imagegen/ModelSelector";
 import { OptionsBottomSheet } from "@/components/Imagegen/OptionsBottomSheet";
 import { PromptInput } from "@/components/Imagegen/PromptInput";
-import { ReferenceImageUploader } from "@/components/Imagegen/ReferenceImageUploader";
+import { useResponsive } from "@/hooks/useResponsive";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -12,9 +12,11 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
+  View,
 } from "react-native";
 
 export default function ImageGenScreen() {
+  const { spacing } = useResponsive();
   const [prompt, setPrompt] = useState("");
   const [showOptions, setShowOptions] = useState(false);
   const [numberOfImages, setNumberOfImages] = useState(1);
@@ -39,10 +41,6 @@ export default function ImageGenScreen() {
     console.log("Select model");
   };
 
-  const handleImageUpload = () => {
-    console.log("Upload reference image");
-  };
-
   return (
     <GradientBackground>
       <KeyboardAvoidingView
@@ -64,19 +62,21 @@ export default function ImageGenScreen() {
             onPress={handleModelSelect}
           />
 
-          <ReferenceImageUploader onUpload={handleImageUpload} />
-
           <PromptInput
             value={prompt}
             onChangeText={setPrompt}
             onAIGenerate={handleAIGenerate}
           />
+          <View style={{ height: spacing.xl }} />
+        </ScrollView>
+
+        <View style={styles.bottomContainer}>
           <GenerateButton
             onPress={handleGenerate}
             credits={10}
             onOptionsPress={() => setShowOptions(true)}
           />
-        </ScrollView>
+        </View>
 
         <OptionsBottomSheet
           isVisible={showOptions}
@@ -96,5 +96,9 @@ export default function ImageGenScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  bottomContainer: {
+    paddingBottom: Platform.OS === "ios" ? 40 : 20,
+    backgroundColor: "transparent",
   },
 });

@@ -2,7 +2,7 @@ import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface UpscaleUploadViewProps {
   onUpload: () => void;
@@ -75,6 +75,10 @@ export const UpscaleUploadView: React.FC<UpscaleUploadViewProps> = ({
       width: "100%",
       height: "100%",
     },
+    emptyImage: {
+      width: "100%",
+      height: "100%",
+    },
     uploadText: {
       fontSize: typography.body,
       fontFamily: fonts.Medium,
@@ -106,11 +110,11 @@ export const UpscaleUploadView: React.FC<UpscaleUploadViewProps> = ({
         activeOpacity={0.8}
       >
         <View style={styles.stackContainer}>
-          {/* simulating the stack */}
-          <MockCard style={styles.card1} color="#6A4BC6" />
-          <MockCard style={styles.card2} color="#4A90E2" />
-          {/* Center card usually main focus */}
-          <MockCard style={styles.card3} color="#D95698" />
+          <Image
+            source={require("@/assets/images/Group2.png")}
+            style={styles.emptyImage}
+            resizeMode="contain"
+          />
         </View>
         <Text style={styles.uploadText}>Upload Image</Text>
       </TouchableOpacity>
