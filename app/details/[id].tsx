@@ -1,6 +1,7 @@
 import { ClothSwapGenerateButton } from "@/components/ClothSwap/ClothSwapGenerateButton";
 import { ClothSwapHeader } from "@/components/ClothSwap/ClothSwapHeader";
 import { GradientBackground } from "@/components/GradientBackground";
+import { PromptInput } from "@/components/Imagegen/PromptInput";
 import { LoadingModal } from "@/components/Modals/LoadingModal";
 import { EffectSelector } from "@/components/Shared/EffectSelector";
 import { EffectsModal } from "@/components/Shared/EffectsModal";
@@ -21,6 +22,8 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useMemo, useState } from "react";
 import {
   Image,
+  KeyboardAvoidingView,
+  Platform,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -36,6 +39,7 @@ export default function GenericEffectScreen() {
   const [selectedImage, setSelectedImage] = useState<string | undefined>(
     undefined
   );
+  const [prompt, setPrompt] = useState("");
   const [loading, setLoading] = useState(false);
   const [showEffectsModal, setShowEffectsModal] = useState(false);
 
@@ -123,54 +127,70 @@ export default function GenericEffectScreen() {
 
   return (
     <GradientBackground>
-      <View style={styles.container}>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.scrollContent}
-        >
-          <ClothSwapHeader title="Image Effects" />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      >
+        <View style={styles.container}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.scrollContent}
+            keyboardShouldPersistTaps="handled"
+          >
+            <ClothSwapHeader title="Image Effects" />
 
-          <EffectSelector
-            title={currentEffect?.title || "Unknown Effect"}
-            icon={currentEffect?.image}
-            onPress={() => setShowEffectsModal(true)}
+            <EffectSelector
+              title={currentEffect?.title || "Unknown Effect"}
+              icon={currentEffect?.image}
+              onPress={() => setShowEffectsModal(true)}
+            />
+
+            {selectedImage ? (
+              <View style={styles.imagePreviewContainer}>
+                <Image
+                  source={{ uri: selectedImage }}
+                  style={styles.previewImage}
+                  resizeMode="cover"
+                />
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={handleRemoveImage}
+                >
+                  <Feather name="x" size={20} color="white" />
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <UploadView onUpload={handleImageUpload} />
+            )}
+
+            {Number(id) === 10 && (
+              <View style={{ marginTop: spacing.sm }}>
+                <PromptInput
+                  value={prompt}
+                  onChangeText={setPrompt}
+                  onAIGenerate={() => console.log("AI Generate prompt")}
+                />
+              </View>
+            )}
+          </ScrollView>
+
+          <ClothSwapGenerateButton
+            onPress={handleGenerate}
+            credits={10}
+            disabled={!selectedImage || loading}
           />
-
-          {selectedImage ? (
-            <View style={styles.imagePreviewContainer}>
-              <Image
-                source={{ uri: selectedImage }}
-                style={styles.previewImage}
-                resizeMode="cover"
-              />
-              <TouchableOpacity
-                style={styles.closeButton}
-                onPress={handleRemoveImage}
-              >
-                <Feather name="x" size={20} color="white" />
-              </TouchableOpacity>
-            </View>
-          ) : (
-            <UploadView onUpload={handleImageUpload} />
-          )}
-        </ScrollView>
-
-        <ClothSwapGenerateButton
-          onPress={handleGenerate}
-          credits={10}
-          disabled={!selectedImage || loading}
-        />
+        </View>
 
         <LoadingModal isVisible={loading} />
 
         <EffectsModal
           isVisible={showEffectsModal}
           onClose={() => setShowEffectsModal(false)}
-          effects={imageEffects} // Passing image effects list
+          effects={imageEffects}
           onSelectEffect={handleEffectChange}
           currentEffectId={Number(id)}
         />
-      </View>
+      </KeyboardAvoidingView>
     </GradientBackground>
   );
 }

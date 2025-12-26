@@ -51,6 +51,9 @@ export default function HomeScreen() {
       case 12: // Upscaler
         router.push("/image-upscale");
         break;
+      case 20: // Video Generate
+        router.push("/video-generation");
+        break;
       default:
         // Generic detail page for single image processing
         // Covers: Color Change (2), Model Swap (3), Background (5), Pose (6),

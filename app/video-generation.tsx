@@ -54,7 +54,7 @@ export default function VideoGenScreen() {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          <ImageGenHeader title="Video Gen" />
+          <ImageGenHeader title="Video Generate" />
 
           <ModelSelector
             modelName="Sora Turbo"

@@ -81,13 +81,22 @@ export const sketchToImageEffect = {
   description: "Turn sketch into realistic image.",
 };
 
-// 10. Static Image to Video
+// 10. Image to Video
 export const imageToVideoEffect = {
   id: 10,
   title: "Image to Video",
   image: IMAGES.video,
   isPremium: true,
   description: "Animate a static image.",
+};
+
+// 20. Video Generate
+export const videoGenerateEffect = {
+  id: 20,
+  title: "Video Generate",
+  image: IMAGES.videoGen,
+  isPremium: false,
+  description: "Generate video from text.",
 };
 
 // 11. Video Styles
@@ -160,13 +169,7 @@ export const imageEffects = [
   lightingEffect,
 ];
 
-export const videoEffects = [
-  imageToVideoEffect,
-  videoStylesEffect,
-  poseGeneratorEffect, // Putting pose here as it implies movement/3D
-  cameraAngleEffect,
-  modelConsistencyEffect,
-];
+export const videoEffects = [videoGenerateEffect, imageToVideoEffect];
 
 // Deprecated or unused but kept to avoid breaking other imports (empty or aliased)
 export const hairstyleEffects = [hairStyleEffect];
