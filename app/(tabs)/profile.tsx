@@ -20,7 +20,7 @@ import { SectionTitle } from "@/components/Profile/SectionTitle";
 import { UpgradeBanner } from "@/components/Profile/UpgradeBanner";
 import { UserProfileCard } from "@/components/Profile/UserProfileCard";
 import { useResponsive } from "@/hooks/useResponsive";
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
 
 export default function ProfileScreen() {
   const { spacing, getResponsiveValue, safeAreaBottom, getIconSize } =
@@ -47,7 +47,7 @@ export default function ProfileScreen() {
   const handleUpgradePress = () => {
     // Perform upgrade action
     if (isLoggedIn && !isSubscribed) {
-      router.push("/Upgrade");
+      router.push("/upgrade");
     } else if (!isLoggedIn) {
       router.push("/(auth)/login");
     }
@@ -100,7 +100,6 @@ export default function ProfileScreen() {
             onPress={() => setIsLoggedIn(true)}
             isLoggedIn={isLoggedIn}
           />
-
           {/* User Info */}
           {isLoggedIn && (
             <UserProfileCard
@@ -117,37 +116,45 @@ export default function ProfileScreen() {
             isSubscribed={true}
             isLoggedIn={isLoggedIn}
           />
-
-          {/* Too Precious Section */}
+          {/* Too precious Section */}
           <SectionTitle title="Too precious!" />
           <MenuSection>
-            <MenuItem
-              icon={<Terms width={iconSize} height={iconSize} />}
-              label="Terms and Conditions"
-            />
-            <MenuItem
-              icon={<Privacy width={iconSize} height={iconSize} />}
-              isMiddleItem
-              label="Privacy Policy"
-            />
-            <MenuItem
-              icon={<Rate width={iconSize} height={iconSize} />}
-              label="Rate App"
-            />
+            <Link href="/terms" asChild>
+              <MenuItem
+                icon={<Terms width={iconSize} height={iconSize} />}
+                label="Terms and Conditions"
+              />
+            </Link>
+            <Link href="/privacy" asChild>
+              <MenuItem
+                icon={<Privacy width={iconSize} height={iconSize} />}
+                isMiddleItem
+                label="Privacy Policy"
+              />
+            </Link>
+            <Link href="/rate-app" asChild>
+              <MenuItem
+                icon={<Rate width={iconSize} height={iconSize} />}
+                label="Rate App"
+              />
+            </Link>
           </MenuSection>
-
           {/* Security Section */}
           <SectionTitle title="Security" />
           <MenuSection>
-            <MenuItem
-              icon={<FeedBack width={iconSize} height={iconSize} />}
-              label="Feedback"
-            />
-            <MenuItem
-              icon={<Contact width={iconSize} height={iconSize} />}
-              isMiddleItem
-              label="Contact Us"
-            />
+            <Link href="/feedback" asChild>
+              <MenuItem
+                icon={<FeedBack width={iconSize} height={iconSize} />}
+                label="Feedback"
+              />
+            </Link>
+            <Link href="/contact" asChild>
+              <MenuItem
+                icon={<Contact width={iconSize} height={iconSize} />}
+                isMiddleItem
+                label="Contact Us"
+              />
+            </Link>
             <MenuItem
               icon={<Logout width={iconSize} height={iconSize} />}
               label="Log Out"

@@ -1,7 +1,7 @@
 import { ClothSwapGenerateButton } from "@/components/ClothSwap/ClothSwapGenerateButton";
-import { ClothSwapHeader } from "@/components/ClothSwap/ClothSwapHeader";
 import { ImageUploadBox } from "@/components/ClothSwap/ImageUploadBox";
 import { GradientBackground } from "@/components/GradientBackground";
+import { ImageGenHeader } from "@/components/Imagegen/ImageGenHeader";
 import { LoadingModal } from "@/components/Modals/LoadingModal";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
@@ -88,7 +88,7 @@ export default function ClothSwapScreen() {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollContent}
         >
-          <ClothSwapHeader />
+          <ImageGenHeader title="Clothes Swap" />
 
           {/* Model Image Upload */}
           <ImageUploadBox

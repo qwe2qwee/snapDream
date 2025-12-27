@@ -1,7 +1,7 @@
-import { ClothSwapGenerateButton } from "@/components/ClothSwap/ClothSwapGenerateButton";
-import { ClothSwapHeader } from "@/components/ClothSwap/ClothSwapHeader";
 import { GradientBackground } from "@/components/GradientBackground";
-import { UpscaleOptions } from "@/components/ImageUpscale/UpscaleOptions";
+import { GenerateButton } from "@/components/Imagegen/GenerateButton";
+import { ImageGenHeader } from "@/components/Imagegen/ImageGenHeader";
+import { UpscaleOptionsBottomSheet } from "@/components/ImageUpscale/UpscaleOptionsBottomSheet";
 import { UpscaleUploadView } from "@/components/ImageUpscale/UpscaleUploadView";
 import { LoadingModal } from "@/components/Modals/LoadingModal";
 import { useResponsive } from "@/hooks/useResponsive";
@@ -11,6 +11,7 @@ import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   Image,
+  Platform,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -28,6 +29,7 @@ export default function ImageUpscaleScreen() {
   );
   const [upscaleFactor, setUpscaleFactor] = useState<"2x" | "4x">("2x");
   const [loading, setLoading] = useState(false);
+  const [showOptions, setShowOptions] = useState(false);
 
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -49,12 +51,8 @@ export default function ImageUpscaleScreen() {
     if (!modelImage) return;
 
     setLoading(true);
-    // Mock generation delay
     setTimeout(() => {
       setLoading(false);
-      // Navigate to result logic here - reusable result page? or new one?
-      // Using existing image-result for now as placeholder or creating a specific one if needed.
-      // The mock shows just the upscale page. Assuming it navigates to result.
       router.push("/image-result");
     }, 2000);
   };
@@ -64,14 +62,14 @@ export default function ImageUpscaleScreen() {
       flex: 1,
     },
     scrollContent: {
-      paddingBottom: safeAreaBottom + 100, // Space for bottom button
+      paddingBottom: safeAreaBottom + 100,
     },
     imagePreviewContainer: {
-      marginHorizontal: spacing.md,
+      marginHorizontal: spacing.lg,
       borderRadius: getBorderRadius("large"),
       overflow: "hidden",
       position: "relative",
-      height: getResponsiveValue(350, 400, 450, 500, 550), // Match upload height
+      height: getResponsiveValue(350, 400, 450, 500, 550),
       marginBottom: spacing.lg,
     },
     previewImage: {
@@ -87,6 +85,10 @@ export default function ImageUpscaleScreen() {
       padding: 6,
       zIndex: 10,
     },
+    bottomContainer: {
+      paddingBottom: Platform.OS === "ios" ? 40 : 20,
+      backgroundColor: "transparent",
+    },
   });
 
   return (
@@ -96,46 +98,45 @@ export default function ImageUpscaleScreen() {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollContent}
         >
-          <ClothSwapHeader title="Image Upscale" />
+          <ImageGenHeader title="Image Upscale" />
 
           {modelImage ? (
-            // Image Preview State
-            <View>
-              <View style={styles.imagePreviewContainer}>
-                <Image
-                  source={{ uri: modelImage }}
-                  style={styles.previewImage}
-                  resizeMode="cover"
-                />
-                <TouchableOpacity
-                  style={styles.closeButton}
-                  onPress={handleRemoveImage}
-                >
-                  <Feather name="x" size={20} color="white" />
-                </TouchableOpacity>
-              </View>
-
-              <UpscaleOptions
-                enhanceModel={enhanceModel}
-                setEnhanceModel={setEnhanceModel}
-                upscaleFactor={upscaleFactor}
-                setUpscaleFactor={setUpscaleFactor}
+            <View style={styles.imagePreviewContainer}>
+              <Image
+                source={{ uri: modelImage }}
+                style={styles.previewImage}
+                resizeMode="cover"
               />
+              <TouchableOpacity
+                style={styles.closeButton}
+                onPress={handleRemoveImage}
+              >
+                <Feather name="x" size={20} color="white" />
+              </TouchableOpacity>
             </View>
           ) : (
-            // Upload State
             <UpscaleUploadView onUpload={pickImage} />
           )}
         </ScrollView>
 
-        {/* Floating Generate Button Area */}
         {modelImage && (
-          <ClothSwapGenerateButton
-            onPress={handleGenerate}
-            credits={10}
-            disabled={loading}
-          />
+          <View style={styles.bottomContainer}>
+            <GenerateButton
+              onPress={handleGenerate}
+              credits={10}
+              onOptionsPress={() => setShowOptions(true)}
+            />
+          </View>
         )}
+
+        <UpscaleOptionsBottomSheet
+          isVisible={showOptions}
+          onClose={() => setShowOptions(false)}
+          enhanceModel={enhanceModel}
+          setEnhanceModel={setEnhanceModel}
+          upscaleFactor={upscaleFactor}
+          setUpscaleFactor={setUpscaleFactor}
+        />
       </View>
       <LoadingModal isVisible={loading} />
     </GradientBackground>

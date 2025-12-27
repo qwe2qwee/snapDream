@@ -27,71 +27,29 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="details/[id]" options={{ headerShown: false }} />
-        <Stack.Screen name="effects/video" options={{ headerShown: false }} />
-        <Stack.Screen name="effects/image" options={{ headerShown: false }} />
-        <Stack.Screen name="Upgrade" options={{ headerShown: false }} />
-        <Stack.Screen name="image-result" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="multiple-image-upload"
-          options={{ headerShown: false }}
-        />
-
-        <Stack.Screen name="video-result" options={{ headerShown: false }} />
-        <Stack.Screen name="cloth-swap" options={{ headerShown: false }} />
-        <Stack.Screen name="hairstyle/index" options={{ headerShown: false }} />
-
-        <Stack.Screen
-          name="hairstyle/result"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="video-generation"
-          options={{ headerShown: false }}
-        />
-
-        <Stack.Screen
-          name="image-generation"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="outfit-variations"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="details/community/[id]"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="details/creations/[id]"
-          options={{ headerShown: false }}
-        />
-
-        <Stack.Screen
-          name="effects/hairstyle"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen name="effects/tryon" options={{ headerShown: false }} />
-
-        <Stack.Screen name="(auth)/login" options={{ headerShown: false }} />
-        <Stack.Screen name="(auth)/register" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="(auth)/forgot-password"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="(auth)/verify-email"
-          options={{ headerShown: false }}
-        />
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          animation: "fade",
+        }}
+      >
+        <Stack.Screen name="index" />
+        <Stack.Screen name="onboarding" />
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="(auth)" />
+        <Stack.Screen name="hairstyle" />
+        <Stack.Screen name="cloth-swap" />
+        <Stack.Screen name="image-result" />
+        <Stack.Screen name="video-result" />
+        <Stack.Screen name="details/[id]" />
+        <Stack.Screen name="[...not-found]" />
+        {/* Specific presentation for modals if needed */}
         <Stack.Screen
           name="modal"
           options={{ presentation: "modal", title: "Modal" }}
         />
       </Stack>
-      <StatusBar style="dark" />
+      <StatusBar style="light" />
     </ThemeProvider>
   );
 }

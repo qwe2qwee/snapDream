@@ -7,6 +7,7 @@ import { GenerateButton } from "@/components/MultiImage/GenerateButton";
 import { MultiImageUpload } from "@/components/MultiImage/MultiImageUpload";
 import { useResponsive } from "@/hooks/useResponsive";
 import * as ImagePicker from "expo-image-picker";
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   Alert,
@@ -16,7 +17,8 @@ import {
   StyleSheet,
 } from "react-native";
 
-export default function ImageGenScreen() {
+export default function OutfitVariationsScreen() {
+  const router = useRouter();
   const [images, setImages] = useState<string[]>([]);
   const [prompt, setPrompt] = useState("");
   const [showOptions, setShowOptions] = useState(false);
@@ -68,25 +70,16 @@ export default function ImageGenScreen() {
       return;
     }
 
-    console.log("Generate with:", {
-      images,
-      prompt,
-      numberOfImages,
-      aspectRatio,
-      resolution,
-    });
-
-    Alert.alert("Generate", "Starting image generation...");
+    // Simulate generation
+    router.push("/image-result");
   };
 
   const handleAIGenerate = () => {
     Alert.alert("AI Generate", "Generating prompt with AI...");
-    // Implement AI prompt generation
   };
 
   const handleModelSelect = () => {
     Alert.alert("Model Selection", "Select AI model");
-    // Navigate to model selection screen
   };
 
   return (
@@ -103,7 +96,7 @@ export default function ImageGenScreen() {
             paddingBottom: safeAreaBottom,
           }}
         >
-          <ImageGenHeader />
+          <ImageGenHeader title="Outfit Variations" />
 
           <ModelSelector
             modelName="Nano Banana Pro"

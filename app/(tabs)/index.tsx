@@ -87,7 +87,7 @@ export default function HomeScreen() {
         <StatusBar barStyle="light-content" backgroundColor="#0D0D0F" />
 
         {/* Header */}
-        <Header credits={5000} onProPress={() => router.push("/Upgrade")} />
+        <Header credits={5000} onProPress={() => router.push("/upgrade")} />
 
         <ScrollView
           style={styles.scrollView}
@@ -97,21 +97,22 @@ export default function HomeScreen() {
             dynamicStyles.scrollContent,
           ]}
         >
-          {/* Feature Cards */}
+          {/* Feature Cards Grid */}
           <View style={[styles.featureCards, dynamicStyles.featureCards]}>
             <FeatureCard
               title="Image Generation"
               gradient={["#1E3A5F", "#0D7377"]}
               image={require("../../assets/icons/imageGen.png")}
-              onPress={() => router.push("/image-generation")}
+              onPress={() => handleEffectPress(8)}
             />
             <FeatureCard
               title="Video Generation"
               gradient={["#2D1B4E", "#1E3A5F"]}
               image={require("../../assets/icons/videoGen.png")}
-              onPress={() => router.push("/video-generation")}
+              onPress={() => handleEffectPress(20)}
             />
           </View>
+
           <View
             style={[
               styles.featureCards,
@@ -123,13 +124,13 @@ export default function HomeScreen() {
               title="Cloth Swap"
               gradient={["#4A148C", "#880E4F"]}
               image={require("../../assets/icons/imageGen.png")}
-              onPress={() => router.push("/cloth-swap")}
+              onPress={() => handleEffectPress(1)}
             />
             <FeatureCard
               title="Hair Style"
               gradient={["#FF6B6B", "#556270"]}
-              image={require("../../assets/icons/imageGen.png")} // Placeholder
-              onPress={() => router.push("/hairstyle")}
+              image={require("../../assets/icons/imageGen.png")}
+              onPress={() => handleEffectPress(16)}
             />
           </View>
 

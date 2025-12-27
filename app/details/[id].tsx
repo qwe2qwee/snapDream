@@ -1,6 +1,6 @@
 import { ClothSwapGenerateButton } from "@/components/ClothSwap/ClothSwapGenerateButton";
-import { ClothSwapHeader } from "@/components/ClothSwap/ClothSwapHeader";
 import { GradientBackground } from "@/components/GradientBackground";
+import { ImageGenHeader } from "@/components/Imagegen/ImageGenHeader";
 import { PromptInput } from "@/components/Imagegen/PromptInput";
 import { LoadingModal } from "@/components/Modals/LoadingModal";
 import { EffectSelector } from "@/components/Shared/EffectSelector";
@@ -137,7 +137,7 @@ export default function GenericEffectScreen() {
             contentContainerStyle={styles.scrollContent}
             keyboardShouldPersistTaps="handled"
           >
-            <ClothSwapHeader title="Image Effects" />
+            <ImageGenHeader title={currentEffect?.title || "Image Effects"} />
 
             <EffectSelector
               title={currentEffect?.title || "Unknown Effect"}

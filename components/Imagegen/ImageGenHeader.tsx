@@ -55,7 +55,11 @@ export const ImageGenHeader: React.FC<ImageGenHeaderProps> = ({
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} activeOpacity={0.7}>
+        <TouchableOpacity
+          onPress={() => router.back()}
+          activeOpacity={0.7}
+          style={styles.backButton}
+        >
           <BackButton width={backButtonSize} height={backButtonSize} />
         </TouchableOpacity>
 

@@ -111,7 +111,7 @@ export const UpscaleUploadView: React.FC<UpscaleUploadViewProps> = ({
       >
         <View style={styles.stackContainer}>
           <Image
-            source={require("@/assets/images/Group2.png")}
+            source={require("@/assets/images/Group.png")}
             style={styles.emptyImage}
             resizeMode="contain"
           />
