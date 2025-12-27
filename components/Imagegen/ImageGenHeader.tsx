@@ -1,8 +1,8 @@
-import BackButton from "@/assets/icons/BackIcon.svg";
+import BackIcon from "@/assets/icons/BackIcon.svg";
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
 import { useRouter } from "expo-router";
-import React from "react";
+import React, { useMemo } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface ImageGenHeaderProps {
@@ -14,10 +14,63 @@ export const ImageGenHeader: React.FC<ImageGenHeaderProps> = ({
 }) => {
   const router = useRouter();
   const fonts = useFontFamily();
-  const { spacing, typography, safeAreaTop, getResponsiveValue } =
-    useResponsive();
+  const {
+    spacing,
+    typography,
+    safeAreaTop,
+    getResponsiveValue,
+    getTabBarHeight,
+    isTablet,
+  } = useResponsive();
 
-  const backButtonSize = getResponsiveValue(40, 44, 48, 50, 52);
+  // Responsive values with memoization
+  const responsiveValues = useMemo(
+    () => ({
+      // Back button icon size
+      backIconSize: getResponsiveValue(42, 45, 48, 50, 52),
+
+      // Title font size
+      titleSize: getResponsiveValue(18, 20, 22, 24, 26),
+
+      // Header vertical padding
+      headerPaddingVertical: spacing.md,
+
+      // Placeholder width (balance header)
+      placeholderWidth: getResponsiveValue(40, 45, 48, 50, 52),
+
+      // Tab bar height for grid
+      tabBarHeight: getTabBarHeight(true),
+    }),
+    [spacing, getResponsiveValue, getTabBarHeight]
+  );
+
+  // Dynamic styles
+  const dynamicStyles = useMemo(
+    () => ({
+      container: {
+        paddingTop: safeAreaTop,
+      },
+      header: {
+        paddingHorizontal: isTablet ? spacing.lg : spacing.md,
+        paddingVertical: responsiveValues.headerPaddingVertical,
+        flexDirection: "row" as const,
+        alignItems: "center" as const,
+        justifyContent: "space-between" as const,
+      },
+      backButton: {
+        width: responsiveValues.backIconSize,
+        height: responsiveValues.backIconSize,
+      },
+      title: {
+        fontSize: responsiveValues.titleSize,
+        fontFamily: fonts.Bold,
+      },
+      placeholder: {
+        width: responsiveValues.placeholderWidth,
+      },
+    }),
+    [safeAreaTop, spacing, fonts, responsiveValues, isTablet]
+  );
 
   const styles = StyleSheet.create({
     container: {
@@ -31,9 +84,6 @@ export const ImageGenHeader: React.FC<ImageGenHeaderProps> = ({
       justifyContent: "space-between",
     },
     backButton: {
-      width: backButtonSize,
-      height: backButtonSize,
-      borderRadius: backButtonSize / 2,
       backgroundColor: "rgba(255, 255, 255, 0.1)",
       justifyContent: "center",
       alignItems: "center",
@@ -47,25 +97,23 @@ export const ImageGenHeader: React.FC<ImageGenHeaderProps> = ({
       right: 0,
       textAlign: "center",
     },
-    spacer: {
-      width: backButtonSize,
-    },
   });
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
+    <View style={dynamicStyles.container}>
+      <View style={dynamicStyles.header}>
         <TouchableOpacity
           onPress={() => router.back()}
+          style={dynamicStyles.backButton}
           activeOpacity={0.7}
-          style={styles.backButton}
         >
-          <BackButton width={backButtonSize} height={backButtonSize} />
+          <BackIcon
+            width={responsiveValues.backIconSize}
+            height={responsiveValues.backIconSize}
+          />
         </TouchableOpacity>
 
         <Text style={styles.title}>{title}</Text>
-
-        <View style={styles.spacer} />
       </View>
     </View>
   );
