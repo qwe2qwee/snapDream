@@ -1,3 +1,4 @@
+import useLanguageStore from "@/store/useLanguageStore";
 import React, { useMemo } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
@@ -16,6 +17,8 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
   onPress,
   isLoggedIn,
 }) => {
+  const { t, currentLanguage } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
   const {
     spacing,
     getResponsiveValue,
@@ -73,7 +76,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
       },
       title: {
         fontSize: responsiveValues.titleSize,
-        fontFamily: fonts.Bold,
+        fontFamily: isArabic ? "Zain-Bold" : fonts.Bold,
         letterSpacing: responsiveValues.letterSpacing,
       },
       proButton: {
@@ -83,7 +86,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
       },
       proButtonText: {
         fontSize: responsiveValues.textSize,
-        fontFamily: fonts.Bold,
+        fontFamily: isArabic ? "Zain-Bold" : fonts.Bold,
       },
     }),
     [responsiveValues, fonts]
@@ -101,7 +104,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
             style={[styles.proButton, dynamicStyles.proButton]}
           >
             <Text style={[styles.proButtonText, dynamicStyles.proButtonText]}>
-              Log In
+              {t("auth.login")}
             </Text>
           </LinearGradient>
         </TouchableOpacity>

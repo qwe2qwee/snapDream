@@ -1,3 +1,4 @@
+import useLanguageStore from "@/store/useLanguageStore";
 import { useRouter } from "expo-router";
 import React, { useMemo } from "react";
 import { ScrollView, StatusBar, StyleSheet, View } from "react-native";
@@ -16,6 +17,9 @@ import { useResponsive } from "@/hooks/useResponsive";
 
 export default function HomeScreen() {
   const router = useRouter();
+  const { currentLanguage, t } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
+
   const {
     spacing,
     safeAreaTop,
@@ -100,13 +104,13 @@ export default function HomeScreen() {
           {/* Feature Cards Grid */}
           <View style={[styles.featureCards, dynamicStyles.featureCards]}>
             <FeatureCard
-              title="Image Generation"
+              title={t("features.imageGen.title")}
               gradient={["#1E3A5F", "#0D7377"]}
               image={require("../../assets/icons/imageGen.png")}
               onPress={() => handleEffectPress(8)}
             />
             <FeatureCard
-              title="Video Generation"
+              title={t("features.videoGen.title")}
               gradient={["#2D1B4E", "#1E3A5F"]}
               image={require("../../assets/icons/videoGen.png")}
               onPress={() => handleEffectPress(20)}
@@ -121,13 +125,13 @@ export default function HomeScreen() {
             ]}
           >
             <FeatureCard
-              title="Cloth Swap"
+              title={t("clothSwap.title")}
               gradient={["#4A148C", "#880E4F"]}
               image={require("../../assets/icons/imageGen.png")}
               onPress={() => handleEffectPress(1)}
             />
             <FeatureCard
-              title="Hair Style"
+              title={t("hairstyle.title")}
               gradient={["#FF6B6B", "#556270"]}
               image={require("../../assets/icons/imageGen.png")}
               onPress={() => handleEffectPress(16)}
@@ -136,7 +140,8 @@ export default function HomeScreen() {
 
           {/* Video Effects Section */}
           <EffectsSection
-            title="Video Effects"
+            title={t("home.videoEffects")}
+            seeAllText={t("home.seeAll")}
             effects={videoEffects}
             onSeeAll={() => router.push("/effects/video")}
             onEffectPress={handleEffectPress}
@@ -144,7 +149,8 @@ export default function HomeScreen() {
 
           {/* Image Effects Section */}
           <EffectsSection
-            title="Image Effects"
+            title={t("home.imageEffects")}
+            seeAllText={t("home.seeAll")}
             effects={imageEffects}
             onSeeAll={() => router.push("/effects/image")}
             onEffectPress={handleEffectPress}
@@ -152,7 +158,8 @@ export default function HomeScreen() {
 
           {/* Hairstyle Changer Section */}
           <EffectsSection
-            title="Hairstyle Changer"
+            title={t("hairstyle.title")}
+            seeAllText={t("home.seeAll")}
             effects={hairstyleEffects}
             onSeeAll={() => router.push("/effects/hairstyle")}
             onEffectPress={handleEffectPress}
@@ -160,7 +167,8 @@ export default function HomeScreen() {
 
           {/* Try-on Clothes Section */}
           <EffectsSection
-            title="Try-on Clothes"
+            title={t("clothSwap.title")}
+            seeAllText={t("home.seeAll")}
             effects={tryOnEffects}
             onSeeAll={() => router.push("/effects/tryon")}
             onEffectPress={handleEffectPress}

@@ -4,14 +4,15 @@ import { StyleSheet, Text, View } from "react-native";
 import EmptyIcon from "@/assets/icons/emptyIcon.svg";
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 
 interface EmptyStateProps {
   message?: string;
 }
 
-export const EmptyState: React.FC<EmptyStateProps> = ({
-  message = "Oops! No creations.",
-}) => {
+export const EmptyState: React.FC<EmptyStateProps> = ({ message }) => {
+  const { t, currentLanguage } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
   const { spacing, getResponsiveValue, getIconSize, getTabBarHeight } =
     useResponsive();
 
@@ -46,7 +47,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
       },
       emptyText: {
         fontSize: responsiveValues.fontSize,
-        fontFamily: fonts.Regular,
+        fontFamily: isArabic ? "Zain-Regular" : fonts.Regular,
       },
     }),
     [responsiveValues, fonts]
@@ -62,7 +63,9 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
           height={responsiveValues.iconSize}
         />
       </View>
-      <Text style={[styles.emptyText, dynamicStyles.emptyText]}>{message}</Text>
+      <Text style={[styles.emptyText, dynamicStyles.emptyText]}>
+        {message || t("creations.noCreations")}
+      </Text>
     </View>
   );
 };

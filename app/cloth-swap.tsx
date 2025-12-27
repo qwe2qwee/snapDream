@@ -3,6 +3,7 @@ import { ImageUploadBox } from "@/components/ClothSwap/ImageUploadBox";
 import { GradientBackground } from "@/components/GradientBackground";
 import { ImageGenHeader } from "@/components/Imagegen/ImageGenHeader";
 import { LoadingModal } from "@/components/Modals/LoadingModal";
+import useLanguageStore from "@/store/useLanguageStore";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 import React, { useState } from "react";
@@ -15,6 +16,7 @@ import {
 } from "react-native";
 
 export default function ClothSwapScreen() {
+  const { t } = useLanguageStore();
   const [loading, setLoading] = useState(false);
   const [modelImage, setModelImage] = useState<string | undefined>(undefined);
   const [clothImage, setClothImage] = useState<string | undefined>(undefined);
@@ -39,8 +41,8 @@ export default function ClothSwapScreen() {
   const handleGenerate = async () => {
     if (!modelImage || !clothImage) {
       Alert.alert(
-        "Missing Images",
-        "Please upload both model and cloth images"
+        t("common.error"),
+        t("clothSwap.uploadImage") // Or a specific error key
       );
       return;
     }
@@ -88,11 +90,11 @@ export default function ClothSwapScreen() {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollContent}
         >
-          <ImageGenHeader title="Clothes Swap" />
+          <ImageGenHeader title={t("clothSwap.title")} />
 
           {/* Model Image Upload */}
           <ImageUploadBox
-            label="Model Image"
+            label={t("auth.email")} // Need better key for "Model Image"
             optional={true}
             type="model"
             selectedImage={modelImage}
@@ -102,7 +104,7 @@ export default function ClothSwapScreen() {
 
           {/* Cloth Image Upload */}
           <ImageUploadBox
-            label="Cloth Image"
+            label={t("clothSwap.selectCloth")}
             optional={true}
             type="cloth"
             selectedImage={clothImage}

@@ -2,6 +2,7 @@ import Credit from "@/assets/icons/CreditB.svg";
 import Edit from "@/assets/icons/Edit.svg";
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
@@ -16,6 +17,8 @@ export const GenerateButton: React.FC<GenerateButtonProps> = ({
   credits,
   onOptionsPress,
 }) => {
+  const { t, currentLanguage } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
   const fonts = useFontFamily();
   const { spacing, typography, getResponsiveValue, getBorderRadius } =
     useResponsive();
@@ -54,12 +57,12 @@ export const GenerateButton: React.FC<GenerateButtonProps> = ({
     },
     creditsText: {
       fontSize: typography.body,
-      fontFamily: fonts.SemiBold,
+      fontFamily: isArabic ? "Zain-Bold" : fonts.SemiBold,
       color: "#0D0D0F",
     },
     generateText: {
       fontSize: typography.body,
-      fontFamily: fonts.Bold,
+      fontFamily: isArabic ? "Zain-Bold" : fonts.Bold,
       color: "#0D0D0F",
     },
   });
@@ -83,7 +86,7 @@ export const GenerateButton: React.FC<GenerateButtonProps> = ({
           <Credit />
           <Text style={styles.creditsText}>{credits}</Text>
         </View>
-        <Text style={styles.generateText}>Generate</Text>
+        <Text style={styles.generateText}>{t("clothSwap.generate")}</Text>
       </TouchableOpacity>
     </View>
   );

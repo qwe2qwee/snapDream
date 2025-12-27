@@ -7,6 +7,7 @@ import { SignUpLink } from "@/components/Auth/SignUpLink";
 import { SocialLoginButtons } from "@/components/Auth/SocialLoginButtons";
 import { GradientBackground } from "@/components/GradientBackground";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -18,6 +19,8 @@ import {
 } from "react-native";
 
 export default function LoginScreen() {
+  const { t, currentLanguage } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
   const { spacing, safeAreaTop, safeAreaBottom } = useResponsive();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -76,8 +79,8 @@ export default function LoginScreen() {
           <View style={styles.form}>
             {/* Email Input */}
             <LoginInput
-              label="Email"
-              placeholder="Email"
+              label={t("auth.email")}
+              placeholder={t("auth.email")}
               value={email}
               onChangeText={setEmail}
               icon="mail"
@@ -86,8 +89,8 @@ export default function LoginScreen() {
 
             {/* Password Input */}
             <LoginInput
-              label="Password"
-              placeholder="Password"
+              label={t("auth.password")}
+              placeholder={t("auth.password")}
               value={password}
               onChangeText={setPassword}
               icon="lock"
@@ -98,7 +101,7 @@ export default function LoginScreen() {
             <ForgotPasswordLink onPress={handleForgotPassword} />
 
             {/* Login Button */}
-            <LoginButton onPress={handleLogin} text="Login" />
+            <LoginButton onPress={handleLogin} text={t("auth.login")} />
 
             {/* Sign Up Link */}
             <SignUpLink onPress={handleSignUp} />

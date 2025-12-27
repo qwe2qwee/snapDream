@@ -5,6 +5,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 
 interface FeatureCardProps {
   title: string;
@@ -19,6 +20,9 @@ export const FeatureCard: React.FC<FeatureCardProps> = ({
   image,
   onPress,
 }) => {
+  const { currentLanguage } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
+
   const {
     spacing,
     getResponsiveValue,
@@ -78,7 +82,7 @@ export const FeatureCard: React.FC<FeatureCardProps> = ({
       },
       featureTitle: {
         fontSize: responsiveValues.titleSize,
-        fontFamily: fonts.Medium,
+        fontFamily: isArabic ? "Zain-Bold" : fonts.Medium,
         lineHeight: responsiveValues.lineHeight,
       },
       featureImage: {

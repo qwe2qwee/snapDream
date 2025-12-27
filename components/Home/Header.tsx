@@ -5,6 +5,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import CreditsIcon from "@/assets/icons/credits.svg";
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 
 interface HeaderProps {
   credits?: number;
@@ -17,6 +18,9 @@ export const Header: React.FC<HeaderProps> = ({
   onProPress,
   isSubscribed,
 }) => {
+  const { currentLanguage, t } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
+
   const {
     spacing,
     typography,
@@ -73,8 +77,8 @@ export const Header: React.FC<HeaderProps> = ({
         paddingBottom: spacing.md,
       },
       logo: {
-        fontSize: responsiveValues.logoSize,
-        fontFamily: fonts.Bold,
+        fontSize: responsiveValues.logoSize - spacing.xs,
+        fontFamily: "SFProDisplay-Bold", // leave it always bold En
       },
       headerRight: {
         gap: responsiveValues.headerGap,
@@ -87,7 +91,7 @@ export const Header: React.FC<HeaderProps> = ({
       },
       creditsText: {
         fontSize: responsiveValues.textSize,
-        fontFamily: fonts.SemiBold,
+        fontFamily: isArabic ? "Zain-Bold" : fonts.SemiBold,
       },
       proButton: {
         paddingVertical: responsiveValues.pillPaddingVertical,
@@ -96,7 +100,7 @@ export const Header: React.FC<HeaderProps> = ({
       },
       proButtonText: {
         fontSize: responsiveValues.textSize,
-        fontFamily: fonts.Bold,
+        fontFamily: isArabic ? "Zain-Bold" : fonts.Bold,
       },
     }),
     [spacing, fonts, responsiveValues, isTablet]
@@ -107,7 +111,9 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <View style={[styles.header, dynamicStyles.header]}>
-      <Text style={[styles.logo, dynamicStyles.logo]}>SnapDream</Text>
+      <Text style={[styles.logo, dynamicStyles.logo]}>
+        {t("common.appName")}
+      </Text>
 
       <View style={[styles.headerRight, dynamicStyles.headerRight]}>
         {/* Credits display */}
@@ -133,7 +139,7 @@ export const Header: React.FC<HeaderProps> = ({
               style={[styles.proButton, dynamicStyles.proButton]}
             >
               <Text style={[styles.proButtonText, dynamicStyles.proButtonText]}>
-                Go Pro
+                {t("settings.upgrade")}
               </Text>
             </LinearGradient>
           </TouchableOpacity>

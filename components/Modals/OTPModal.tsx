@@ -1,6 +1,7 @@
 import Close from "@/assets/icons/Close.svg";
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import React, { useMemo, useRef, useState } from "react";
 import {
   StyleSheet,
@@ -25,11 +26,17 @@ export const OTPModal: React.FC<OTPModalProps> = ({
   isVisible,
   onClose,
   onVerify,
-  title = "Verify Your Email",
-  subtitle = "We've sent a verification code to",
+  title,
+  subtitle,
   email = "your email",
   onModalHide,
 }) => {
+  const { t, currentLanguage } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
+
+  const displayTitle = title || t("auth.verifyEmail");
+  const displaySubtitle = subtitle || t("auth.verifyDesc");
+
   const { spacing, getResponsiveValue, getBorderRadius, isTablet, width } =
     useResponsive();
   const fonts = useFontFamily();
@@ -99,17 +106,17 @@ export const OTPModal: React.FC<OTPModalProps> = ({
       },
       title: {
         fontSize: responsiveValues.titleSize,
-        fontFamily: fonts.SemiBold,
+        fontFamily: isArabic ? "Zain-Bold" : fonts.SemiBold,
         marginBottom: spacing.sm,
       },
       subtitle: {
         fontSize: responsiveValues.subtitleSize,
-        fontFamily: fonts.Regular,
+        fontFamily: isArabic ? "Zain-Regular" : fonts.Regular,
         marginBottom: spacing.xs / 2,
       },
       email: {
         fontSize: responsiveValues.emailSize,
-        fontFamily: fonts.SemiBold,
+        fontFamily: isArabic ? "Zain-Bold" : fonts.SemiBold,
         marginBottom: spacing.xl,
       },
       otpBox: {
@@ -127,7 +134,7 @@ export const OTPModal: React.FC<OTPModalProps> = ({
       },
       buttonText: {
         fontSize: responsiveValues.buttonTextSize,
-        fontFamily: fonts.Bold,
+        fontFamily: isArabic ? "Zain-Bold" : fonts.Bold,
       },
     }),
     [spacing, fonts, responsiveValues]
@@ -161,11 +168,11 @@ export const OTPModal: React.FC<OTPModalProps> = ({
         </TouchableOpacity>
 
         {/* Title */}
-        <Text style={[styles.title, dynamicStyles.title]}>{title}</Text>
+        <Text style={[styles.title, dynamicStyles.title]}>{displayTitle}</Text>
 
         {/* Subtitle */}
         <Text style={[styles.subtitle, dynamicStyles.subtitle]}>
-          {subtitle}
+          {displaySubtitle}
         </Text>
         <Text style={[styles.email, dynamicStyles.email]}>{email}</Text>
 
@@ -204,7 +211,7 @@ export const OTPModal: React.FC<OTPModalProps> = ({
           disabled={!isComplete}
         >
           <Text style={[styles.buttonText, dynamicStyles.buttonText]}>
-            Verify
+            {t("auth.verify")}
           </Text>
         </TouchableOpacity>
 
@@ -213,10 +220,21 @@ export const OTPModal: React.FC<OTPModalProps> = ({
           <Text
             style={[
               styles.resendText,
-              { fontSize: responsiveValues.subtitleSize },
+              {
+                fontSize: responsiveValues.subtitleSize,
+                fontFamily: isArabic ? "Zain-Regular" : fonts.Regular,
+              },
             ]}
           >
-            Didn't receive code? <Text style={styles.resendLink}>Resend</Text>
+            {t("auth.didNotReceive")}{" "}
+            <Text
+              style={[
+                styles.resendLink,
+                { fontFamily: isArabic ? "Zain-Bold" : fonts.SemiBold },
+              ]}
+            >
+              {t("auth.resend")}
+            </Text>
           </Text>
         </TouchableOpacity>
       </View>

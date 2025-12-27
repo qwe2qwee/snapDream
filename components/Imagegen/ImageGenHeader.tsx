@@ -1,6 +1,7 @@
 import BackIcon from "@/assets/icons/BackIcon.svg";
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import { useRouter } from "expo-router";
 import React, { useMemo } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -9,11 +10,13 @@ interface ImageGenHeaderProps {
   title?: string;
 }
 
-export const ImageGenHeader: React.FC<ImageGenHeaderProps> = ({
-  title = "Image Gen",
-}) => {
+export const ImageGenHeader: React.FC<ImageGenHeaderProps> = ({ title }) => {
+  const { currentLanguage, t } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
   const router = useRouter();
   const fonts = useFontFamily();
+
+  const displayTitle = title || t("features.imageGen.title");
   const {
     spacing,
     typography,
@@ -63,7 +66,7 @@ export const ImageGenHeader: React.FC<ImageGenHeaderProps> = ({
       },
       title: {
         fontSize: responsiveValues.titleSize,
-        fontFamily: fonts.Bold,
+        fontFamily: isArabic ? "Zain-Bold" : fonts.Bold,
       },
       placeholder: {
         width: responsiveValues.placeholderWidth,
@@ -113,7 +116,7 @@ export const ImageGenHeader: React.FC<ImageGenHeaderProps> = ({
           />
         </TouchableOpacity>
 
-        <Text style={styles.title}>{title}</Text>
+        <Text style={dynamicStyles.title}>{displayTitle}</Text>
       </View>
     </View>
   );

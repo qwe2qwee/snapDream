@@ -2,6 +2,7 @@ import Close from "@/assets/icons/Close.svg";
 import Success from "@/assets/icons/Success.svg";
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import React, { useMemo } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Modal from "react-native-modal";
@@ -21,12 +22,19 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
   isVisible,
   onClose,
   onContinue,
-  title = "Success",
-  subtitle = "Your email has been successfully verified.\nYou can now proceed.",
-  buttonText = "Let's Go",
+  title,
+  subtitle,
+  buttonText,
   showCloseButton = true,
   onModalHide,
 }) => {
+  const { t, currentLanguage } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
+
+  const displayTitle = title || t("common.done");
+  const displaySubtitle = subtitle || t("auth.successVerified");
+  const displayButtonText = buttonText || t("auth.letsGo");
+
   const { spacing, getResponsiveValue, getBorderRadius, isTablet, width } =
     useResponsive();
   const fonts = useFontFamily();
@@ -70,12 +78,12 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
       },
       title: {
         fontSize: responsiveValues.titleSize,
-        fontFamily: fonts.Bold,
+        fontFamily: isArabic ? "Zain-Bold" : fonts.Bold,
         marginBottom: spacing.sm,
       },
       subtitle: {
         fontSize: responsiveValues.subtitleSize,
-        fontFamily: fonts.Regular,
+        fontFamily: isArabic ? "Zain-Regular" : fonts.Regular,
         marginBottom: spacing.xl,
         lineHeight: responsiveValues.subtitleSize * 1.5,
       },
@@ -85,7 +93,7 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
       },
       buttonText: {
         fontSize: responsiveValues.buttonTextSize,
-        fontFamily: fonts.Bold,
+        fontFamily: isArabic ? "Zain-Bold" : fonts.Bold,
       },
     }),
     [spacing, fonts, responsiveValues]
@@ -130,11 +138,11 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
         </View>
 
         {/* Title */}
-        <Text style={[styles.title, dynamicStyles.title]}>{title}</Text>
+        <Text style={[styles.title, dynamicStyles.title]}>{displayTitle}</Text>
 
         {/* Subtitle */}
         <Text style={[styles.subtitle, dynamicStyles.subtitle]}>
-          {subtitle}
+          {displaySubtitle}
         </Text>
 
         {/* Continue Button */}
@@ -147,7 +155,7 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
           activeOpacity={0.9}
         >
           <Text style={[styles.buttonText, dynamicStyles.buttonText]}>
-            {buttonText}
+            {displayButtonText}
           </Text>
         </TouchableOpacity>
       </View>

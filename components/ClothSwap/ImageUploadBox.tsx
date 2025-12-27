@@ -1,5 +1,6 @@
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import { Feather } from "@expo/vector-icons";
 import React from "react";
 import {
@@ -30,6 +31,8 @@ export const ImageUploadBox: React.FC<ImageUploadBoxProps> = ({
   onRemove,
   isLoading = false,
 }) => {
+  const { currentLanguage, t } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
   const fonts = useFontFamily();
   const { spacing, typography, getBorderRadius, getResponsiveValue } =
     useResponsive();
@@ -50,7 +53,7 @@ export const ImageUploadBox: React.FC<ImageUploadBoxProps> = ({
     },
     label: {
       fontSize: typography.caption,
-      fontFamily: fonts.Regular,
+      fontFamily: isArabic ? "Zain-Bold" : fonts.Regular,
       color: "#FFFFFF",
     },
     optional: {
@@ -88,7 +91,7 @@ export const ImageUploadBox: React.FC<ImageUploadBoxProps> = ({
     },
     uploadText: {
       fontSize: typography.body,
-      fontFamily: fonts.Medium,
+      fontFamily: isArabic ? "Zain-Bold" : fonts.Medium,
       color: "#FFFFFF",
     },
     filledState: {
@@ -129,7 +132,11 @@ export const ImageUploadBox: React.FC<ImageUploadBoxProps> = ({
       {/* Label */}
       <View style={styles.labelContainer}>
         <Text style={styles.label}>{label}</Text>
-        {optional && <Text style={styles.optional}>(Optional)</Text>}
+        {optional && (
+          <Text style={styles.optional}>
+            ({t("common.optional") || (isArabic ? "اختياري" : "Optional")})
+          </Text>
+        )}
       </View>
 
       {/* Upload Area */}
@@ -180,7 +187,9 @@ export const ImageUploadBox: React.FC<ImageUploadBoxProps> = ({
                   resizeMode="contain"
                 />
               )}
-              <Text style={styles.uploadText}>Upload Image</Text>
+              <Text style={styles.uploadText}>
+                {t("clothSwap.uploadImage")}
+              </Text>
             </View>
           </View>
         )}

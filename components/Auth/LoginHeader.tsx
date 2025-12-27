@@ -1,5 +1,6 @@
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -11,11 +12,15 @@ interface LoginHeaderProps {
 }
 
 export const LoginHeader: React.FC<LoginHeaderProps> = ({
-  title = "Hey, welcome back!",
+  title,
   subtitle = "",
 }) => {
+  const { currentLanguage, t } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
   const router = useRouter();
   const fonts = useFontFamily();
+
+  const displayTitle = title || t("auth.loginWelcome");
   const { spacing, getResponsiveValue, safeAreaTop } = useResponsive();
 
   const styles = StyleSheet.create({
@@ -34,14 +39,14 @@ export const LoginHeader: React.FC<LoginHeaderProps> = ({
     },
     welcomeText: {
       fontSize: getResponsiveValue(26, 28, 30, 32, 34),
-      fontFamily: fonts.Bold,
+      fontFamily: isArabic ? "Zain-Bold" : fonts.Bold,
       color: "#FFFFFF",
       marginBottom: spacing.xs,
       marginTop: safeAreaTop,
     },
     subtitle: {
-      fontSize: getResponsiveValue(6, 8, 10, 12, 14),
-      fontFamily: fonts.Bold,
+      fontSize: getResponsiveValue(12, 14, 16, 18, 20),
+      fontFamily: isArabic ? "Zain-Regular" : fonts.Bold,
       color: "rgba(255, 255, 255, 0.8)",
     },
   });

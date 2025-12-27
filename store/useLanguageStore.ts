@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
+import translations from "../langs";
 
 // Type definitions
 export type Language = "en" | "ar";
@@ -10,6 +11,7 @@ export interface LanguageInfo {
   isRTL: boolean;
   isArabic: boolean;
   isEnglish: boolean;
+  t: (keyPath: string) => string;
 }
 
 interface LanguageState {
@@ -25,19 +27,34 @@ interface LanguageActions {
   toggleLanguage: () => void;
   setHydrated: () => void;
   getLanguageInfo: () => LanguageInfo;
+  t: (keyPath: string) => string;
 }
 
 export type LanguageStore = LanguageState & LanguageActions;
 
-// Initialize AsyncStorage (no setup needed, works out of the box with Expo)
+// Helper function to get translation by path
+const getTranslation = (lang: Language, path: string): string => {
+  const keys = path.split(".");
+  let result: any = translations[lang];
+
+  for (const key of keys) {
+    if (result && typeof result === "object" && key in result) {
+      result = result[key];
+    } else {
+      return path; // Fallback to path if not found
+    }
+  }
+
+  return typeof result === "string" ? result : path;
+};
 
 // Language store with persistence using AsyncStorage
 const useLanguageStore = create<LanguageStore>()(
   persist(
     (set, get): LanguageStore => ({
       // State
-      currentLanguage: "en", // default to English
-      isRTL: false,
+      currentLanguage: "ar", // default to Arabic
+      isRTL: true,
       isHydrated: false,
 
       // Actions
@@ -72,7 +89,13 @@ const useLanguageStore = create<LanguageStore>()(
           isRTL: state.isRTL,
           isArabic: state.currentLanguage === "ar",
           isEnglish: state.currentLanguage === "en",
+          t: (path: string) => getTranslation(state.currentLanguage, path),
         };
+      },
+
+      // Translation function
+      t: (path: string): string => {
+        return getTranslation(get().currentLanguage, path);
       },
     }),
     {

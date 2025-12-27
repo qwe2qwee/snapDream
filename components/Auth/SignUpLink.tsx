@@ -1,5 +1,6 @@
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 
@@ -8,6 +9,8 @@ interface SignUpLinkProps {
 }
 
 export const SignUpLink: React.FC<SignUpLinkProps> = ({ onPress }) => {
+  const { t, currentLanguage } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
   const fonts = useFontFamily();
   const { spacing, typography } = useResponsive();
 
@@ -20,14 +23,15 @@ export const SignUpLink: React.FC<SignUpLinkProps> = ({ onPress }) => {
     },
     text: {
       fontSize: typography.body,
-      fontFamily: fonts.Regular,
+      fontFamily: isArabic ? "Zain-Regular" : fonts.Regular,
       color: "#8E8E93",
     },
     link: {
       fontSize: typography.body,
-      fontFamily: fonts.SemiBold,
+      fontFamily: isArabic ? "Zain-Bold" : fonts.SemiBold,
       color: "#FFFFFF",
-      marginLeft: spacing.xs,
+      marginLeft: isArabic ? 0 : spacing.xs,
+      marginRight: isArabic ? spacing.xs : 0,
     },
   });
 
@@ -37,8 +41,8 @@ export const SignUpLink: React.FC<SignUpLinkProps> = ({ onPress }) => {
       onPress={onPress}
       activeOpacity={0.7}
     >
-      <Text style={styles.text}>Didn't have an account?</Text>
-      <Text style={styles.link}>Sign up</Text>
+      <Text style={styles.text}>{t("auth.noAccount")}</Text>
+      <Text style={styles.link}>{t("auth.signUp")}</Text>
     </TouchableOpacity>
   );
 };

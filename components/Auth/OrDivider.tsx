@@ -1,9 +1,12 @@
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 export const OrDivider: React.FC = () => {
+  const { t, currentLanguage } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
   const fonts = useFontFamily();
   const { spacing, typography } = useResponsive();
 
@@ -20,7 +23,7 @@ export const OrDivider: React.FC = () => {
     },
     text: {
       fontSize: typography.body,
-      fontFamily: fonts.Regular,
+      fontFamily: isArabic ? "Zain-Bold" : fonts.Regular,
       color: "#8E8E93",
       marginHorizontal: spacing.md,
     },
@@ -29,7 +32,7 @@ export const OrDivider: React.FC = () => {
   return (
     <View style={styles.container}>
       <View style={styles.line} />
-      <Text style={styles.text}>or</Text>
+      <Text style={styles.text}>{t("common.or")}</Text>
       <View style={styles.line} />
     </View>
   );

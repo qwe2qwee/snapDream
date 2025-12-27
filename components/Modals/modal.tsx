@@ -6,6 +6,7 @@ import Modal from "react-native-modal";
 
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 
 type IconType = React.ReactNode;
 
@@ -34,10 +35,13 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   iconBackgroundColor = "rgba(255, 255, 255, 0.1)",
   title,
   subtitle,
-  confirmText = "Confirm",
+  confirmText,
   confirmColor = "#FFFFFF",
   showCloseButton = true,
 }) => {
+  const { t, currentLanguage } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
+  const displayConfirmText = confirmText || t("common.confirm");
   const { spacing, getResponsiveValue, getBorderRadius, isTablet, width } =
     useResponsive();
 
@@ -103,12 +107,12 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
       },
       title: {
         fontSize: responsiveValues.titleSize,
-        fontFamily: fonts.Medium,
+        fontFamily: isArabic ? "Zain-Bold" : fonts.Medium,
         marginBottom: spacing.sm,
       },
       subtitle: {
         fontSize: responsiveValues.subtitleSize,
-        fontFamily: fonts.Regular,
+        fontFamily: isArabic ? "Zain-Regular" : fonts.Regular,
         marginBottom: spacing.xl,
       },
       confirmButton: {
@@ -118,7 +122,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
       },
       confirmButtonText: {
         fontSize: responsiveValues.buttonTextSize,
-        fontFamily: fonts.Bold,
+        fontFamily: isArabic ? "Zain-Bold" : fonts.Bold,
       },
     }),
     [spacing, fonts, responsiveValues, iconBackgroundColor, confirmColor]
@@ -188,7 +192,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
               { color: confirmColor === "#FFFFFF" ? "#0D0D0F" : "#FFFFFF" },
             ]}
           >
-            {confirmText}
+            {displayConfirmText}
           </Text>
         </TouchableOpacity>
       </View>

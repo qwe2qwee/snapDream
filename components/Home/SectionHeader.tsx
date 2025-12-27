@@ -4,15 +4,22 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
 
+import useLanguageStore from "@/store/useLanguageStore";
+
 interface SectionHeaderProps {
   title: string;
+  seeAllText?: string;
   onSeeAll?: () => void;
 }
 
 export const SectionHeader: React.FC<SectionHeaderProps> = ({
   title,
+  seeAllText = "See All",
   onSeeAll,
 }) => {
+  const { currentLanguage } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
+
   const { spacing, typography, getResponsiveValue, isTablet, isSmallScreen } =
     useResponsive();
 
@@ -48,12 +55,12 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
       },
       sectionTitle: {
         fontSize: responsiveValues.titleSize,
-        fontFamily: fonts.Bold,
+        fontFamily: isArabic ? "Zain-Bold" : fonts.Bold,
         letterSpacing: responsiveValues.letterSpacing,
       },
       seeAllText: {
         fontSize: responsiveValues.seeAllSize,
-        fontFamily: fonts.Medium,
+        fontFamily: isArabic ? "Zain-Regular" : fonts.Medium,
       },
     }),
     [responsiveValues, fonts]
@@ -66,7 +73,7 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
       </Text>
       <TouchableOpacity onPress={onSeeAll} activeOpacity={0.7}>
         <Text style={[styles.seeAllText, dynamicStyles.seeAllText]}>
-          See All
+          {seeAllText}
         </Text>
       </TouchableOpacity>
     </View>

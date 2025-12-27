@@ -17,6 +17,7 @@ import {
   HairStyle,
 } from "@/constants/hairStyleData";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import { useSafeNavigate } from "@/utils/useSafeNavigate";
 import * as ImagePicker from "expo-image-picker";
 import React, { useState } from "react";
@@ -30,6 +31,8 @@ import {
 } from "react-native";
 
 export default function HairStyleScreen() {
+  const { t, currentLanguage } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
   const { spacing, safeAreaBottom } = useResponsive();
   const { push } = useSafeNavigate();
 
@@ -57,9 +60,11 @@ export default function HairStyleScreen() {
 
       if (status !== "granted") {
         Alert.alert(
-          "Permission Required",
-          "Please grant camera roll permissions to upload images.",
-          [{ text: "OK" }]
+          t("common.error"),
+          isArabic
+            ? "يرجى منح أذونات مكتبة الصور لتحميل الصور."
+            : "Please grant camera roll permissions to upload images.",
+          [{ text: t("common.ok") }]
         );
         return;
       }
@@ -100,10 +105,7 @@ export default function HairStyleScreen() {
   // Generate hairstyle
   const handleGenerate = async () => {
     if (!userImage) {
-      Alert.alert(
-        "Missing Image",
-        "Please upload an image to change hairstyle."
-      );
+      Alert.alert(t("common.error"), t("clothSwap.uploadImage"));
       return;
     }
 
@@ -129,9 +131,11 @@ export default function HairStyleScreen() {
       setIsGenerating(false);
       console.error("Generation error:", error);
       Alert.alert(
-        "Generation Failed",
-        "Failed to generate hairstyle. Please try again.",
-        [{ text: "OK" }]
+        t("common.error"),
+        isArabic
+          ? "فشل توليد تسريحة الشعر. يرجى المحاولة مرة أخرى."
+          : "Failed to generate hairstyle. Please try again.",
+        [{ text: t("common.ok") }]
       );
     }
   };
@@ -156,25 +160,25 @@ export default function HairStyleScreen() {
           keyboardShouldPersistTaps="handled"
         >
           {/* Header */}
-          <HairStyleHeader />
+          <HairStyleHeader title={t("hairstyle.title")} />
 
           {/* Hair Style Selector */}
           <StyleSelector
-            label="Hair Style"
+            label={t("hairstyle.selectStyle")}
             selectedStyle={selectedStyle}
             onPress={() => setShowStyleModal(true)}
           />
 
           {/* Hair Color Selector */}
           <ColorSelector
-            label="Hair Color"
+            label={t("hairstyle.selectColor")}
             selectedColor={selectedColor}
             onPress={() => setShowColorModal(true)}
           />
 
           {/* Image Upload */}
           <ImageUploadBox
-            label="Your Photo"
+            label={t("onboarding.slide1Title")} // Or create a new key
             optional={false}
             type="model"
             selectedImage={userImage}
@@ -222,7 +226,7 @@ export default function HairStyleScreen() {
       {/* Loading Modal */}
       <LoadingModal
         isVisible={isGenerating}
-        title="Generating Hairstyle..."
+        title={t("hairstyle.processing")}
         subtitle={`Creating ${imageCount} image${
           imageCount > 1 ? "s" : ""
         } with ${selectedStyle.name} in ${selectedColor.name}`}

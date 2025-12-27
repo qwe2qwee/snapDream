@@ -6,6 +6,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import CrownIcon from "../../assets/icons/CrownIcon.svg";
 
 interface EffectCardProps {
@@ -44,6 +45,9 @@ export const EffectCard: React.FC<EffectCardProps> = ({
   isPremium,
   onPress,
 }) => {
+  const { currentLanguage } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
+
   const {
     width,
     spacing,
@@ -106,7 +110,7 @@ export const EffectCard: React.FC<EffectCardProps> = ({
       },
       effectTitle: {
         fontSize: responsiveValues.titleSize,
-        fontFamily: fonts.Regular,
+        fontFamily: isArabic ? "Zain-Regular" : fonts.Regular,
         color: "#ffffffae",
       },
     }),

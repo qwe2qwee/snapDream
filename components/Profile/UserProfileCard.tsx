@@ -1,4 +1,6 @@
+import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 
@@ -15,6 +17,9 @@ export const UserProfileCard: React.FC<UserProfileCardProps> = ({
   avatarUri,
   loginType,
 }) => {
+  const { currentLanguage } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
+  const fonts = useFontFamily();
   const {
     spacing,
     typography,
@@ -46,6 +51,7 @@ export const UserProfileCard: React.FC<UserProfileCardProps> = ({
     },
     loginType: {
       fontSize: typography.caption,
+      fontFamily: isArabic ? "Zain-Bold" : fonts.Medium,
       color: "#ffffffff",
     },
     loginTypeContainer: {
@@ -60,7 +66,7 @@ export const UserProfileCard: React.FC<UserProfileCardProps> = ({
     },
     userName: {
       fontSize: typography.h4,
-      fontWeight: "600",
+      fontFamily: isArabic ? "Zain-Bold" : fonts.SemiBold,
       color: "#FFFFFF",
       marginBottom: 2,
     },

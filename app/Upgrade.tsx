@@ -16,12 +16,15 @@ import { PricingFeatures } from "@/components/Upgrade/PricingFeatures";
 import { PricingFooter } from "@/components/Upgrade/PricingFooter";
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import { ImageBackground } from "expo-image";
 
 type PlanType = "basic" | "premium";
 type PricingOption = "monthly" | "yearly";
 
 export default function PricingScreen() {
+  const { t, currentLanguage } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
   const fonts = useFontFamily();
   const [selectedPlan, setSelectedPlan] = useState<PlanType>("basic");
   const [selectedPricing, setSelectedPricing] =
@@ -40,12 +43,12 @@ export default function PricingScreen() {
   const horizontalPadding = isTablet ? spacing.xl : spacing.lg;
 
   const features = [
-    { icon: QuickIcon, label: "Quick Generation" },
-    { icon: SaveIcon, label: "Save Creations" },
-    { icon: LifetimeIcon, label: "Life Time Access" },
-    { icon: AdIcon, label: "Ad-Free Experience" },
-    { icon: HDIcon, label: "HD Image Downloads" },
-    { icon: CustomerIcon, label: "Customer Support" },
+    { icon: QuickIcon, label: t("settings.quickGen") },
+    { icon: SaveIcon, label: t("settings.saveCreations") },
+    { icon: LifetimeIcon, label: t("settings.lifetimeAccess") },
+    { icon: AdIcon, label: t("settings.adFree") },
+    { icon: HDIcon, label: t("settings.hdDownloads") },
+    { icon: CustomerIcon, label: t("settings.support") },
   ];
 
   const styles = StyleSheet.create({
@@ -58,9 +61,9 @@ export default function PricingScreen() {
     },
     mainHeading: {
       fontSize: mainHeadingSize,
-      fontFamily: fonts.Bold,
+      fontFamily: isArabic ? "Zain-Bold" : fonts.Bold,
       color: "#FFFFFF",
-      textAlign: "left",
+      textAlign: isArabic ? "right" : "left",
       paddingHorizontal: horizontalPadding,
       marginBottom: spacing.xl,
     },
@@ -96,11 +99,11 @@ export default function PricingScreen() {
           showsVerticalScrollIndicator={false}
         >
           {/* Header */}
-          <PricingHeader title="Pricing" />
+          <PricingHeader title={t("settings.pricing")} />
 
           <View>
             {/* Main Heading */}
-            <Text style={styles.mainHeading}>Upgrade To Premium</Text>
+            <Text style={styles.mainHeading}>{t("settings.upgradeTitle")}</Text>
 
             {/* Features Grid */}
             <PricingFeatures features={features} />
@@ -136,7 +139,7 @@ export default function PricingScreen() {
             {/* CTA Button */}
             <View style={styles.buttonContainer}>
               <PricingButton
-                text="Upgrade Now"
+                text={t("home.upgradeNow")}
                 onPress={() => console.log("Upgrade pressed")}
               />
             </View>

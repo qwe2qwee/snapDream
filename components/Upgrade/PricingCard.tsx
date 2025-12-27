@@ -1,5 +1,6 @@
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import { Feather } from "@expo/vector-icons";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -23,6 +24,8 @@ export const PricingCard: React.FC<PricingCardProps> = ({
   isSelected,
   onPress,
 }) => {
+  const { t, currentLanguage } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
   const fonts = useFontFamily();
   const { spacing, getResponsiveValue, getBorderRadius } = useResponsive();
 
@@ -56,14 +59,14 @@ export const PricingCard: React.FC<PricingCardProps> = ({
     },
     price: {
       fontSize: priceSize,
-      fontFamily: fonts.Medium,
+      fontFamily: isArabic ? "Zain-Bold" : fonts.Medium,
       color: "#FFFFFF",
       lineHeight: priceSize + 4,
       marginBottom: spacing.xs / 2,
     },
     type: {
       fontSize: subTextSize + 2,
-      fontFamily: fonts.Regular,
+      fontFamily: isArabic ? "Zain-Regular" : fonts.Regular,
       color: "#8E8E93",
     },
     rightSection: {
@@ -78,12 +81,12 @@ export const PricingCard: React.FC<PricingCardProps> = ({
     },
     badgeText: {
       fontSize: subTextSize - 3,
-      fontFamily: fonts.SemiBold,
+      fontFamily: isArabic ? "Zain-Bold" : fonts.SemiBold,
       color: "#FFFFFF",
     },
     credits: {
       fontSize: creditsSize,
-      fontFamily: fonts.Regular,
+      fontFamily: isArabic ? "Zain-Regular" : fonts.Regular,
       color: "#FFFFFF",
     },
   });
@@ -106,7 +109,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
         <View style={styles.leftSection}>
           <Text style={styles.price}>{price}</Text>
           <Text style={styles.type}>
-            {type === "monthly" ? "Monthly" : "Yearly"}
+            {type === "monthly" ? t("settings.monthly") : t("settings.yearly")}
           </Text>
         </View>
 

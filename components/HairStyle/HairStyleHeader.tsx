@@ -1,5 +1,6 @@
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -9,11 +10,13 @@ interface HairStyleHeaderProps {
   title?: string;
 }
 
-export const HairStyleHeader: React.FC<HairStyleHeaderProps> = ({
-  title = "Hair Style Changer",
-}) => {
+export const HairStyleHeader: React.FC<HairStyleHeaderProps> = ({ title }) => {
+  const { currentLanguage, t } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
   const router = useRouter();
   const fonts = useFontFamily();
+
+  const displayTitle = title || t("hairstyle.title");
   const { spacing, typography, safeAreaTop, getResponsiveValue } =
     useResponsive();
 
@@ -40,7 +43,7 @@ export const HairStyleHeader: React.FC<HairStyleHeaderProps> = ({
     },
     title: {
       fontSize: typography.h4,
-      fontFamily: fonts.Bold,
+      fontFamily: isArabic ? "Zain-Bold" : fonts.Bold,
       color: "#FFFFFF",
       position: "absolute",
       left: 0,
@@ -63,7 +66,7 @@ export const HairStyleHeader: React.FC<HairStyleHeaderProps> = ({
           <Feather name="chevron-left" size={24} color="#FFFFFF" />
         </TouchableOpacity>
 
-        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.title}>{displayTitle}</Text>
 
         <View style={styles.spacer} />
       </View>

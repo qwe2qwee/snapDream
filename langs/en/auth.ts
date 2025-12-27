@@ -1,0 +1,33 @@
+const auth = {
+  login: "Login",
+  register: "Register",
+  email: "Email",
+  password: "Password",
+  confirmPassword: "Confirm Password",
+  forgotPassword: "Forgot Password?",
+  signIn: "Sign In",
+  signUp: "Sign Up",
+  createAccount: "Create Account",
+  noAccount: "Don't have an account?",
+  loginWelcome: "Hey, welcome back!",
+  registerWelcome: "Let's go! Register in seconds.",
+  confirmPasswordPlaceholder: "Re-Enter Your Password",
+  forgotPasswordtitle: "Forgot Password?",
+  forgotPasswordDesc: "Enter your email to receive recovery link.",
+  sendLink: "Send Recovery Link",
+  linkSent: "Link Sent!",
+  recoveryEmailSent: "We've sent a password recovery link to:\n",
+  verifyEmail: "Verify Email",
+  verifyDesc: "We've sent a verification code to your email.",
+  otpCode: "Verification Code",
+  verify: "Verify",
+  resendCode: "Resend Code",
+  didNotReceive: "Didn't receive code?",
+  resend: "Resend",
+  justAMoment: "Just a moment...",
+  successVerified:
+    "Your email has been successfully verified.\nYou can now proceed.",
+  letsGo: "Let's Go",
+};
+
+export default auth;

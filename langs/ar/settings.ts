@@ -1,0 +1,26 @@
+const settings = {
+  title: "الإعدادات",
+  profile: "الملف الشخصي",
+  language: "اللغة",
+  notifications: "التنبيهات",
+  theme: "المظهر",
+  upgrade: "ترقية للنسخة الاحترافية",
+  feedback: "الملاحظات والآراء",
+  contactUs: "اتصل بنا",
+  privacy: "سياسة الخصوصية",
+  terms: "الشروط والأحكام",
+  monthly: "شهري",
+  yearly: "سنوي",
+  quickGen: "إنتاج سريع",
+  saveCreations: "حفظ الابتكارات",
+  lifetimeAccess: "وصول مدى الحياة",
+  adFree: "تجربة بدون إعلانات",
+  hdDownloads: "تحميلات بجودة HD",
+  support: "دعم العملاء",
+  pricing: "الأسعار",
+  upgradeTitle: "الترقية إلى بريميوم",
+  logout: "تسجيل الخروج",
+  rateUs: "قيم التطبيق",
+};
+
+export default settings;

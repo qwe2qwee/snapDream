@@ -13,6 +13,7 @@ import Modal from "react-native-modal";
 
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 
 // Import your social media icons
 import FacebookIcon from "@/assets/icons/Facebook.svg";
@@ -43,9 +44,12 @@ export const ShareModal: React.FC<ShareModalProps> = ({
   onClose,
   shareUrl,
   shareText = "Check this out!",
-  title = "Share",
+  title,
   showPlatforms,
 }) => {
+  const { t, currentLanguage } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
+  const displayTitle = title || t("common.share");
   const { spacing, getResponsiveValue, getBorderRadius, isTablet, width } =
     useResponsive();
 
@@ -219,7 +223,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({
       },
       title: {
         fontSize: responsiveValues.titleSize,
-        fontFamily: fonts.Bold,
+        fontFamily: isArabic ? "Zain-Bold" : fonts.Bold,
         marginBottom: spacing.lg,
       },
       socialIconsContainer: {
@@ -241,7 +245,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({
       },
       urlText: {
         fontSize: responsiveValues.urlTextSize,
-        fontFamily: fonts.Regular,
+        fontFamily: isArabic ? "Zain-Regular" : fonts.Regular,
       },
       copyButton: {
         paddingHorizontal: spacing.lg,
@@ -250,7 +254,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({
       },
       copyButtonText: {
         fontSize: responsiveValues.copyButtonTextSize,
-        fontFamily: fonts.SemiBold,
+        fontFamily: isArabic ? "Zain-Bold" : fonts.SemiBold,
       },
     }),
     [spacing, fonts, responsiveValues]
@@ -284,7 +288,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({
         </TouchableOpacity>
 
         {/* Title */}
-        <Text style={[styles.title, dynamicStyles.title]}>{title}</Text>
+        <Text style={[styles.title, dynamicStyles.title]}>{displayTitle}</Text>
 
         {/* Social Media Icons */}
         <View
@@ -320,7 +324,9 @@ export const ShareModal: React.FC<ShareModalProps> = ({
             activeOpacity={0.8}
           >
             <Text style={[styles.copyButtonText, dynamicStyles.copyButtonText]}>
-              {copied ? "Copied!" : "Copy"}
+              {copied
+                ? t("common.copied") || "Copied!"
+                : t("common.copy") || "Copy"}
             </Text>
           </TouchableOpacity>
         </View>

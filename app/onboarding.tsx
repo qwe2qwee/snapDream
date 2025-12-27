@@ -1,6 +1,7 @@
 import { GradientBackground } from "@/components/GradientBackground";
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
@@ -84,10 +85,6 @@ const MODELS = [
   },
 ];
 
-const GENERATION_IMAGES = [
-  require("../assets/images/onboarding2/Onboarding2.png"),
-];
-
 export default function OnboardingScreen() {
   const {
     width,
@@ -100,7 +97,37 @@ export default function OnboardingScreen() {
     isTablet,
   } = useResponsive();
 
+  const { currentLanguage, t } = useLanguageStore();
   const fonts = useFontFamily();
+  const isArabic = currentLanguage === "ar";
+
+  const SLIDES = [
+    {
+      id: 1,
+      title: t("onboarding.slide1Title"),
+      description: t("onboarding.slide1Desc"),
+      type: "effects",
+    },
+    {
+      id: 2,
+      title: t("onboarding.slide2Title"),
+      description: t("onboarding.slide2Desc"),
+      type: "generation",
+    },
+    {
+      id: 3,
+      title: t("onboarding.slide3Title"),
+      description: t("onboarding.slide3Desc"),
+      type: "models",
+    },
+  ];
+
+  const GENERATION_IMAGES = [
+    isArabic
+      ? require("../assets/images/onboarding2/OnboardingAr.png")
+      : require("../assets/images/onboarding2/OnboardingEn.png"),
+  ];
+
   const [activeIndex, setActiveIndex] = useState(0);
   const scrollViewRef = useRef<ScrollView>(null);
 
@@ -266,7 +293,7 @@ export default function OnboardingScreen() {
                           styles.modelName,
                           {
                             fontSize: getResponsiveValue(12, 14, 16, 18, 20),
-                            fontFamily: fonts.Bold,
+                            fontFamily: isArabic ? "Zain-Bold" : fonts.Bold,
                           },
                         ]}
                       >
@@ -295,7 +322,9 @@ export default function OnboardingScreen() {
                           styles.modelLabelText,
                           {
                             fontSize: getResponsiveValue(10, 11, 12, 13, 14),
-                            fontFamily: fonts.Regular,
+                            fontFamily: isArabic
+                              ? "Zain-Regular"
+                              : fonts.Regular,
                           },
                         ]}
                         numberOfLines={1}
@@ -356,7 +385,7 @@ export default function OnboardingScreen() {
               {
                 fontSize: responsiveValues.titleSize,
                 lineHeight: responsiveValues.titleLineHeight,
-                fontFamily: fonts.Bold,
+                fontFamily: isArabic ? "Zain-Bold" : fonts.Bold,
                 marginBottom: spacing.md,
               },
             ]}
@@ -371,7 +400,7 @@ export default function OnboardingScreen() {
               {
                 fontSize: responsiveValues.descSize,
                 lineHeight: responsiveValues.descLineHeight,
-                fontFamily: fonts.Regular,
+                fontFamily: isArabic ? "Zain-Regular" : fonts.Regular,
               },
             ]}
           >
@@ -423,11 +452,13 @@ export default function OnboardingScreen() {
                 styles.buttonText,
                 {
                   fontSize: responsiveValues.buttonTextSize,
-                  fontFamily: fonts.Bold,
+                  fontFamily: isArabic ? "Zain-Bold" : fonts.Bold,
                 },
               ]}
             >
-              {activeIndex === SLIDES.length - 1 ? "Get Started" : "Next"}
+              {activeIndex === SLIDES.length - 1
+                ? t("onboarding.getStarted")
+                : t("onboarding.next")}
             </Text>
           </TouchableOpacity>
         </View>

@@ -1,5 +1,6 @@
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 
@@ -10,6 +11,8 @@ interface ForgotPasswordLinkProps {
 export const ForgotPasswordLink: React.FC<ForgotPasswordLinkProps> = ({
   onPress,
 }) => {
+  const { t, currentLanguage } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
   const fonts = useFontFamily();
   const { spacing, typography } = useResponsive();
 
@@ -19,9 +22,9 @@ export const ForgotPasswordLink: React.FC<ForgotPasswordLinkProps> = ({
       marginTop: -spacing.sm,
       marginBottom: spacing.xl,
     },
-    text: {
-      fontSize: typography.caption,
-      fontFamily: fonts.Medium,
+    link: {
+      fontSize: typography.body,
+      fontFamily: isArabic ? "Zain-Bold" : fonts.SemiBold,
       color: "#FFFFFF",
     },
   });
@@ -32,7 +35,7 @@ export const ForgotPasswordLink: React.FC<ForgotPasswordLinkProps> = ({
       onPress={onPress}
       activeOpacity={0.7}
     >
-      <Text style={styles.text}>Forgot password?</Text>
+      <Text style={styles.link}>{t("auth.forgotPassword")}</Text>
     </TouchableOpacity>
   );
 };

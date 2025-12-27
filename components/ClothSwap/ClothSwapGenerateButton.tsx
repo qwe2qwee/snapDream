@@ -1,5 +1,6 @@
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import { Feather } from "@expo/vector-icons";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -13,6 +14,8 @@ interface ClothSwapGenerateButtonProps {
 export const ClothSwapGenerateButton: React.FC<
   ClothSwapGenerateButtonProps
 > = ({ onPress, credits, disabled = false }) => {
+  const { currentLanguage, t } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
   const fonts = useFontFamily();
   const { spacing, typography, getResponsiveValue, safeAreaBottom } =
     useResponsive();
@@ -45,12 +48,12 @@ export const ClothSwapGenerateButton: React.FC<
     },
     creditsText: {
       fontSize: typography.body,
-      fontFamily: fonts.Bold,
+      fontFamily: isArabic ? "Zain-Bold" : fonts.Bold,
       color: "#0D0D0F",
     },
     generateText: {
       fontSize: typography.body,
-      fontFamily: fonts.Bold,
+      fontFamily: isArabic ? "Zain-Bold" : fonts.Bold,
       color: "#0D0D0F",
     },
   });
@@ -67,7 +70,7 @@ export const ClothSwapGenerateButton: React.FC<
           <Feather name="zap" size={18} color="#0D0D0F" />
           <Text style={styles.creditsText}>{credits}</Text>
         </View>
-        <Text style={styles.generateText}>Generate</Text>
+        <Text style={styles.generateText}>{t("clothSwap.generate")}</Text>
       </TouchableOpacity>
     </View>
   );

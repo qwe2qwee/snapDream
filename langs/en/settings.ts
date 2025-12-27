@@ -1,0 +1,26 @@
+const settings = {
+  title: "Settings",
+  profile: "Profile",
+  language: "Language",
+  notifications: "Notifications",
+  theme: "Theme",
+  upgrade: "Upgrade to PRO",
+  feedback: "Feedback",
+  contactUs: "Contact Us",
+  privacy: "Privacy Policy",
+  terms: "Terms and Conditions",
+  monthly: "Monthly",
+  yearly: "Yearly",
+  quickGen: "Quick Generation",
+  saveCreations: "Save Creations",
+  lifetimeAccess: "Life Time Access",
+  adFree: "Ad-Free Experience",
+  hdDownloads: "HD Image Downloads",
+  support: "Customer Support",
+  pricing: "Pricing",
+  upgradeTitle: "Upgrade To Premium",
+  logout: "Logout",
+  rateUs: "Rate Us",
+};
+
+export default settings;

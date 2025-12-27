@@ -15,6 +15,7 @@ interface Effect {
 
 interface EffectsSectionProps {
   title: string;
+  seeAllText?: string;
   effects: Effect[];
   onSeeAll?: () => void;
   onEffectPress?: (id: number) => void;
@@ -22,6 +23,7 @@ interface EffectsSectionProps {
 
 export const EffectsSection: React.FC<EffectsSectionProps> = ({
   title,
+  seeAllText,
   effects,
   onSeeAll,
   onEffectPress,
@@ -62,7 +64,11 @@ export const EffectsSection: React.FC<EffectsSectionProps> = ({
 
   return (
     <>
-      <SectionHeader title={title} onSeeAll={onSeeAll} />
+      <SectionHeader
+        title={title}
+        seeAllText={seeAllText}
+        onSeeAll={onSeeAll}
+      />
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}

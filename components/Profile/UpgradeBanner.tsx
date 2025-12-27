@@ -1,6 +1,7 @@
 import ArrowLeft from "@/assets/icons/arrow-left.svg";
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
@@ -26,6 +27,8 @@ export const UpgradeBanner: React.FC<UpgradeBannerProps> = ({
   onPress,
   isLoggedIn = false,
 }) => {
+  const { t, currentLanguage } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
   const {
     spacing,
     typography,
@@ -39,8 +42,8 @@ export const UpgradeBanner: React.FC<UpgradeBannerProps> = ({
   const isUpgradeAvailable = (isLoggedIn && !isSubscribed) || !isLoggedIn;
 
   const bannerText = isUpgradeAvailable
-    ? "Upgrade Now to Level Up"
-    : "Manage Your Subscription";
+    ? t("home.upgradeNow") // Need to ensure this exists or create it
+    : t("home.manageSubscription");
 
   const iconSize = getIconSize("medium");
 
@@ -79,7 +82,7 @@ export const UpgradeBanner: React.FC<UpgradeBannerProps> = ({
     },
     bannerText: {
       fontSize: typography.body,
-      fontFamily: fonts.Medium,
+      fontFamily: isArabic ? "Zain-Bold" : fonts.Medium,
       color: "#FFFFFF",
     },
     bannerTextContainer: {
