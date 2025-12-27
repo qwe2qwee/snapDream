@@ -18,6 +18,8 @@ export default function RootLayout() {
     "SFProText-Medium": require("../assets/font/SFProText-Medium.otf"),
     "SFProText-Semibold": require("../assets/font/SFProText-Semibold.otf"),
     "SFProDisplay-Bold": require("../assets/font/SFProDisplay-Bold.otf"),
+    "Zain-Bold": require("../assets/fonts/Zain-Bold.ttf"),
+    "Zain-Regular": require("../assets/fonts/Zain-Regular.ttf"),
   });
 
   // ⛔️ مهم جدًا
