@@ -94,6 +94,11 @@ export const CreationCard: React.FC<CreationCardProps> = ({
       left: isArabic ? spacing.sm + spacing.xs : undefined,
       right: isArabic ? undefined : spacing.sm + spacing.xs,
     },
+    rotateButton: {
+      left: isArabic ? undefined : spacing.sm + spacing.xs,
+      right: isArabic ? spacing.sm + spacing.xs : undefined,
+    },
+
     blurContainer: {
       width: "100%",
       height: "100%",
@@ -154,7 +159,10 @@ export const CreationCard: React.FC<CreationCardProps> = ({
       <Image source={{ uri }} style={styles.creationImage} />
 
       {/* Top-left media type icon */}
-      <TouchableOpacity style={styles.iconButton} activeOpacity={0.7}>
+      <TouchableOpacity
+        style={[styles.iconButton, styles.rotateButton]}
+        activeOpacity={0.7}
+      >
         <BlurView intensity={80} tint="dark" style={styles.blurContainer}>
           <MediaTypeIcon type={type} />
         </BlurView>
