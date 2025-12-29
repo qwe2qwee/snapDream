@@ -7,8 +7,10 @@ import { PageHeader } from "@/components/Creations/PageHeader";
 import { GradientBackground } from "@/components/GradientBackground";
 import { COMMUNITY_IMAGES } from "@/constants/data";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 
 export default function CommunityScreen() {
+  const { t } = useLanguageStore();
   const [refreshing, setRefreshing] = useState(false);
 
   const { safeAreaTop, getTabBarHeight, spacing, getContentHeight } =
@@ -49,7 +51,7 @@ export default function CommunityScreen() {
         <StatusBar barStyle="light-content" backgroundColor="#0D0D0F" />
 
         {/* Header */}
-        <PageHeader title="Community" isLoggedIn={true} />
+        <PageHeader title={t("common.community")} isLoggedIn={true} />
 
         {/* Masonry Grid - Pass tab bar height for proper bottom padding */}
         <MasonryGrid

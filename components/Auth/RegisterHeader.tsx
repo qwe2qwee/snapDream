@@ -17,6 +17,7 @@ export const RegisterHeader: React.FC = () => {
     container: {
       paddingHorizontal: spacing.lg,
       marginBottom: spacing.xl,
+      alignItems: isArabic ? "flex-end" : "flex-start",
     },
     backButton: {
       width: getResponsiveValue(40, 44, 48, 50, 52),
@@ -38,6 +39,7 @@ export const RegisterHeader: React.FC = () => {
       fontSize: getResponsiveValue(26, 28, 30, 32, 34),
       fontFamily: isArabic ? "Zain-Bold" : fonts.Bold,
       color: "#FFFFFF",
+      textAlign: isArabic ? "right" : "left",
     },
   });
 
@@ -48,7 +50,11 @@ export const RegisterHeader: React.FC = () => {
         onPress={() => router.back()}
         activeOpacity={0.7}
       >
-        <Feather name="chevron-left" size={28} color="#FFFFFF" />
+        <Feather
+          name={isArabic ? "chevron-right" : "chevron-left"}
+          size={28}
+          color="#FFFFFF"
+        />
       </TouchableOpacity>
 
       <Text style={styles.title}>{t("auth.registerWelcome")}</Text>

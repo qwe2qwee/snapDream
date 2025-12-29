@@ -21,6 +21,10 @@ const settings = {
   upgradeTitle: "الترقية إلى بريميوم",
   logout: "تسجيل الخروج",
   rateUs: "قيم التطبيق",
+  tooPrecious: "نحن نهتم!",
+  security: "الأمان",
+  deleteAccount: "حذف الحساب",
+  deleteAccountConfirmSub: "حذف الحساب نهائياً؟ سيتم فقدان كل شيء.",
 };
 
 export default settings;

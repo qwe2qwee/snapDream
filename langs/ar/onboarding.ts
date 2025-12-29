@@ -7,6 +7,13 @@ const onboarding = {
   slide3Desc: "استخدم نماذج متطورة للحصول على أفضل النتائج الممكنة.",
   getStarted: "ابدأ الآن",
   next: "التالي",
+  models: {
+    sdxlBase: "SDXL\nأساسي",
+    sdxlRefiner: "SDXL\nمحسن",
+    realisticVision: "رؤية\nواقعية",
+    juggernautXL: "Juggernaut\nXL",
+    animeXL: "أنمي\nXL",
+  },
 };
 
 export default onboarding;

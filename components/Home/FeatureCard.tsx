@@ -54,11 +54,9 @@ export const FeatureCard: React.FC<FeatureCardProps> = ({
       // Line height (1.35x font size for readability)
       lineHeight: getResponsiveValue(17.5, 19, 20, 21.5, 24),
 
-      // Padding left
-      paddingLeft: spacing.md,
-
-      // Padding right (smaller for image space)
-      paddingRight: spacing.xs,
+      // Horizontal paddings swapped for RTL
+      paddingLeft: isArabic ? spacing.xs : spacing.md,
+      paddingRight: isArabic ? spacing.md : spacing.xs,
 
       // Max width for title (prevents overlap with image)
       titleMaxWidth: (isTablet ? "60%" : "55%") as "60%" | "55%",
@@ -73,10 +71,6 @@ export const FeatureCard: React.FC<FeatureCardProps> = ({
         height: responsiveValues.cardHeight,
         borderRadius: responsiveValues.cardBorderRadius,
       },
-      featureGradient: {
-        paddingLeft: responsiveValues.paddingLeft,
-        paddingRight: responsiveValues.paddingRight,
-      },
       featureTitleContainer: {
         maxWidth: responsiveValues.titleMaxWidth,
       },
@@ -89,9 +83,22 @@ export const FeatureCard: React.FC<FeatureCardProps> = ({
         width: responsiveValues.imageSize,
         height: responsiveValues.imageSize,
         borderRadius: responsiveValues.imageBorderRadius,
+        position: "absolute" as const,
+        right: isArabic ? undefined : -8,
+        left: isArabic ? -8 : undefined,
+        bottom: 0,
+        marginRight: isArabic ? 0 : 8,
+        marginLeft: isArabic ? 8 : 0,
+      },
+      featureGradient: {
+        paddingLeft: responsiveValues.paddingLeft,
+        paddingRight: responsiveValues.paddingRight,
+        flexDirection: (isArabic ? "row-reverse" : "row") as
+          | "row"
+          | "row-reverse",
       },
     }),
-    [responsiveValues, fonts]
+    [responsiveValues, fonts, isArabic]
   );
 
   return (
@@ -136,7 +143,6 @@ const styles = StyleSheet.create({
   },
   featureGradient: {
     flex: 1,
-    flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     bottom: 0,
@@ -151,9 +157,6 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   featureImage: {
-    position: "absolute",
-    right: -8,
-    bottom: 0,
-    marginRight: 8,
+    // Positioning moved to dynamicStyles
   },
 });

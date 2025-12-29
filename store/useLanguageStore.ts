@@ -1,38 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { I18nManager } from "react-native";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import translations from "../langs";
 
-// Type definitions
 export type Language = "en" | "ar";
 
-export interface LanguageInfo {
-  language: Language;
-  isRTL: boolean;
-  isArabic: boolean;
-  isEnglish: boolean;
-  t: (keyPath: string) => string;
-}
-
-interface LanguageState {
-  // State
-  currentLanguage: Language;
-  isRTL: boolean;
-  isHydrated: boolean;
-}
-
-interface LanguageActions {
-  // Actions
-  setLanguage: (language: Language) => void;
-  toggleLanguage: () => void;
-  setHydrated: () => void;
-  getLanguageInfo: () => LanguageInfo;
-  t: (keyPath: string) => string;
-}
-
-export type LanguageStore = LanguageState & LanguageActions;
-
-// Helper function to get translation by path
 const getTranslation = (lang: Language, path: string): string => {
   const keys = path.split(".");
   let result: any = translations[lang];
@@ -41,80 +14,60 @@ const getTranslation = (lang: Language, path: string): string => {
     if (result && typeof result === "object" && key in result) {
       result = result[key];
     } else {
-      return path; // Fallback to path if not found
+      return path;
     }
   }
 
   return typeof result === "string" ? result : path;
 };
 
-// Language store with persistence using AsyncStorage
+interface LanguageStore {
+  currentLanguage: Language;
+  isRTL: boolean;
+  isHydrated: boolean;
+  setLanguage: (language: Language) => void;
+  toggleLanguage: () => void;
+  setHydrated: (val: boolean) => void;
+  t: (keyPath: string) => string;
+}
+
 const useLanguageStore = create<LanguageStore>()(
   persist(
-    (set, get): LanguageStore => ({
-      // State
-      currentLanguage: "ar", // default to Arabic
+    (set, get) => ({
+      currentLanguage: "ar",
       isRTL: true,
       isHydrated: false,
 
-      // Actions
-      setLanguage: (language: Language): void => {
+      setLanguage: (language: Language) => {
         const isRTL = language === "ar";
-        set({
-          currentLanguage: language,
-          isRTL: isRTL,
-        });
+        set({ currentLanguage: language, isRTL });
+        if (isRTL !== I18nManager.isRTL) {
+          I18nManager.allowRTL(isRTL);
+          I18nManager.forceRTL(isRTL);
+        }
       },
 
-      toggleLanguage: (): void => {
+      toggleLanguage: () => {
         const current = get().currentLanguage;
-        const newLanguage: Language = current === "en" ? "ar" : "en";
+        const newLanguage = current === "en" ? "ar" : "en";
         const isRTL = newLanguage === "ar";
-        set({
-          currentLanguage: newLanguage,
-          isRTL: isRTL,
-        });
+        set({ currentLanguage: newLanguage, isRTL });
+        if (isRTL !== I18nManager.isRTL) {
+          I18nManager.allowRTL(isRTL);
+          I18nManager.forceRTL(isRTL);
+        }
       },
 
-      // Hydration handler
-      setHydrated: (): void => {
-        set({ isHydrated: true });
-      },
+      setHydrated: (val: boolean) => set({ isHydrated: val }),
 
-      // Get current language info
-      getLanguageInfo: (): LanguageInfo => {
-        const state = get();
-        return {
-          language: state.currentLanguage,
-          isRTL: state.isRTL,
-          isArabic: state.currentLanguage === "ar",
-          isEnglish: state.currentLanguage === "en",
-          t: (path: string) => getTranslation(state.currentLanguage, path),
-        };
-      },
-
-      // Translation function
-      t: (path: string): string => {
-        return getTranslation(get().currentLanguage, path);
-      },
+      t: (path: string) => getTranslation(get().currentLanguage, path),
     }),
     {
-      name: "language-storage", // unique name for this store
+      name: "language-storage",
       storage: createJSONStorage(() => AsyncStorage),
-
-      // Only persist the language, not hydration state
-      partialize: (state) => ({
-        currentLanguage: state.currentLanguage,
-        isRTL: state.isRTL,
-      }),
-
-      // Handle hydration
       onRehydrateStorage: () => (state) => {
-        state?.setHydrated?.();
+        state?.setHydrated(true);
       },
-
-      // Version control for future updates
-      version: 1,
     }
   )
 );

@@ -1,5 +1,7 @@
 import ArrowRight from "@/assets/icons/arrow-right.svg";
+import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
@@ -20,13 +22,16 @@ export const MenuItem: React.FC<MenuItemProps> = ({
   isLastItem = false,
   isMiddleItem = false,
 }) => {
+  const { currentLanguage } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
+  const fonts = useFontFamily();
   const { spacing, typography, getResponsiveValue, getIconSize } =
     useResponsive();
   const iconSize = getIconSize("small") + spacing.xs / 2;
 
   const styles = StyleSheet.create({
     menuItem: {
-      flexDirection: "row",
+      flexDirection: isArabic ? "row-reverse" : "row",
       alignItems: "center",
       paddingVertical: spacing.md + 2,
       paddingHorizontal: spacing.md + 2,
@@ -44,8 +49,9 @@ export const MenuItem: React.FC<MenuItemProps> = ({
     menuLabel: {
       flex: 1,
       fontSize: typography.body,
+      fontFamily: isArabic ? "Zain-Regular" : fonts.Regular,
       color: "#FFFFFF",
-      fontWeight: "400",
+      textAlign: isArabic ? "right" : "left",
     },
     destructiveText: {
       color: "#E85454",
@@ -53,6 +59,9 @@ export const MenuItem: React.FC<MenuItemProps> = ({
     lastItem: {
       borderBottomWidth: 2,
       borderColor: "#000000ff",
+    },
+    arrow: {
+      transform: [{ scaleX: isArabic ? -1 : 1 }],
     },
   });
 
@@ -70,7 +79,9 @@ export const MenuItem: React.FC<MenuItemProps> = ({
       <Text style={[styles.menuLabel, isDestructive && styles.destructiveText]}>
         {label}
       </Text>
-      <ArrowRight width={iconSize} height={iconSize} />
+      <View style={styles.arrow}>
+        <ArrowRight width={iconSize} height={iconSize} />
+      </View>
     </TouchableOpacity>
   );
 };

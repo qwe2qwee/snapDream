@@ -1,14 +1,16 @@
+import useLanguageStore from "@/store/useLanguageStore";
 import { Link, Stack } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 
 export default function NotFoundScreen() {
+  const { t } = useLanguageStore();
   return (
     <>
-      <Stack.Screen options={{ title: "Oops!", headerShown: true }} />
+      <Stack.Screen options={{ title: t("common.oops"), headerShown: true }} />
       <View style={styles.container}>
-        <Text style={styles.title}>This screen doesn't exist.</Text>
+        <Text style={styles.title}>{t("common.notExist")}</Text>
         <Link href="/" style={styles.link}>
-          <Text style={styles.linkText}>Go to home screen!</Text>
+          <Text style={styles.linkText}>{t("common.goHome")}</Text>
         </Link>
       </View>
     </>

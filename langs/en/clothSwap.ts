@@ -3,6 +3,7 @@ const clothSwap = {
   uploadImage: "Upload your image",
   selectCloth: "Select clothing",
   generate: "Generate",
+  modelImage: "Model Image",
 };
 
 export default clothSwap;

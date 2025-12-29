@@ -27,6 +27,7 @@ export const LoginHeader: React.FC<LoginHeaderProps> = ({
     container: {
       paddingHorizontal: spacing.lg,
       marginBottom: spacing.xl,
+      alignItems: isArabic ? "flex-end" : "flex-start",
     },
     backButton: {
       width: getResponsiveValue(40, 44, 48, 50, 52),
@@ -42,12 +43,14 @@ export const LoginHeader: React.FC<LoginHeaderProps> = ({
       fontFamily: isArabic ? "Zain-Bold" : fonts.Bold,
       color: "#FFFFFF",
       marginBottom: spacing.xs,
+      textAlign: isArabic ? "right" : "left",
       marginTop: safeAreaTop,
     },
     subtitle: {
       fontSize: getResponsiveValue(12, 14, 16, 18, 20),
       fontFamily: isArabic ? "Zain-Regular" : fonts.Bold,
       color: "rgba(255, 255, 255, 0.8)",
+      textAlign: isArabic ? "right" : "left",
     },
   });
 
@@ -58,10 +61,14 @@ export const LoginHeader: React.FC<LoginHeaderProps> = ({
         onPress={() => router.back()}
         activeOpacity={0.7}
       >
-        <Feather name="chevron-left" size={28} color="#FFFFFF" />
+        <Feather
+          name={isArabic ? "chevron-right" : "chevron-left"}
+          size={28}
+          color="#FFFFFF"
+        />
       </TouchableOpacity>
 
-      <Text style={styles.welcomeText}>{title}</Text>
+      <Text style={styles.welcomeText}>{displayTitle}</Text>
       <Text style={styles.subtitle}>{subtitle}</Text>
     </View>
   );

@@ -20,6 +20,10 @@ const hairstyle = {
   },
   generate: "Generate Change",
   processing: "Processing...",
+  resultTitle: "Hair Style Result",
+  checkOut: "Check out my new hairstyle!",
+  generateError: "Failed to generate hairstyle. Please try again.",
+  processingDesc: "Creating {count} image(s) with {style} in {color}",
 };
 
 export default hairstyle;

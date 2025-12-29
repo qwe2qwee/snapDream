@@ -8,11 +8,13 @@ import { LoadingModal } from "@/components/Modals/LoadingModal";
 import { ConfirmModal } from "@/components/Modals/modal";
 import { ShareModal } from "@/components/Modals/shareModal";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import { useRouter } from "expo-router";
 import React from "react";
 import { ScrollView, StyleSheet } from "react-native";
 
 export default function HairStyleResultScreen() {
+  const { t } = useLanguageStore();
   const router = useRouter();
   const { getResponsiveValue } = useResponsive();
   const [isShareVisible, setShareVisible] = React.useState(false);
@@ -53,7 +55,7 @@ export default function HairStyleResultScreen() {
   return (
     <GradientBackground>
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-        <ImageGenHeader title="Hair Style Result" />
+        <ImageGenHeader title={t("hairstyle.resultTitle")} />
 
         <GeneratedImageCard imageUri={uri} />
 
@@ -68,16 +70,16 @@ export default function HairStyleResultScreen() {
           isVisible={isShareVisible}
           onClose={() => setShareVisible(false)}
           shareUrl={uri}
-          shareText="Check out my new hairstyle!"
+          shareText={t("hairstyle.checkOut")}
         />
 
         <SuccessModal
           isVisible={isSuccessVisible}
           onClose={() => setSuccessVisible(false)}
           onContinue={() => setSuccessVisible(false)}
-          title="Saved!"
-          subtitle="Image has been saved to your gallery."
-          buttonText="Continue"
+          title={t("result.saved")}
+          subtitle={t("result.imageSavedDesc")}
+          buttonText={t("result.continue")}
         />
 
         <ConfirmModal
@@ -94,9 +96,9 @@ export default function HairStyleResultScreen() {
           iconName="trash-2"
           iconColor="#FFFFFF"
           iconBackgroundColor="rgba(255, 255, 255, 0.05)"
-          title="Delete Creation"
-          subtitle="Are you sure you want to delete this creation? This action cannot be undone."
-          confirmText="Delete"
+          title={t("result.deleteTitle")}
+          subtitle={t("result.deleteConfirm")}
+          confirmText={t("common.delete")}
           showCloseButton={true}
         />
 

@@ -84,7 +84,7 @@ export default function HairStyleScreen() {
       }
     } catch (error) {
       console.error("Error picking image:", error);
-      Alert.alert("Error", "Failed to pick image. Please try again.");
+      Alert.alert(t("common.error"), t("clothSwap.uploadError"));
     } finally {
       setIsUploadingImage(false);
     }
@@ -92,10 +92,10 @@ export default function HairStyleScreen() {
 
   // Remove image
   const handleRemoveImage = () => {
-    Alert.alert("Remove Image", "Are you sure you want to remove this image?", [
-      { text: "Cancel", style: "cancel" },
+    Alert.alert(t("common.removeImage"), t("common.removeImageConfirm"), [
+      { text: t("common.cancel"), style: "cancel" },
       {
-        text: "Remove",
+        text: t("common.remove"),
         style: "destructive",
         onPress: () => setUserImage(undefined),
       },
@@ -132,9 +132,10 @@ export default function HairStyleScreen() {
       console.error("Generation error:", error);
       Alert.alert(
         t("common.error"),
-        isArabic
-          ? "فشل توليد تسريحة الشعر. يرجى المحاولة مرة أخرى."
-          : "Failed to generate hairstyle. Please try again.",
+        t("hairstyle.generateError") ||
+          (isArabic
+            ? "فشل توليد تسريحة الشعر. يرجى المحاولة مرة أخرى."
+            : "Failed to generate hairstyle. Please try again."),
         [{ text: t("common.ok") }]
       );
     }
@@ -227,9 +228,10 @@ export default function HairStyleScreen() {
       <LoadingModal
         isVisible={isGenerating}
         title={t("hairstyle.processing")}
-        subtitle={`Creating ${imageCount} image${
-          imageCount > 1 ? "s" : ""
-        } with ${selectedStyle.name} in ${selectedColor.name}`}
+        subtitle={t("hairstyle.processingDesc")
+          .replace("{count}", imageCount.toString())
+          .replace("{style}", selectedStyle.name)
+          .replace("{color}", selectedColor.name)}
       />
     </GradientBackground>
   );

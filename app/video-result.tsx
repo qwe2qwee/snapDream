@@ -9,6 +9,7 @@ import { LoadingModal } from "@/components/Modals/LoadingModal";
 import { ConfirmModal } from "@/components/Modals/modal";
 import { ShareModal } from "@/components/Modals/shareModal";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import { useRouter } from "expo-router";
 
 import React from "react";
@@ -32,6 +33,9 @@ export default function VideoResultScreen() {
 
   const prompt =
     "Cute child hugging a fluffy fox in a snowy forest, soft lighting, winter atmosphere, cozy clothing, photorealistic, warm emotional moment.";
+
+  const { currentLanguage, t } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
 
   const handleShare = () => {
     setShareVisible(true);
@@ -60,8 +64,8 @@ export default function VideoResultScreen() {
     setTimeout(() => {
       setLoading(false);
       setSuccessMessage({
-        title: "Saved!",
-        subtitle: "Video has been saved to your gallery.",
+        title: t("result.saved"),
+        subtitle: t("result.videoSavedDesc"),
       });
       setSuccessVisible(true);
     }, 1500);
@@ -70,7 +74,7 @@ export default function VideoResultScreen() {
   return (
     <GradientBackground>
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-        <ImageGenHeader title="Video Result" />
+        <ImageGenHeader title={t("result.videoResult")} />
 
         <GeneratedVideoCard videoUri={uri} />
 
@@ -86,7 +90,9 @@ export default function VideoResultScreen() {
           isVisible={isShareVisible}
           onClose={() => setShareVisible(false)}
           shareUrl={uri}
-          shareText={`Check out this AI generated video!\n\n${prompt}`}
+          shareText={t("result.shareText")
+            .replace("{type}", "video")
+            .replace("{prompt}", prompt)}
         />
 
         <SuccessModal
@@ -95,7 +101,7 @@ export default function VideoResultScreen() {
           onContinue={() => setSuccessVisible(false)}
           title={successMessage.title}
           subtitle={successMessage.subtitle}
-          buttonText="Continue"
+          buttonText={t("result.continue")}
         />
 
         <ConfirmModal
@@ -112,9 +118,9 @@ export default function VideoResultScreen() {
           iconName="trash-2"
           iconColor="#FFFFFF"
           iconBackgroundColor="rgba(255, 255, 255, 0.05)"
-          title="Delete Creation"
-          subtitle="Are you sure you want to delete this creation? This action cannot be undone."
-          confirmText="Delete"
+          title={t("result.deleteTitle")}
+          subtitle={t("result.deleteConfirm")}
+          confirmText={t("common.delete")}
           showCloseButton={true}
         />
 

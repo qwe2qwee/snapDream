@@ -6,6 +6,7 @@ import { PromptInput } from "@/components/Imagegen/PromptInput";
 import { GenerateButton } from "@/components/MultiImage/GenerateButton";
 import { MultiImageUpload } from "@/components/MultiImage/MultiImageUpload";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -18,6 +19,7 @@ import {
 } from "react-native";
 
 export default function OutfitVariationsScreen() {
+  const { t } = useLanguageStore();
   const router = useRouter();
   const [images, setImages] = useState<string[]>([]);
   const [prompt, setPrompt] = useState("");
@@ -29,7 +31,10 @@ export default function OutfitVariationsScreen() {
 
   const handleAddImage = async () => {
     if (images.length >= 10) {
-      Alert.alert("Maximum Reached", "You can upload up to 10 images only");
+      Alert.alert(
+        t("common.maxImagesReached"),
+        t("common.maxImagesDesc").replace("{max}", "10")
+      );
       return;
     }
 
@@ -46,27 +51,32 @@ export default function OutfitVariationsScreen() {
   };
 
   const handleRemoveImage = (index: number) => {
-    Alert.alert("Remove Image", "Are you sure you want to remove this image?", [
-      { text: "Cancel", style: "cancel" },
-      {
-        text: "Remove",
-        style: "destructive",
-        onPress: () => {
-          const newImages = images.filter((_, i) => i !== index);
-          setImages(newImages);
+    Alert.alert(
+      t("common.removeImage"),
+      t("common.removeImageConfirm"),
+      [
+        { text: t("common.cancel"), style: "cancel" },
+        {
+          text: t("common.remove"),
+          style: "destructive",
+          onPress: () => {
+            const newImages = images.filter((_, i) => i !== index);
+            setImages(newImages);
+          },
         },
-      },
-    ]);
+      ],
+      { cancelable: true }
+    );
   };
 
   const handleGenerate = () => {
     if (images.length === 0) {
-      Alert.alert("No Images", "Please upload at least one image");
+      Alert.alert(t("common.noImages"), t("common.noImagesDesc"));
       return;
     }
 
     if (!prompt.trim()) {
-      Alert.alert("No Prompt", "Please enter a prompt");
+      Alert.alert(t("common.noPrompt"), t("common.noPromptDesc"));
       return;
     }
 
@@ -75,11 +85,11 @@ export default function OutfitVariationsScreen() {
   };
 
   const handleAIGenerate = () => {
-    Alert.alert("AI Generate", "Generating prompt with AI...");
+    Alert.alert(t("common.aiGenerate"), t("common.aiGenerateDesc"));
   };
 
   const handleModelSelect = () => {
-    Alert.alert("Model Selection", "Select AI model");
+    Alert.alert(t("common.modelSelection"), t("common.modelSelectionDesc"));
   };
 
   return (
@@ -96,7 +106,7 @@ export default function OutfitVariationsScreen() {
             paddingBottom: safeAreaBottom,
           }}
         >
-          <ImageGenHeader title="Outfit Variations" />
+          <ImageGenHeader title={t("features.outfit.title")} />
 
           <ModelSelector
             modelName="Nano Banana Pro"

@@ -8,8 +8,10 @@ import { PageHeader } from "@/components/Creations/PageHeader";
 import { GradientBackground } from "@/components/GradientBackground";
 import { CREATIONS } from "@/constants/data";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 
 export default function CreationsScreen() {
+  const { t } = useLanguageStore();
   const [activeFilter, setActiveFilter] = useState<FilterType>("all");
 
   const { safeAreaTop, getTabBarHeight, spacing } = useResponsive();
@@ -55,7 +57,7 @@ export default function CreationsScreen() {
         <StatusBar barStyle="light-content" backgroundColor="#0D0D0F" />
 
         {/* Header */}
-        <PageHeader title="Creations" isLoggedIn={true} />
+        <PageHeader title={t("creations.title")} isLoggedIn={true} />
 
         {/* Filter Tabs */}
         <FilterTabs

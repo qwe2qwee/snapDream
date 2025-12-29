@@ -20,6 +20,10 @@ const hairstyle = {
   },
   generate: "تغيير التسريحة",
   processing: "جاري المعالجة...",
+  resultTitle: "نتيجة تسريحة الشعر",
+  checkOut: "شاهد تسريحة شعري الجديدة!",
+  generateError: "فشل توليد تسريحة الشعر. يرجى المحاولة مرة أخرى.",
+  processingDesc: "جاري إنشاء {count} صور بـ {style} باللون {color}",
 };
 
 export default hairstyle;

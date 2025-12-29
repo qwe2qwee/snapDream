@@ -122,6 +122,44 @@ export default function OnboardingScreen() {
     },
   ];
 
+  const MODELS = [
+    {
+      name: t("onboarding.models.sdxlBase"),
+      label: "Stable Diffusion XL",
+      model: "sdxl_base_1.0.safetensors",
+      type: "checkpoint",
+      gradient: ["#4A1F1F", "#2A0F0F"],
+    },
+    {
+      name: t("onboarding.models.sdxlRefiner"),
+      label: "SDXL Refiner",
+      model: "sdxl_refiner_1.0.safetensors",
+      type: "checkpoint",
+      gradient: ["#1F3A4A", "#0F1A2A"],
+    },
+    {
+      name: t("onboarding.models.realisticVision"),
+      label: "Realistic Vision v6",
+      model: "realisticVisionV60B1.safetensors",
+      type: "checkpoint",
+      gradient: ["#4A1F4A", "#2A0F2A"],
+    },
+    {
+      name: t("onboarding.models.juggernautXL"),
+      label: "Juggernaut XL",
+      model: "juggernautXL_v9.safetensors",
+      type: "checkpoint",
+      gradient: ["#3A4A1F", "#1A2A0F"],
+    },
+    {
+      name: t("onboarding.models.animeXL"),
+      label: "Animagine XL",
+      model: "animagineXLV3.safetensors",
+      type: "checkpoint",
+      gradient: ["#4A1F3A", "#2A0F1A"],
+    },
+  ];
+
   const GENERATION_IMAGES = [
     isArabic
       ? require("../assets/images/onboarding2/OnboardingAr.png")

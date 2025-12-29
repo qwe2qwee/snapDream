@@ -14,8 +14,10 @@ import { ConfirmModal } from "@/components/Modals/modal";
 import { ShareModal } from "@/components/Modals/shareModal";
 import { CREATIONS } from "@/constants/data";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 
 export default function CreationDetailScreen() {
+  const { t } = useLanguageStore();
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const numericId = Number(id);
@@ -76,7 +78,8 @@ export default function CreationDetailScreen() {
   // Determine what to show
   const itemPrompt = item?.prompt;
   const itemAIModel = item?.AIModel;
-  const itemAspectRatio = item?.aspectRatio || "3:4 Aspect Ratio";
+  const itemAspectRatio =
+    item?.aspectRatio || `3:4 ${t("creations.aspectRatio")}`;
 
   const showInfo = !!itemAIModel;
   const showPrompt = !!itemPrompt;
@@ -85,8 +88,8 @@ export default function CreationDetailScreen() {
   // Share data
   const shareUrl = `https://myapp.com/creation/${numericId}`;
   const shareText = item?.prompt
-    ? `Check out my AI creation: "${item.prompt}"`
-    : "Check out my amazing AI creation!";
+    ? `${t("common.appName")} creation: "${item.prompt}"`
+    : `${t("common.appName")} creation!`;
 
   return (
     <GradientBackground>
@@ -95,7 +98,7 @@ export default function CreationDetailScreen() {
         contentContainerStyle={[styles.scrollContent, { flexGrow: 1 }]}
         showsVerticalScrollIndicator={false}
       >
-        <ResultHeader title="My Creation" />
+        <ResultHeader title={t("creations.myCreation")} />
 
         <View style={isExpanded ? { flex: 1, minHeight: 400 } : {}}>
           <ResultImage
@@ -130,7 +133,7 @@ export default function CreationDetailScreen() {
         onClose={() => setShareModalVisible(false)}
         shareUrl={shareUrl}
         shareText={shareText}
-        title="Share"
+        title={t("common.share")}
       />
 
       {/* Delete Confirmation Modal */}
@@ -148,9 +151,9 @@ export default function CreationDetailScreen() {
         iconName="trash-2"
         iconColor="#FFFFFF"
         iconBackgroundColor="rgba(255, 255, 255, 0.05)"
-        title="Delete Creation"
-        subtitle="Are you sure you want to delete this creation? This action cannot be undone."
-        confirmText="Delete"
+        title={t("result.deleteTitle")}
+        subtitle={t("result.deleteConfirm")}
+        confirmText={t("common.delete")}
         showCloseButton={true}
       />
     </GradientBackground>

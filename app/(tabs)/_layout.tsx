@@ -29,6 +29,7 @@ import HomeIcon from "@/assets/icons/home.svg";
 import ProfileIconActive from "@/assets/icons/profile-active.svg";
 import ProfileIcon from "@/assets/icons/profile.svg";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 
 type IconName = "home" | "community" | "create" | "creations" | "profile";
 
@@ -183,6 +184,7 @@ function TabButton({
 // Main TabLayout
 // ------------------------------
 export default function TabLayout() {
+  const { t } = useLanguageStore();
   const {
     safeAreaBottom,
     safeAreaLeft,
@@ -210,11 +212,11 @@ export default function TabLayout() {
       <TabSlot />
       <TabList style={[styles.tabList, dynamicStyles.tabList]}>
         <TabTrigger name="index" href="/" asChild>
-          <TabButton icon="home" label="Home" />
+          <TabButton icon="home" label={t("common.home")} />
         </TabTrigger>
 
         <TabTrigger name="community" href="/community" asChild>
-          <TabButton icon="community" label="Community" />
+          <TabButton icon="community" label={t("common.community")} />
         </TabTrigger>
 
         <TabTrigger name="create" href="/create" asChild>
@@ -222,11 +224,11 @@ export default function TabLayout() {
         </TabTrigger>
 
         <TabTrigger name="creations" href="/creations" asChild>
-          <TabButton icon="creations" label="Creations" />
+          <TabButton icon="creations" label={t("common.creations")} />
         </TabTrigger>
 
         <TabTrigger name="profile" href="/profile" asChild>
-          <TabButton icon="profile" label="Profile" />
+          <TabButton icon="profile" label={t("common.profile")} />
         </TabTrigger>
       </TabList>
     </Tabs>

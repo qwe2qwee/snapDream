@@ -25,6 +25,9 @@ const features = {
     upload: "Upload photo",
     variations: "Generate Variations",
   },
+  consistency: {
+    title: "Consistency Model",
+  },
 };
 
 export default features;

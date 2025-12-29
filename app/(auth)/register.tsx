@@ -9,6 +9,7 @@ import { SuccessModal } from "@/components/Modals/AproveModal";
 import { LoadingModal } from "@/components/Modals/LoadingModal";
 import { OTPModal } from "@/components/Modals/OTPModal";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -20,6 +21,7 @@ import {
 } from "react-native";
 
 export default function RegisterScreen() {
+  const { t } = useLanguageStore();
   const router = useRouter();
   const { spacing, safeAreaTop, safeAreaBottom } = useResponsive();
 
@@ -107,8 +109,8 @@ export default function RegisterScreen() {
           <View style={styles.form}>
             {/* Email Input */}
             <LoginInput
-              label="Email"
-              placeholder="Email"
+              label={t("auth.email")}
+              placeholder={t("auth.email")}
               value={email}
               onChangeText={setEmail}
               icon="mail"
@@ -117,8 +119,8 @@ export default function RegisterScreen() {
 
             {/* Password Input */}
             <LoginInput
-              label="Password"
-              placeholder="Password"
+              label={t("auth.password")}
+              placeholder={t("auth.password")}
               value={password}
               onChangeText={setPassword}
               icon="lock"
@@ -127,8 +129,8 @@ export default function RegisterScreen() {
 
             {/* Confirm Password Input */}
             <LoginInput
-              label="Confirm Password"
-              placeholder="Re-Enter Your Password"
+              label={t("auth.confirmPassword")}
+              placeholder={t("auth.confirmPasswordPlaceholder")}
               value={confirmPassword}
               onChangeText={setConfirmPassword}
               icon="lock"
@@ -136,7 +138,10 @@ export default function RegisterScreen() {
             />
 
             {/* Sign Up Button */}
-            <LoginButton onPress={() => setShowOTP(true)} text="Sign Up" />
+            <LoginButton
+              onPress={() => setShowOTP(true)}
+              text={t("auth.signUp")}
+            />
 
             {/* Login Link */}
             <LoginLink onPress={handleLogin} />
@@ -165,7 +170,7 @@ export default function RegisterScreen() {
       <LoadingModal
         isVisible={showLoading}
         onModalHide={handleLoadingModalHide}
-        title="Just a moment…"
+        title={t("auth.justAMoment")}
       />
 
       {/* Success Modal */}

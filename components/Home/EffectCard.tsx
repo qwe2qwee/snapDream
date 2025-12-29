@@ -20,7 +20,8 @@ const CrownBadge: React.FC<{
   size: number;
   iconSize: number;
   position: number;
-}> = ({ size, iconSize, position }) => (
+  isRTL?: boolean;
+}> = ({ size, iconSize, position, isRTL }) => (
   <View
     style={[
       styles.iconButton,
@@ -29,7 +30,8 @@ const CrownBadge: React.FC<{
         height: size,
         borderRadius: size / 2,
         top: position,
-        right: position,
+        right: isRTL ? undefined : position,
+        left: isRTL ? position : undefined,
       },
     ]}
   >
@@ -112,6 +114,7 @@ export const EffectCard: React.FC<EffectCardProps> = ({
         fontSize: responsiveValues.titleSize,
         fontFamily: isArabic ? "Zain-Regular" : fonts.Regular,
         color: "#ffffffae",
+        textAlign: isArabic ? "right" : "left",
       },
     }),
     [responsiveValues, fonts]
@@ -142,6 +145,7 @@ export const EffectCard: React.FC<EffectCardProps> = ({
             size={responsiveValues.badgeSize}
             iconSize={responsiveValues.iconSize}
             position={responsiveValues.badgePosition}
+            isRTL={isArabic}
           />
         )}
       </View>

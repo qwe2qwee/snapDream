@@ -5,6 +5,7 @@ import { ModelSelector } from "@/components/Imagegen/ModelSelector";
 import { OptionsBottomSheet } from "@/components/Imagegen/OptionsBottomSheet";
 import { PromptInput } from "@/components/Imagegen/PromptInput";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -41,6 +42,9 @@ export default function ImageGenScreen() {
     console.log("Select model");
   };
 
+  const { currentLanguage, t } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
+
   return (
     <GradientBackground>
       <KeyboardAvoidingView
@@ -54,18 +58,21 @@ export default function ImageGenScreen() {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          <ImageGenHeader />
+          <ImageGenHeader title={t("imageGen.title")} />
 
           <ModelSelector
             modelName="Nano Banana Pro"
             modelIcon="https://example.com/model-icon.png"
             onPress={handleModelSelect}
+            label={t("imageGen.model")}
           />
 
           <PromptInput
             value={prompt}
             onChangeText={setPrompt}
             onAIGenerate={handleAIGenerate}
+            label={t("imageGen.prompt")}
+            placeholder={t("imageGen.promptPlaceholder")}
           />
           <View style={{ height: spacing.xl }} />
         </ScrollView>

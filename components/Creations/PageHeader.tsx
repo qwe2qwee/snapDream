@@ -70,7 +70,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
         paddingHorizontal: responsiveValues.horizontalPadding,
         paddingTop: responsiveValues.topPadding,
         paddingBottom: responsiveValues.bottomPadding,
-        flexDirection: "row",
+        flexDirection: isArabic ? "row-reverse" : "row",
         alignItems: "center",
         justifyContent: "space-between",
       },

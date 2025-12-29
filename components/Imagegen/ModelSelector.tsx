@@ -7,12 +7,14 @@ interface ModelSelectorProps {
   modelName: string;
   modelIcon?: string;
   onPress: () => void;
+  label?: string;
 }
 
 export const ModelSelector: React.FC<ModelSelectorProps> = ({
   modelName,
   modelIcon,
   onPress,
+  label = "Model",
 }) => {
   const fonts = useFontFamily();
   const { spacing, typography, getBorderRadius } = useResponsive();
@@ -55,7 +57,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Model</Text>
+      <Text style={styles.label}>{label}</Text>
       <TouchableOpacity
         style={styles.selector}
         onPress={onPress}

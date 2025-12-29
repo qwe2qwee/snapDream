@@ -3,6 +3,7 @@ import React, { useMemo } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import { EffectCard } from "./EffectCard";
 import { SectionHeader } from "./SectionHeader";
 
@@ -28,17 +29,30 @@ export const EffectsSection: React.FC<EffectsSectionProps> = ({
   onSeeAll,
   onEffectPress,
 }) => {
+  const { currentLanguage } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
   const { spacing, getResponsiveValue, isTablet, isSmallScreen } =
     useResponsive();
 
   // Responsive values with memoization
   const responsiveValues = useMemo(
     () => ({
-      // Padding left (aligns with HomeScreen container)
-      paddingLeft: isTablet ? spacing.lg : spacing.md,
+      // Horizontal paddings swapped for RTL
+      paddingLeft: isArabic
+        ? isSmallScreen
+          ? spacing.xs
+          : spacing.sm
+        : isTablet
+        ? spacing.lg
+        : spacing.md,
 
-      // Padding right (smaller for scroll indicator space)
-      paddingRight: isSmallScreen ? spacing.xs : spacing.sm,
+      paddingRight: isArabic
+        ? isTablet
+          ? spacing.lg
+          : spacing.md
+        : isSmallScreen
+        ? spacing.xs
+        : spacing.sm,
 
       // Gap between cards
       gap: getResponsiveValue(10, 12, 14, 16, 18),
@@ -57,6 +71,9 @@ export const EffectsSection: React.FC<EffectsSectionProps> = ({
         paddingRight: responsiveValues.paddingRight,
         gap: responsiveValues.gap,
         marginBottom: responsiveValues.marginBottom,
+        flexDirection: (isArabic ? "row-reverse" : "row") as
+          | "row"
+          | "row-reverse",
       },
     }),
     [responsiveValues]

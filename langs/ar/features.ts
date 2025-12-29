@@ -25,6 +25,9 @@ const features = {
     upload: "ارفع صورتك",
     variations: "توليد تنويعات",
   },
+  consistency: {
+    title: "نموذج التناسق",
+  },
 };
 
 export default features;

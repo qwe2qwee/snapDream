@@ -5,6 +5,7 @@ import { ModelSelector } from "@/components/Imagegen/ModelSelector";
 import { OptionsBottomSheet } from "@/components/Imagegen/OptionsBottomSheet";
 import { PromptInput } from "@/components/Imagegen/PromptInput";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -24,6 +25,9 @@ export default function VideoGenScreen() {
   const [aspectRatio, setAspectRatio] = useState("16:9");
   const [resolution, setResolution] = useState("1080p");
   const [duration, setDuration] = useState("5s");
+
+  const { currentLanguage, t } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
 
   const handleGenerate = () => {
     console.log("Generate Video with:", {
@@ -54,18 +58,21 @@ export default function VideoGenScreen() {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          <ImageGenHeader title="Video Generate" />
+          <ImageGenHeader title={t("videoGen.title")} />
 
           <ModelSelector
             modelName="Sora Turbo"
             modelIcon="https://example.com/sora-icon.png" // Placeholder
             onPress={handleModelSelect}
+            label={t("videoGen.model")}
           />
 
           <PromptInput
             value={prompt}
             onChangeText={setPrompt}
             onAIGenerate={handleAIGenerate}
+            label={t("imageGen.prompt")}
+            placeholder={t("imageGen.promptPlaceholder")}
           />
           <View style={{ height: spacing.xl }} />
         </ScrollView>

@@ -56,7 +56,9 @@ export const ImageGenHeader: React.FC<ImageGenHeaderProps> = ({ title }) => {
       header: {
         paddingHorizontal: isTablet ? spacing.lg : spacing.md,
         paddingVertical: responsiveValues.headerPaddingVertical,
-        flexDirection: "row" as const,
+        flexDirection: (isArabic ? "row-reverse" : "row") as
+          | "row"
+          | "row-reverse",
         alignItems: "center" as const,
         justifyContent: "space-between" as const,
       },
@@ -113,10 +115,18 @@ export const ImageGenHeader: React.FC<ImageGenHeaderProps> = ({ title }) => {
           <BackIcon
             width={responsiveValues.backIconSize}
             height={responsiveValues.backIconSize}
+            style={{ transform: [{ rotate: isArabic ? "180deg" : "0deg" }] }}
           />
         </TouchableOpacity>
 
-        <Text style={dynamicStyles.title}>{displayTitle}</Text>
+        <Text
+          style={[
+            dynamicStyles.title,
+            { textAlign: isArabic ? "right" : "left" },
+          ]}
+        >
+          {displayTitle}
+        </Text>
       </View>
     </View>
   );

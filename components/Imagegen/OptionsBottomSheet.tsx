@@ -29,6 +29,8 @@ interface OptionsBottomSheetProps {
   type?: "image" | "video";
 }
 
+import useLanguageStore from "@/store/useLanguageStore";
+
 export const OptionsBottomSheet: React.FC<OptionsBottomSheetProps> = ({
   isVisible,
   onClose,
@@ -44,6 +46,7 @@ export const OptionsBottomSheet: React.FC<OptionsBottomSheetProps> = ({
   onFpsChange,
   type = "image",
 }) => {
+  const { t } = useLanguageStore();
   const fonts = useFontFamily();
   const { spacing, typography, getBorderRadius, safeAreaBottom } =
     useResponsive();
@@ -98,7 +101,7 @@ export const OptionsBottomSheet: React.FC<OptionsBottomSheetProps> = ({
     >
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.title}>Options</Text>
+          <Text style={styles.title}>{t("imageGen.advanceOptions")}</Text>
           <TouchableOpacity
             style={styles.closeButton}
             onPress={onClose}
@@ -112,7 +115,7 @@ export const OptionsBottomSheet: React.FC<OptionsBottomSheetProps> = ({
           {type === "image" ? (
             <>
               <OptionsPicker
-                label="Number of Images"
+                label={t("imageGen.numberOfImages")}
                 options={["1", "2", "3", "4"]}
                 selectedValue={numberOfImages.toString()}
                 onSelect={(value) => onNumberOfImagesChange(Number(value))}
@@ -126,7 +129,7 @@ export const OptionsBottomSheet: React.FC<OptionsBottomSheetProps> = ({
               />
 
               <OptionsPicker
-                label="Resolutions"
+                label={t("imageGen.resolutions")}
                 options={["1K", "2K", "3K"]}
                 selectedValue={resolution}
                 onSelect={onResolutionChange}
@@ -144,7 +147,7 @@ export const OptionsBottomSheet: React.FC<OptionsBottomSheetProps> = ({
 
               {duration && onDurationChange && (
                 <OptionsPicker
-                  label="Duration (sec)"
+                  label={t("videoGen.duration")}
                   options={["3s", "5s", "10s"]}
                   selectedValue={duration}
                   onSelect={onDurationChange}
@@ -153,7 +156,7 @@ export const OptionsBottomSheet: React.FC<OptionsBottomSheetProps> = ({
 
               {fps && onFpsChange && (
                 <OptionsPicker
-                  label="Frame Rate"
+                  label={t("videoGen.fps")}
                   options={["24", "30", "60"]}
                   selectedValue={fps}
                   onSelect={onFpsChange}
@@ -161,7 +164,7 @@ export const OptionsBottomSheet: React.FC<OptionsBottomSheetProps> = ({
               )}
 
               <OptionsPicker
-                label="Resolution"
+                label={t("videoGen.resolution")}
                 options={["720p", "1080p", "4K"]}
                 selectedValue={resolution}
                 onSelect={onResolutionChange}

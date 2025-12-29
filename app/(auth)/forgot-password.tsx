@@ -4,6 +4,7 @@ import { LoginInput } from "@/components/Auth/LoginInput";
 import { GradientBackground } from "@/components/GradientBackground";
 import { SuccessModal } from "@/components/Modals/AproveModal";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -15,6 +16,7 @@ import {
 } from "react-native";
 
 export default function ForgotPasswordScreen() {
+  const { t } = useLanguageStore();
   const router = useRouter();
   const { spacing, safeAreaTop, safeAreaBottom } = useResponsive();
   const [email, setEmail] = useState("");
@@ -54,16 +56,16 @@ export default function ForgotPasswordScreen() {
         >
           {/* Header */}
           <LoginHeader
-            title="Forgot Password?"
-            subtitle="Enter your email to receive recovery link."
+            title={t("auth.forgotPasswordtitle")}
+            subtitle={t("auth.forgotPasswordDesc")}
           />
 
           {/* Form */}
           <View style={styles.form}>
             {/* Email Input */}
             <LoginInput
-              label="Email"
-              placeholder="Email"
+              label={t("auth.email")}
+              placeholder={t("auth.email")}
               value={email}
               onChangeText={setEmail}
               icon="mail"
@@ -71,7 +73,7 @@ export default function ForgotPasswordScreen() {
             />
 
             {/* Send Link Button */}
-            <LoginButton onPress={handleSendLink} text="Send Recovery Link" />
+            <LoginButton onPress={handleSendLink} text={t("auth.sendLink")} />
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -86,11 +88,11 @@ export default function ForgotPasswordScreen() {
             params: { email },
           });
         }}
-        title="Link Sent!"
-        subtitle={`We've sent a password recovery link to:\n${
-          email || "your email"
+        title={t("auth.linkSent")}
+        subtitle={`${t("auth.recoveryEmailSent")}${
+          email || t("auth.email").toLowerCase()
         }`}
-        buttonText="Continue"
+        buttonText={t("common.continue")}
       />
     </GradientBackground>
   );

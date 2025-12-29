@@ -12,55 +12,61 @@ import {
 import Star from "@/assets/icons/Rate.svg";
 import { GradientBackground } from "@/components/GradientBackground";
 import { ImageGenHeader } from "@/components/Imagegen/ImageGenHeader";
+import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import { router } from "expo-router";
 
 export default function RateAppScreen() {
-  const {
-    spacing,
-    typography,
-    getResponsiveValue,
-    safeAreaBottom,
-    getIconSize,
-  } = useResponsive();
+  const { spacing, typography, getResponsiveValue, safeAreaBottom } =
+    useResponsive();
   const [rating, setRating] = useState(0);
   const [hoveredRating, setHoveredRating] = useState(0);
 
+  const { currentLanguage, t } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
+  const fonts = useFontFamily();
+
+  const getRatingText = (rating: number) => {
+    switch (rating) {
+      case 1:
+        return t("rateApp.rating1");
+      case 2:
+        return t("rateApp.rating2");
+      case 3:
+        return t("rateApp.rating3");
+      case 4:
+        return t("rateApp.rating4");
+      case 5:
+        return t("rateApp.rating5");
+      default:
+        return "";
+    }
+  };
+
   const handleRating = (value: number) => {
     setRating(value);
-    // In a real app, you would submit this rating to your backend
     setTimeout(() => {
       if (value >= 4) {
-        // Open app store for high ratings
-        Alert.alert(
-          "Thank You!",
-          "Would you like to rate us on the App Store?",
-          [
-            { text: "Not Now", style: "cancel" },
-            {
-              text: "Rate Now",
-              onPress: () => {
-                // Replace with your actual app store URL
-                Linking.openURL("https://apps.apple.com/app/snackdream");
-              },
+        Alert.alert(t("rateApp.thankYou"), t("rateApp.storeRedirectDesc"), [
+          { text: t("rateApp.notNow"), style: "cancel" },
+          {
+            text: t("rateApp.rateNow"),
+            onPress: () => {
+              Linking.openURL("https://apps.apple.com/app/snackdream");
             },
-          ]
-        );
+          },
+        ]);
       } else {
-        // Collect feedback for low ratings
-        Alert.alert(
-          "Thank You!",
-          "We appreciate your feedback. Would you like to tell us how we can improve?",
-          [
-            { text: "Not Now", style: "cancel" },
-            {
-              text: "Send Feedback",
-              onPress: () => router.push("/feedback"),
-            },
-          ]
-        );
+        Alert.alert(t("rateApp.thankYou"), t("rateApp.improveDesc"), [
+          { text: t("rateApp.notNow"), style: "cancel" },
+          {
+            text: t("rateApp.giveFeedback"),
+            onPress: () => router.push("/feedback"),
+          },
+        ]);
       }
-    }, 300);
+    }, 500);
   };
 
   const styles = StyleSheet.create({
@@ -70,103 +76,127 @@ export default function RateAppScreen() {
     },
     content: {
       flex: 1,
-      paddingHorizontal: spacing.md,
-      paddingTop: spacing.xl * 2,
       alignItems: "center",
+      justifyContent: "center",
+      paddingHorizontal: spacing.xl,
+      paddingBottom: safeAreaBottom + spacing.xl,
+    },
+    iconContainer: {
+      width: 120, // Replaced getIconSize call from previous version
+      height: 120,
+      borderRadius: 60,
+      backgroundColor: "rgba(255, 255, 255, 0.05)",
+      justifyContent: "center",
+      alignItems: "center",
+      marginBottom: spacing.xl,
     },
     title: {
-      fontSize: typography.h1,
-      fontWeight: "700",
+      fontSize: typography.h2,
+      fontFamily: fonts.Bold,
       color: "#FFFFFF",
       textAlign: "center",
-      marginBottom: spacing.md,
+      marginBottom: spacing.sm,
     },
     subtitle: {
       fontSize: typography.body,
+      fontFamily: fonts.Regular,
       color: "#A0A0A0",
       textAlign: "center",
-      marginBottom: spacing.xl * 2,
-      lineHeight: typography.body * 1.5,
+      marginBottom: spacing.xl * 1.5,
     },
-    starsContainer: {
-      flexDirection: "row",
-      gap: spacing.md,
+    ratingContainer: {
+      width: "100%",
+      alignItems: "center",
       marginBottom: spacing.xl,
+    },
+    starsRow: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      width: "100%",
+      paddingHorizontal: spacing.lg,
     },
     starButton: {
       padding: spacing.xs,
     },
-    feedbackText: {
-      fontSize: typography.small,
-      color: "#666666",
-      textAlign: "center",
-      marginTop: spacing.xl,
-      paddingHorizontal: spacing.lg,
-    },
     ratingText: {
+      marginTop: spacing.lg,
       fontSize: typography.h3,
-      fontWeight: "600",
+      fontFamily: fonts.SemiBold,
       color: "#FFFFFF",
-      marginTop: spacing.md,
+      textAlign: "center",
+    },
+    submitButton: {
+      width: "100%",
+      height: getResponsiveValue(54, 58, 62, 66, 70),
+      backgroundColor: "#FFFFFF",
+      borderRadius: getResponsiveValue(27, 29, 31, 33, 35),
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: spacing.xl,
+    },
+    submitButtonDisabled: {
+      opacity: 0.5,
+    },
+    submitButtonText: {
+      fontSize: typography.body,
+      fontFamily: fonts.Bold,
+      color: "#000000",
     },
   });
-
-  const renderStar = (index: number) => {
-    const isFilled = index <= (hoveredRating || rating);
-    return (
-      <TouchableOpacity
-        key={index}
-        style={styles.starButton}
-        onPress={() => handleRating(index)}
-        activeOpacity={0.7}
-      >
-        <Star
-          width={getIconSize("large")}
-          height={getIconSize("large")}
-          fill={isFilled ? "#FFD700" : "none"}
-          stroke={isFilled ? "#FFD700" : "#666666"}
-          strokeWidth={2}
-        />
-      </TouchableOpacity>
-    );
-  };
 
   return (
     <View style={styles.container}>
       <GradientBackground>
         <StatusBar barStyle="light-content" />
-
-        {/* Header */}
-        <ImageGenHeader title="Rate App" />
+        <ImageGenHeader />
 
         <View style={styles.content}>
-          <Text style={styles.title}>Enjoying SnackDream?</Text>
-          <Text style={styles.subtitle}>
-            Your feedback helps us improve and create better experiences for
-            everyone
-          </Text>
-
-          <View style={styles.starsContainer}>
-            {[1, 2, 3, 4, 5].map((index) => renderStar(index))}
+          <View style={styles.iconContainer}>
+            <Star width={60} height={60} color="#FFFFFF" />
           </View>
 
-          {rating > 0 && (
-            <Text style={styles.ratingText}>
-              {rating === 5
-                ? "Excellent! 🎉"
-                : rating === 4
-                ? "Great! 😊"
-                : rating === 3
-                ? "Good 👍"
-                : rating === 2
-                ? "Fair 🤔"
-                : "Needs Improvement 😔"}
-            </Text>
-          )}
+          <Text style={styles.title}>{t("rateApp.title")}</Text>
+          <Text style={styles.subtitle}>{t("rateApp.subtitle")}</Text>
 
-          <Text style={styles.feedbackText}>
-            Tap a star to rate your experience with SnackDream
-          </Text>
+          <View style={styles.ratingContainer}>
+            <View style={styles.starsRow}>
+              {[1, 2, 3, 4, 5].map((index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={styles.starButton}
+                  onPress={() => handleRating(index)}
+                  onPressIn={() => setHoveredRating(index)}
+                  onPressOut={() => setHoveredRating(0)}
+                  activeOpacity={0.7}
+                >
+                  <Star
+                    width={32}
+                    height={32}
+                    color={
+                      index <= (hoveredRating || rating)
+                        ? "#FFFFFF"
+                        : "rgba(255, 255, 255, 0.2)"
+                    }
+                  />
+                </TouchableOpacity>
+              ))}
+            </View>
+            {rating > 0 && (
+              <Text style={styles.ratingText}>{getRatingText(rating)}</Text>
+            )}
+          </View>
+
+          <TouchableOpacity
+            style={[
+              styles.submitButton,
+              rating === 0 && styles.submitButtonDisabled,
+            ]}
+            disabled={rating === 0}
+            onPress={() => handleRating(rating)}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.submitButtonText}>{t("rateApp.submit")}</Text>
+          </TouchableOpacity>
         </View>
       </GradientBackground>
     </View>

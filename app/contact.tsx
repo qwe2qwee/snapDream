@@ -15,7 +15,9 @@ import {
 
 import { GradientBackground } from "@/components/GradientBackground";
 import { ImageGenHeader } from "@/components/Imagegen/ImageGenHeader";
+import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import { router } from "expo-router";
 
 export default function ContactScreen() {
@@ -29,10 +31,14 @@ export default function ContactScreen() {
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
 
+  const { currentLanguage, t } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
+  const fonts = useFontFamily();
+
   const contactMethods = [
     {
       id: "email",
-      label: "Email Us",
+      label: t("contact.emailUs"),
       value: "support@snackdream.app",
       icon: "📧",
       action: () => Linking.openURL("mailto:support@snackdream.app"),
@@ -55,23 +61,21 @@ export default function ContactScreen() {
 
   const handleSubmit = () => {
     if (!name.trim() || !email.trim() || !subject.trim() || !message.trim()) {
-      Alert.alert("Required Fields", "Please fill in all fields");
+      Alert.alert(t("contact.requiredFields"), t("contact.fillAllFields"));
       return;
     }
 
     // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      Alert.alert("Invalid Email", "Please enter a valid email address");
+      Alert.alert(t("contact.invalidEmail"), t("contact.invalidEmailDesc"));
       return;
     }
 
     // In a real app, submit to backend
-    Alert.alert(
-      "Message Sent!",
-      "Thank you for contacting us. We'll get back to you within 24-48 hours.",
-      [{ text: "OK", onPress: () => router.back() }]
-    );
+    Alert.alert(t("contact.messageSent"), t("contact.messageSentDesc"), [
+      { text: t("contact.ok"), onPress: () => router.back() },
+    ]);
   };
 
   const styles = StyleSheet.create({
@@ -186,7 +190,7 @@ export default function ContactScreen() {
         <StatusBar barStyle="light-content" />
 
         {/* Header */}
-        <ImageGenHeader title="Contact Us" />
+        <ImageGenHeader title={t("contact.title")} />
 
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -197,14 +201,25 @@ export default function ContactScreen() {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.scrollContent}
           >
-            <Text style={styles.description}>
-              Have a question or need help? We're here for you! Reach out
-              through any of the methods below or send us a message.
+            <Text
+              style={[
+                styles.description,
+                isArabic && { fontFamily: fonts.Regular },
+              ]}
+            >
+              {t("contact.desc")}
             </Text>
 
             {/* Contact Methods */}
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Get in Touch</Text>
+              <Text
+                style={[
+                  styles.sectionTitle,
+                  isArabic && { fontFamily: fonts.Bold },
+                ]}
+              >
+                {t("contact.getInTouch")}
+              </Text>
               <View style={styles.contactMethodsContainer}>
                 {contactMethods.map((method) => (
                   <TouchableOpacity
@@ -215,10 +230,20 @@ export default function ContactScreen() {
                   >
                     <Text style={styles.contactMethodIcon}>{method.icon}</Text>
                     <View style={styles.contactMethodContent}>
-                      <Text style={styles.contactMethodLabel}>
+                      <Text
+                        style={[
+                          styles.contactMethodLabel,
+                          isArabic && { fontFamily: fonts.Regular },
+                        ]}
+                      >
                         {method.label}
                       </Text>
-                      <Text style={styles.contactMethodValue}>
+                      <Text
+                        style={[
+                          styles.contactMethodValue,
+                          isArabic && { fontFamily: fonts.Medium },
+                        ]}
+                      >
                         {method.value}
                       </Text>
                     </View>
@@ -231,13 +256,33 @@ export default function ContactScreen() {
 
             {/* Contact Form */}
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Send a Message</Text>
+              <Text
+                style={[
+                  styles.sectionTitle,
+                  isArabic && { fontFamily: fonts.Bold },
+                ]}
+              >
+                {t("contact.sendMessage")}
+              </Text>
 
               <View style={styles.formSection}>
-                <Text style={styles.label}>Name</Text>
+                <Text
+                  style={[
+                    styles.label,
+                    isArabic && { fontFamily: fonts.SemiBold },
+                  ]}
+                >
+                  {t("contact.name")}
+                </Text>
                 <TextInput
-                  style={styles.input}
-                  placeholder="Your name"
+                  style={[
+                    styles.input,
+                    isArabic && {
+                      fontFamily: fonts.Regular,
+                      textAlign: "right",
+                    },
+                  ]}
+                  placeholder={t("contact.namePlaceholder")}
                   placeholderTextColor="#666666"
                   value={name}
                   onChangeText={setName}
@@ -245,10 +290,23 @@ export default function ContactScreen() {
               </View>
 
               <View style={styles.formSection}>
-                <Text style={styles.label}>Email</Text>
+                <Text
+                  style={[
+                    styles.label,
+                    isArabic && { fontFamily: fonts.SemiBold },
+                  ]}
+                >
+                  {t("contact.email")}
+                </Text>
                 <TextInput
-                  style={styles.input}
-                  placeholder="your@email.com"
+                  style={[
+                    styles.input,
+                    isArabic && {
+                      fontFamily: fonts.Regular,
+                      textAlign: "right",
+                    },
+                  ]}
+                  placeholder={t("contact.emailPlaceholder")}
                   placeholderTextColor="#666666"
                   keyboardType="email-address"
                   autoCapitalize="none"
@@ -258,10 +316,23 @@ export default function ContactScreen() {
               </View>
 
               <View style={styles.formSection}>
-                <Text style={styles.label}>Subject</Text>
+                <Text
+                  style={[
+                    styles.label,
+                    isArabic && { fontFamily: fonts.SemiBold },
+                  ]}
+                >
+                  {t("contact.subject")}
+                </Text>
                 <TextInput
-                  style={styles.input}
-                  placeholder="What is this about?"
+                  style={[
+                    styles.input,
+                    isArabic && {
+                      fontFamily: fonts.Regular,
+                      textAlign: "right",
+                    },
+                  ]}
+                  placeholder={t("contact.subjectPlaceholder")}
                   placeholderTextColor="#666666"
                   value={subject}
                   onChangeText={setSubject}
@@ -269,10 +340,24 @@ export default function ContactScreen() {
               </View>
 
               <View style={styles.formSection}>
-                <Text style={styles.label}>Message</Text>
+                <Text
+                  style={[
+                    styles.label,
+                    isArabic && { fontFamily: fonts.SemiBold },
+                  ]}
+                >
+                  {t("contact.message")}
+                </Text>
                 <TextInput
-                  style={[styles.input, styles.textArea]}
-                  placeholder="Tell us how we can help..."
+                  style={[
+                    styles.input,
+                    styles.textArea,
+                    isArabic && {
+                      fontFamily: fonts.Regular,
+                      textAlign: "right",
+                    },
+                  ]}
+                  placeholder={t("contact.messagePlaceholder")}
                   placeholderTextColor="#666666"
                   multiline
                   value={message}
@@ -290,7 +375,14 @@ export default function ContactScreen() {
                 disabled={!isFormValid}
                 activeOpacity={0.7}
               >
-                <Text style={styles.submitButtonText}>Send Message</Text>
+                <Text
+                  style={[
+                    styles.submitButtonText,
+                    isArabic && { fontFamily: fonts.Bold },
+                  ]}
+                >
+                  {t("contact.send")}
+                </Text>
               </TouchableOpacity>
             </View>
           </ScrollView>

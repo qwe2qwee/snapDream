@@ -21,6 +21,11 @@ const settings = {
   upgradeTitle: "Upgrade To Premium",
   logout: "Logout",
   rateUs: "Rate Us",
+  tooPrecious: "Too precious!",
+  security: "Security",
+  deleteAccount: "Delete Account",
+  deleteAccountConfirmSub:
+    "Permanently delete account? Everything will be lost.",
 };
 
 export default settings;

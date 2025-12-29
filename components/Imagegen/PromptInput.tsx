@@ -14,12 +14,16 @@ interface PromptInputProps {
   value: string;
   onChangeText: (text: string) => void;
   onAIGenerate?: () => void;
+  label?: string;
+  placeholder?: string;
 }
 
 export const PromptInput: React.FC<PromptInputProps> = ({
   value,
   onChangeText,
   onAIGenerate,
+  label = "Prompt",
+  placeholder = "Enter prompt or Generate prompt with Image",
 }) => {
   const fonts = useFontFamily();
   const { spacing, typography, getBorderRadius, getResponsiveValue } =
@@ -66,11 +70,11 @@ export const PromptInput: React.FC<PromptInputProps> = ({
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Prompt</Text>
+      <Text style={styles.label}>{label}</Text>
       <View style={styles.inputWrapper}>
         <TextInput
           style={styles.input}
-          placeholder="Enter prompt or Generate prompt with Image"
+          placeholder={placeholder}
           placeholderTextColor="#8E8E93"
           value={value}
           onChangeText={onChangeText}

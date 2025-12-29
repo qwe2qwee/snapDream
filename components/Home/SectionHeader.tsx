@@ -52,6 +52,9 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
       sectionHeader: {
         paddingHorizontal: responsiveValues.horizontalPadding,
         marginBottom: responsiveValues.marginBottom,
+        flexDirection: (isArabic ? "row-reverse" : "row") as
+          | "row"
+          | "row-reverse",
       },
       sectionTitle: {
         fontSize: responsiveValues.titleSize,
@@ -85,7 +88,7 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
 // ------------------------------
 const styles = StyleSheet.create({
   sectionHeader: {
-    flexDirection: "row",
+    // flexDirection moved to dynamicStyles
     justifyContent: "space-between",
     alignItems: "center",
   },

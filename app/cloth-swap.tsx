@@ -56,10 +56,10 @@ export default function ClothSwapScreen() {
   };
 
   const handleRemoveModelImage = () => {
-    Alert.alert("Remove Image", "Are you sure you want to remove this image?", [
-      { text: "Cancel", style: "cancel" },
+    Alert.alert(t("common.removeImage"), t("common.removeImageConfirm"), [
+      { text: t("common.cancel"), style: "cancel" },
       {
-        text: "Remove",
+        text: t("common.remove"),
         style: "destructive",
         onPress: () => setModelImage(undefined),
       },
@@ -67,10 +67,10 @@ export default function ClothSwapScreen() {
   };
 
   const handleRemoveClothImage = () => {
-    Alert.alert("Remove Image", "Are you sure you want to remove this image?", [
-      { text: "Cancel", style: "cancel" },
+    Alert.alert(t("common.removeImage"), t("common.removeImageConfirm"), [
+      { text: t("common.cancel"), style: "cancel" },
       {
-        text: "Remove",
+        text: t("common.remove"),
         style: "destructive",
         onPress: () => setClothImage(undefined),
       },
@@ -94,7 +94,7 @@ export default function ClothSwapScreen() {
 
           {/* Model Image Upload */}
           <ImageUploadBox
-            label={t("auth.email")} // Need better key for "Model Image"
+            label={t("clothSwap.modelImage")}
             optional={true}
             type="model"
             selectedImage={modelImage}

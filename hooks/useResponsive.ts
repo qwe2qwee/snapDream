@@ -1,3 +1,4 @@
+import useLanguageStore from "@/store/useLanguageStore";
 import { useMemo } from "react";
 import { Platform, useWindowDimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -5,6 +6,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 export function useResponsive() {
   const { width, height } = useWindowDimensions();
   const insets = useSafeAreaInsets();
+  const { currentLanguage, isRTL } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
 
   // Memoize expensive calculations
   return useMemo(() => {
@@ -342,6 +345,11 @@ export function useResponsive() {
       // Pre-calculated scales
       typography,
       spacing,
+
+      // Language info
+      currentLanguage,
+      isArabic,
+      isRTL,
     };
-  }, [width, height, insets]);
+  }, [width, height, insets, currentLanguage, isRTL]);
 }

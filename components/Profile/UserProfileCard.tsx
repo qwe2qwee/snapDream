@@ -32,7 +32,7 @@ export const UserProfileCard: React.FC<UserProfileCardProps> = ({
 
   const styles = StyleSheet.create({
     userInfo: {
-      flexDirection: "row",
+      flexDirection: isArabic ? "row-reverse" : "row",
       alignItems: "center",
       marginBottom: spacing.md + spacing.xs,
       gap: spacing.sm + spacing.xs / 2,

@@ -80,9 +80,12 @@ export default function HomeScreen() {
         paddingHorizontal: isTablet ? spacing.lg : spacing.md,
         gap: isSmallScreen ? spacing.sm : spacing.md,
         marginBottom: isTablet ? spacing.xl : spacing.lg,
+        flexDirection: (isArabic ? "row-reverse" : "row") as
+          | "row"
+          | "row-reverse",
       },
     }),
-    [safeAreaTop, spacing, getTabBarHeight, isSmallScreen, isTablet]
+    [safeAreaTop, spacing, getTabBarHeight, isSmallScreen, isTablet, isArabic]
   );
 
   return (
@@ -191,7 +194,6 @@ const styles = StyleSheet.create({
     // Dynamic paddingBottom applied via dynamicStyles
   },
   featureCards: {
-    flexDirection: "row",
-    // Dynamic spacing applied via dynamicStyles
+    // Moved to dynamicStyles
   },
 });

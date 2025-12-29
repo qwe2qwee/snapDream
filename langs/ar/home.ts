@@ -4,6 +4,8 @@ const home = {
   videoEffects: "تأثيرات الفيديو",
   seeAll: "عرض الكل",
   latestCreations: "أحدث الابتكارات",
+  upgradeNow: "ترقية الآن",
+  manageSubscription: "إدارة الاشتراك",
 };
 
 export default home;

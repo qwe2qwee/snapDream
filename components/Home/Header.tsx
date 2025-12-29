@@ -75,19 +75,29 @@ export const Header: React.FC<HeaderProps> = ({
         paddingHorizontal: isTablet ? spacing.xl : spacing.md,
         paddingTop: safeAreaTop + spacing.xs,
         paddingBottom: spacing.md,
+        flexDirection: (isArabic ? "row-reverse" : "row") as
+          | "row"
+          | "row-reverse",
       },
       logo: {
         fontSize: responsiveValues.logoSize - spacing.xs,
-        fontFamily: "SFProDisplay-Bold", // leave it always bold En
+        fontFamily: "SFProDisplay-Bold",
+        textAlign: (isArabic ? "right" : "left") as "left" | "right",
       },
       headerRight: {
         gap: responsiveValues.headerGap,
+        flexDirection: (isArabic ? "row-reverse" : "row") as
+          | "row"
+          | "row-reverse",
       },
       creditsContainer: {
         paddingVertical: responsiveValues.pillPaddingVertical,
         paddingHorizontal: responsiveValues.pillPaddingHorizontal,
         borderRadius: responsiveValues.borderRadius,
         gap: responsiveValues.creditsGap,
+        flexDirection: (isArabic ? "row-reverse" : "row") as
+          | "row"
+          | "row-reverse",
       },
       creditsText: {
         fontSize: responsiveValues.textSize,
@@ -154,7 +164,6 @@ export const Header: React.FC<HeaderProps> = ({
 // ------------------------------
 const styles = StyleSheet.create({
   header: {
-    flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
@@ -163,11 +172,9 @@ const styles = StyleSheet.create({
     letterSpacing: -0.5,
   },
   headerRight: {
-    flexDirection: "row",
     alignItems: "center",
   },
   creditsContainer: {
-    flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#363B4A",
   },

@@ -76,7 +76,7 @@ export const UpgradeBanner: React.FC<UpgradeBannerProps> = ({
       bottom: spacing.sm + spacing.xs / 2,
       left: spacing.sm + spacing.xs / 2,
       right: spacing.sm + spacing.xs / 2,
-      flexDirection: "row",
+      flexDirection: isArabic ? "row-reverse" : "row",
       alignItems: "center",
       justifyContent: "space-between",
     },
@@ -84,6 +84,7 @@ export const UpgradeBanner: React.FC<UpgradeBannerProps> = ({
       fontSize: typography.body,
       fontFamily: isArabic ? "Zain-Bold" : fonts.Medium,
       color: "#FFFFFF",
+      textAlign: isArabic ? "right" : "left",
     },
     bannerTextContainer: {
       borderRadius: 999,
@@ -98,6 +99,7 @@ export const UpgradeBanner: React.FC<UpgradeBannerProps> = ({
       borderRadius: 999,
       borderColor: "rgba(255, 255, 255, 0.1)",
       borderWidth: 2,
+      transform: [{ scaleX: isArabic ? -1 : 1 }],
     },
   });
 
@@ -149,7 +151,11 @@ export const UpgradeBanner: React.FC<UpgradeBannerProps> = ({
               tint="dark"
               style={styles.bannerIconContainer}
             >
-              <ArrowLeft width={iconSize} height={iconSize} />
+              <ArrowLeft
+                width={iconSize}
+                height={iconSize}
+                style={{ transform: [{ rotate: "180deg" }] }}
+              />
             </BlurView>
           ) : (
             <LinearGradient
@@ -161,7 +167,11 @@ export const UpgradeBanner: React.FC<UpgradeBannerProps> = ({
                 { justifyContent: "center", alignItems: "center" },
               ]}
             >
-              <ArrowLeft width={iconSize} height={iconSize} />
+              <ArrowLeft
+                width={iconSize}
+                height={iconSize}
+                style={{ transform: [{ rotate: "180deg" }] }}
+              />
             </LinearGradient>
           )}
         </View>

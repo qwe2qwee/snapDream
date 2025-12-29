@@ -2,7 +2,6 @@ import Delete from "@/assets/icons/Dele.svg";
 import { ActionButtons } from "@/components/CreationDetails/ActionButtons";
 import { GradientBackground } from "@/components/GradientBackground";
 import { GeneratedImageCard } from "@/components/Imagegen/GeneratedImageCard";
-import { GeneratedVideoCard } from "@/components/Imagegen/GeneratedVideoCard";
 import { ImageGenHeader } from "@/components/Imagegen/ImageGenHeader";
 import { PromptDisplay } from "@/components/Imagegen/PromptDisplay";
 import { SuccessModal } from "@/components/Modals/AproveModal";
@@ -10,13 +9,13 @@ import { LoadingModal } from "@/components/Modals/LoadingModal";
 import { ConfirmModal } from "@/components/Modals/modal";
 import { ShareModal } from "@/components/Modals/shareModal";
 import { useResponsive } from "@/hooks/useResponsive";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import useLanguageStore from "@/store/useLanguageStore";
+import { useRouter } from "expo-router";
 
 import React from "react";
 import { ScrollView, StyleSheet } from "react-native";
 
-export default function ResultScreen() {
-  const { type } = useLocalSearchParams<{ type: "image" | "video" }>();
+export default function ImageResultScreen() {
   const router = useRouter();
   const { getResponsiveValue } = useResponsive();
   const [isShareVisible, setShareVisible] = React.useState(false);
@@ -27,11 +26,12 @@ export default function ResultScreen() {
     title: "",
     subtitle: "",
   });
+
+  const { t } = useLanguageStore();
+
   // Mock data - in real app would come from generation state/context/params
   const uri =
-    type === "video"
-      ? "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800" // Video thumbnail
-      : "https://example.com/generated-image.jpg";
+    "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800";
 
   const prompt =
     "Cute child hugging a fluffy fox in a snowy forest, soft lighting, winter atmosphere, cozy clothing, photorealistic, warm emotional moment.";
@@ -63,10 +63,8 @@ export default function ResultScreen() {
     setTimeout(() => {
       setLoading(false);
       setSuccessMessage({
-        title: "Saved!",
-        subtitle: `${
-          type === "video" ? "Video" : "Image"
-        } has been saved to your gallery.`,
+        title: t("result.saved"),
+        subtitle: t("result.imageSavedDesc"),
       });
       setSuccessVisible(true);
     }, 1500);
@@ -75,15 +73,9 @@ export default function ResultScreen() {
   return (
     <GradientBackground>
       <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-        <ImageGenHeader
-          title={type === "video" ? "Video Result" : "Image Result"}
-        />
+        <ImageGenHeader title={t("result.imageResult")} />
 
-        {type === "video" ? (
-          <GeneratedVideoCard videoUri={uri} />
-        ) : (
-          <GeneratedImageCard imageUri={uri} />
-        )}
+        <GeneratedImageCard imageUri={uri} />
 
         <PromptDisplay prompt={prompt} />
         <ActionButtons
@@ -97,9 +89,9 @@ export default function ResultScreen() {
           isVisible={isShareVisible}
           onClose={() => setShareVisible(false)}
           shareUrl={uri}
-          shareText={`Check out this AI generated ${
-            type || "image"
-          }!\n\n${prompt}`}
+          shareText={t("result.shareText")
+            .replace("{type}", "image")
+            .replace("{prompt}", prompt)}
         />
 
         <SuccessModal
@@ -108,7 +100,7 @@ export default function ResultScreen() {
           onContinue={() => setSuccessVisible(false)}
           title={successMessage.title}
           subtitle={successMessage.subtitle}
-          buttonText="Continue"
+          buttonText={t("result.continue")}
         />
 
         <ConfirmModal
@@ -125,9 +117,9 @@ export default function ResultScreen() {
           iconName="trash-2"
           iconColor="#FFFFFF"
           iconBackgroundColor="rgba(255, 255, 255, 0.05)"
-          title="Delete Creation"
-          subtitle="Are you sure you want to delete this creation? This action cannot be undone."
-          confirmText="Delete"
+          title={t("result.deleteTitle")}
+          subtitle={t("result.deleteConfirm")}
+          confirmText={t("common.delete")}
           showCloseButton={true}
         />
 

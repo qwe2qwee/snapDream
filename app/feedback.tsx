@@ -14,7 +14,9 @@ import {
 
 import { GradientBackground } from "@/components/GradientBackground";
 import { ImageGenHeader } from "@/components/Imagegen/ImageGenHeader";
+import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import { router } from "expo-router";
 
 export default function FeedbackScreen() {
@@ -23,33 +25,35 @@ export default function FeedbackScreen() {
 
   const buttonHeight = getResponsiveValue(54, 58, 62, 66, 70);
 
+  const { currentLanguage, t } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
+  const fonts = useFontFamily();
+
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [feedback, setFeedback] = useState("");
   const [email, setEmail] = useState("");
 
   const categories = [
-    { id: "bug", label: "Bug Report", emoji: "🐛" },
-    { id: "feature", label: "Feature Request", emoji: "✨" },
-    { id: "improvement", label: "Improvement", emoji: "🚀" },
-    { id: "other", label: "Other", emoji: "💬" },
+    { id: "bug", label: t("feedback.bug"), emoji: "🐛" },
+    { id: "feature", label: t("feedback.feature"), emoji: "✨" },
+    { id: "improvement", label: t("feedback.improvement"), emoji: "🚀" },
+    { id: "other", label: t("feedback.other"), emoji: "💬" },
   ];
 
   const handleSubmit = () => {
     if (!selectedCategory) {
-      Alert.alert("Category Required", "Please select a feedback category");
+      Alert.alert(t("feedback.categoryRequired"), t("feedback.selectCategory"));
       return;
     }
     if (!feedback.trim()) {
-      Alert.alert("Feedback Required", "Please enter your feedback");
+      Alert.alert(t("feedback.feedbackRequired"), t("feedback.enterFeedback"));
       return;
     }
 
     // In a real app, submit to backend
-    Alert.alert(
-      "Thank You!",
-      "Your feedback has been submitted successfully. We appreciate your input!",
-      [{ text: "OK", onPress: () => router.back() }]
-    );
+    Alert.alert(t("feedback.thankYou"), t("feedback.feedbackSentDesc"), [
+      { text: t("feedback.ok"), onPress: () => router.back() },
+    ]);
   };
 
   const styles = StyleSheet.create({
@@ -151,7 +155,7 @@ export default function FeedbackScreen() {
         <StatusBar barStyle="light-content" />
 
         {/* Header */}
-        <ImageGenHeader title="Feedback" />
+        <ImageGenHeader title={t("feedback.title")} />
 
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -162,14 +166,25 @@ export default function FeedbackScreen() {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.scrollContent}
           >
-            <Text style={styles.description}>
-              We value your feedback! Help us improve SnackDream by sharing your
-              thoughts, reporting bugs, or suggesting new features.
+            <Text
+              style={[
+                styles.description,
+                isArabic && { fontFamily: fonts.Regular },
+              ]}
+            >
+              {t("feedback.desc")}
             </Text>
 
             {/* Category Selection */}
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Category</Text>
+              <Text
+                style={[
+                  styles.sectionTitle,
+                  isArabic && { fontFamily: fonts.SemiBold },
+                ]}
+              >
+                {t("feedback.category")}
+              </Text>
               <View style={styles.categoriesContainer}>
                 {categories.map((category) => (
                   <TouchableOpacity
@@ -188,6 +203,7 @@ export default function FeedbackScreen() {
                         styles.categoryLabel,
                         selectedCategory === category.id &&
                           styles.categoryLabelSelected,
+                        isArabic && { fontFamily: fonts.Medium },
                       ]}
                     >
                       {category.label}
@@ -199,10 +215,21 @@ export default function FeedbackScreen() {
 
             {/* Feedback Text */}
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Your Feedback</Text>
+              <Text
+                style={[
+                  styles.sectionTitle,
+                  isArabic && { fontFamily: fonts.SemiBold },
+                ]}
+              >
+                {t("feedback.yourFeedback")}
+              </Text>
               <TextInput
-                style={[styles.input, styles.textArea]}
-                placeholder="Tell us what's on your mind..."
+                style={[
+                  styles.input,
+                  styles.textArea,
+                  isArabic && { fontFamily: fonts.Regular, textAlign: "right" },
+                ]}
+                placeholder={t("feedback.feedbackPlaceholder")}
                 placeholderTextColor="#666666"
                 multiline
                 value={feedback}
@@ -213,10 +240,20 @@ export default function FeedbackScreen() {
 
             {/* Email (Optional) */}
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Email (Optional)</Text>
+              <Text
+                style={[
+                  styles.sectionTitle,
+                  isArabic && { fontFamily: fonts.SemiBold },
+                ]}
+              >
+                {t("feedback.emailOptional")}
+              </Text>
               <TextInput
-                style={styles.input}
-                placeholder="your@email.com"
+                style={[
+                  styles.input,
+                  isArabic && { fontFamily: fonts.Regular, textAlign: "right" },
+                ]}
+                placeholder={t("feedback.emailPlaceholder")}
                 placeholderTextColor="#666666"
                 keyboardType="email-address"
                 autoCapitalize="none"
@@ -235,7 +272,14 @@ export default function FeedbackScreen() {
               disabled={!isFormValid}
               activeOpacity={0.7}
             >
-              <Text style={styles.submitButtonText}>Submit Feedback</Text>
+              <Text
+                style={[
+                  styles.submitButtonText,
+                  isArabic && { fontFamily: fonts.Bold },
+                ]}
+              >
+                {t("feedback.submit")}
+              </Text>
             </TouchableOpacity>
           </ScrollView>
         </KeyboardAvoidingView>

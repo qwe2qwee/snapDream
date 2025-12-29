@@ -1,0 +1,22 @@
+export default {
+  title: "Feedback",
+  desc: "We value your feedback! Help us improve SnackDream by sharing your thoughts, reporting bugs, or suggesting new features.",
+  category: "Category",
+  bug: "Bug Report",
+  feature: "Feature Request",
+  improvement: "Improvement",
+  other: "Other",
+  yourFeedback: "Your Feedback",
+  feedbackPlaceholder: "Tell us what's on your mind...",
+  emailOptional: "Email (Optional)",
+  emailPlaceholder: "your@email.com",
+  submit: "Submit Feedback",
+  categoryRequired: "Category Required",
+  selectCategory: "Please select a feedback category",
+  feedbackRequired: "Feedback Required",
+  enterFeedback: "Please enter your feedback",
+  thankYou: "Thank You!",
+  feedbackSentDesc:
+    "Your feedback has been submitted successfully. We appreciate your input!",
+  ok: "OK",
+};

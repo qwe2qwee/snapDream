@@ -19,7 +19,9 @@ import { MenuSection } from "@/components/Profile/MenuSection";
 import { SectionTitle } from "@/components/Profile/SectionTitle";
 import { UpgradeBanner } from "@/components/Profile/UpgradeBanner";
 import { UserProfileCard } from "@/components/Profile/UserProfileCard";
+import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import { Link, router } from "expo-router";
 
 export default function ProfileScreen() {
@@ -29,6 +31,10 @@ export default function ProfileScreen() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(true);
+
+  const { currentLanguage, t } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
+  const fonts = useFontFamily();
 
   // Modal states
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
@@ -65,7 +71,7 @@ export default function ProfileScreen() {
       // await deleteAccountAPI();
       setIsLoggedIn(false);
     } catch (error) {
-      Alert.alert("Error", "Failed to delete account");
+      Alert.alert(t("common.error"), t("settings.deleteAccountError"));
     }
   };
 
@@ -96,7 +102,7 @@ export default function ProfileScreen() {
         >
           {/* Header */}
           <PageHeader
-            title="Profile"
+            title={t("settings.profile")}
             onPress={() => setIsLoggedIn(true)}
             isLoggedIn={isLoggedIn}
           />
@@ -117,54 +123,54 @@ export default function ProfileScreen() {
             isLoggedIn={isLoggedIn}
           />
           {/* Too precious Section */}
-          <SectionTitle title="Too precious!" />
+          <SectionTitle title={t("settings.tooPrecious")} />
           <MenuSection>
             <Link href="/terms" asChild>
               <MenuItem
                 icon={<Terms width={iconSize} height={iconSize} />}
-                label="Terms and Conditions"
+                label={t("settings.terms")}
               />
             </Link>
             <Link href="/privacy" asChild>
               <MenuItem
                 icon={<Privacy width={iconSize} height={iconSize} />}
                 isMiddleItem
-                label="Privacy Policy"
+                label={t("settings.privacy")}
               />
             </Link>
             <Link href="/rate-app" asChild>
               <MenuItem
                 icon={<Rate width={iconSize} height={iconSize} />}
-                label="Rate App"
+                label={t("settings.rateUs")}
               />
             </Link>
           </MenuSection>
           {/* Security Section */}
-          <SectionTitle title="Security" />
+          <SectionTitle title={t("settings.security")} />
           <MenuSection>
             <Link href="/feedback" asChild>
               <MenuItem
                 icon={<FeedBack width={iconSize} height={iconSize} />}
-                label="Feedback"
+                label={t("settings.feedback")}
               />
             </Link>
             <Link href="/contact" asChild>
               <MenuItem
                 icon={<Contact width={iconSize} height={iconSize} />}
                 isMiddleItem
-                label="Contact Us"
+                label={t("settings.contactUs")}
               />
             </Link>
             <MenuItem
               icon={<Logout width={iconSize} height={iconSize} />}
-              label="Log Out"
+              label={t("settings.logout")}
               isLastItem
               onPress={handleLogout}
               isDestructive
             />
             <MenuItem
               icon={<Delete width={iconSize} height={iconSize} />}
-              label="Delete Account"
+              label={t("settings.deleteAccount")}
               onPress={handleDeleteAccount}
               isDestructive
             />
@@ -178,9 +184,9 @@ export default function ProfileScreen() {
           onConfirm={confirmLogout}
           iconName="log-out"
           icon={<Logout2 width={iconSize} height={iconSize} />}
-          title="Log Out"
-          subtitle="Do you really want to log out?"
-          confirmText="Log Out"
+          title={t("settings.logout")}
+          subtitle={t("common.logoutConfirm")}
+          confirmText={t("settings.logout")}
           showCloseButton={true}
         />
 
@@ -191,9 +197,9 @@ export default function ProfileScreen() {
           onConfirm={confirmDeleteAccount}
           icon={<Delete2 width={iconSize} height={iconSize} />}
           iconName="trash-2"
-          title="Delete Account"
-          subtitle="Permanently delete account?  Everything will be lost."
-          confirmText="Delete"
+          title={t("settings.deleteAccount")}
+          subtitle={t("settings.deleteAccountConfirmSub")}
+          confirmText={t("common.delete")}
           showCloseButton={true}
         />
       </GradientBackground>

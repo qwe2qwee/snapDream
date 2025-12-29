@@ -47,7 +47,9 @@ export const ImageUploadBox: React.FC<ImageUploadBoxProps> = ({
       marginBottom: spacing.lg,
     },
     labelContainer: {
-      flexDirection: "row",
+      flexDirection: (isArabic ? "row-reverse" : "row") as
+        | "row"
+        | "row-reverse",
       alignItems: "center",
       marginBottom: spacing.sm,
     },
@@ -58,7 +60,8 @@ export const ImageUploadBox: React.FC<ImageUploadBoxProps> = ({
     },
     optional: {
       color: "#8E8E93",
-      marginLeft: spacing.xs,
+      marginLeft: isArabic ? 0 : spacing.xs,
+      marginRight: isArabic ? spacing.xs : 0,
     },
     uploadArea: {
       backgroundColor: "rgba(255, 255, 255, 0.05)",
@@ -107,7 +110,8 @@ export const ImageUploadBox: React.FC<ImageUploadBoxProps> = ({
     removeButton: {
       position: "absolute",
       top: spacing.md,
-      right: spacing.md,
+      right: isArabic ? undefined : spacing.md,
+      left: isArabic ? spacing.md : undefined,
       width: removeButtonSize,
       height: removeButtonSize,
       borderRadius: removeButtonSize / 2,
