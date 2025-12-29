@@ -4,6 +4,7 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
+import { View } from "react-native";
 
 export const unstable_settings = {
   initialRouteName: "onboarding",
@@ -19,7 +20,7 @@ export default function RootLayout() {
     "Zain-Regular": require("../assets/font/Zain-Regular.ttf"),
   });
 
-  const { isHydrated } = useLanguageStore();
+  const { isHydrated, currentLanguage } = useLanguageStore();
 
   if (!fontsLoaded || !isHydrated) {
     return null;
@@ -27,28 +28,30 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={DefaultTheme}>
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          animation: "fade",
-        }}
-      >
-        <Stack.Screen name="index" />
-        <Stack.Screen name="onboarding" />
-        <Stack.Screen name="(tabs)" />
-        <Stack.Screen name="(auth)" />
-        <Stack.Screen name="hairstyle" />
-        <Stack.Screen name="cloth-swap" />
-        <Stack.Screen name="image-result" />
-        <Stack.Screen name="video-result" />
-        <Stack.Screen name="details/[id]" />
-        <Stack.Screen name="[...not-found]" />
-        <Stack.Screen
-          name="modal"
-          options={{ presentation: "modal", title: "Modal" }}
-        />
-      </Stack>
-      <StatusBar style="light" />
+      <View style={{ flex: 1 }} key={currentLanguage}>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            animation: "fade",
+          }}
+        >
+          <Stack.Screen name="index" />
+          <Stack.Screen name="onboarding" />
+          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="(auth)" />
+          <Stack.Screen name="hairstyle" />
+          <Stack.Screen name="cloth-swap" />
+          <Stack.Screen name="image-result" />
+          <Stack.Screen name="video-result" />
+          <Stack.Screen name="details/[id]" />
+          <Stack.Screen name="[...not-found]" />
+          <Stack.Screen
+            name="modal"
+            options={{ presentation: "modal", title: "Modal" }}
+          />
+        </Stack>
+        <StatusBar style="light" />
+      </View>
     </ThemeProvider>
   );
 }

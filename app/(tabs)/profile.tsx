@@ -5,6 +5,7 @@ import Contact from "@/assets/icons/Contact.svg";
 import Delete2 from "@/assets/icons/Dele.svg";
 import Delete from "@/assets/icons/Delete.svg";
 import FeedBack from "@/assets/icons/Feedback.svg";
+import Language from "@/assets/icons/Language.svg";
 import Logout from "@/assets/icons/Logout.svg";
 import Logout2 from "@/assets/icons/Logout2.svg";
 import Privacy from "@/assets/icons/Privacy.svg";
@@ -148,6 +149,13 @@ export default function ProfileScreen() {
           {/* Security Section */}
           <SectionTitle title={t("settings.security")} />
           <MenuSection>
+            <Link href="/change-language" asChild>
+              <MenuItem
+                icon={<Language width={iconSize} height={iconSize} />}
+                label={t("settings.language")}
+                isLastItem
+              />
+            </Link>
             <Link href="/feedback" asChild>
               <MenuItem
                 icon={<FeedBack width={iconSize} height={iconSize} />}
