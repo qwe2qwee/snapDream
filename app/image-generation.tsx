@@ -8,16 +8,11 @@ import { useResponsive } from "@/hooks/useResponsive";
 import useLanguageStore from "@/store/useLanguageStore";
 import { router } from "expo-router";
 import React, { useState } from "react";
-import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  View,
-} from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
 export default function ImageGenScreen() {
-  const { spacing } = useResponsive();
+  const { currentLanguage, t } = useLanguageStore();
   const [prompt, setPrompt] = useState("");
   const [showOptions, setShowOptions] = useState(false);
   const [numberOfImages, setNumberOfImages] = useState(1);
@@ -42,69 +37,73 @@ export default function ImageGenScreen() {
     console.log("Select model");
   };
 
-  const { currentLanguage, t } = useLanguageStore();
-  const isArabic = currentLanguage === "ar";
+  const { spacing, safeAreaBottom, getResponsiveValue } = useResponsive();
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+    scrollContent: {
+      flexGrow: 1,
+    },
+    bottomContainer: {
+      position: "absolute",
+      bottom: 0,
+      left: 0,
+      right: 0,
+      backgroundColor: "transparent",
+    },
+  });
 
   return (
     <GradientBackground>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{
-          flex: 1,
-        }}
+      <KeyboardAwareScrollView
+        style={styles.container}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={[
+          styles.scrollContent,
+          {
+            paddingBottom: spacing.xl * 2 + safeAreaBottom + 80,
+          },
+        ]}
+        keyboardShouldPersistTaps="handled"
+        bottomOffset={Platform.OS === "ios" ? 40 : 0}
       >
-        <ScrollView
-          style={styles.container}
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled"
-        >
-          <ImageGenHeader title={t("imageGen.title")} />
+        <ImageGenHeader title={t("imageGen.title")} />
 
-          <ModelSelector
-            modelName={t("models.nanoBananaPro")}
-            modelIcon="https://example.com/model-icon.png"
-            onPress={handleModelSelect}
-          />
-
-          <PromptInput
-            value={prompt}
-            onChangeText={setPrompt}
-            onAIGenerate={handleAIGenerate}
-            label={t("imageGen.prompt")}
-            placeholder={t("imageGen.promptPlaceholder")}
-          />
-          <View style={{ height: spacing.xl }} />
-        </ScrollView>
-
-        <View style={styles.bottomContainer}>
-          <GenerateButton
-            onPress={handleGenerate}
-            credits={10}
-            onOptionsPress={() => setShowOptions(true)}
-          />
-        </View>
-
-        <OptionsBottomSheet
-          isVisible={showOptions}
-          onClose={() => setShowOptions(false)}
-          numberOfImages={numberOfImages}
-          onNumberOfImagesChange={setNumberOfImages}
-          aspectRatio={aspectRatio}
-          onAspectRatioChange={setAspectRatio}
-          resolution={resolution}
-          onResolutionChange={setResolution}
+        <ModelSelector
+          modelName={t("models.nanoBananaPro")}
+          modelIcon="https://example.com/model-icon.png"
+          onPress={handleModelSelect}
         />
-      </KeyboardAvoidingView>
+
+        <PromptInput
+          value={prompt}
+          onChangeText={setPrompt}
+          onAIGenerate={handleAIGenerate}
+          label={t("imageGen.prompt")}
+          placeholder={t("imageGen.promptPlaceholder")}
+        />
+        <View style={{ height: spacing.xl }} />
+      </KeyboardAwareScrollView>
+
+      <View style={styles.bottomContainer}>
+        <GenerateButton
+          onPress={handleGenerate}
+          credits={10}
+          onOptionsPress={() => setShowOptions(true)}
+        />
+      </View>
+
+      <OptionsBottomSheet
+        isVisible={showOptions}
+        onClose={() => setShowOptions(false)}
+        numberOfImages={numberOfImages}
+        onNumberOfImagesChange={setNumberOfImages}
+        aspectRatio={aspectRatio}
+        onAspectRatioChange={setAspectRatio}
+        resolution={resolution}
+        onResolutionChange={setResolution}
+      />
     </GradientBackground>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  bottomContainer: {
-    paddingBottom: Platform.OS === "ios" ? 40 : 20,
-    backgroundColor: "transparent",
-  },
-});

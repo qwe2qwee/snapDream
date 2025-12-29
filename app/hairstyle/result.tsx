@@ -16,7 +16,7 @@ import { ScrollView, StyleSheet } from "react-native";
 export default function HairStyleResultScreen() {
   const { t } = useLanguageStore();
   const router = useRouter();
-  const { getResponsiveValue } = useResponsive();
+  const { getResponsiveValue, safeAreaBottom, spacing } = useResponsive();
   const [isShareVisible, setShareVisible] = React.useState(false);
   const [isSuccessVisible, setSuccessVisible] = React.useState(false);
   const [isDeleteVisible, setDeleteVisible] = React.useState(false);
@@ -52,9 +52,22 @@ export default function HairStyleResultScreen() {
     }, 1500);
   };
 
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+    scrollContent: {
+      paddingBottom: safeAreaBottom + spacing.xl,
+    },
+  });
+
   return (
     <GradientBackground>
-      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.container}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+      >
         <ImageGenHeader title={t("hairstyle.resultTitle")} />
 
         <GeneratedImageCard imageUri={uri} />
@@ -107,9 +120,3 @@ export default function HairStyleResultScreen() {
     </GradientBackground>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});

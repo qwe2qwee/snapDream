@@ -11,7 +11,8 @@ export default function ChangeLanguageScreen() {
   const { currentLanguage, setLanguage, t } = useLanguageStore();
   const isArabic = currentLanguage === "ar";
   const fonts = useFontFamily();
-  const { spacing, getResponsiveValue, getBorderRadius } = useResponsive();
+  const { spacing, getResponsiveValue, getBorderRadius, safeAreaBottom } =
+    useResponsive();
 
   const handleLanguageChange = (lang: Language) => {
     if (lang !== currentLanguage) {
@@ -32,6 +33,7 @@ export default function ChangeLanguageScreen() {
       flex: 1,
       paddingHorizontal: spacing.md,
       paddingTop: spacing.lg,
+      paddingBottom: safeAreaBottom + spacing.md,
     },
     languageList: {
       backgroundColor: "rgba(255, 255, 255, 0.05)",

@@ -10,13 +10,8 @@ import { useResponsive } from "@/hooks/useResponsive";
 import useLanguageStore from "@/store/useLanguageStore";
 import { router } from "expo-router";
 import React, { useState } from "react";
-import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  View,
-} from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
 export default function LoginScreen() {
   const { t, currentLanguage } = useLanguageStore();
@@ -62,61 +57,57 @@ export default function LoginScreen() {
 
   return (
     <GradientBackground>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
+      <KeyboardAwareScrollView
+        style={styles.container}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        bottomOffset={Platform.OS === "ios" ? 40 : 0}
       >
-        <ScrollView
-          style={styles.container}
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled"
-        >
-          {/* Header */}
-          <LoginHeader />
+        {/* Header */}
+        <LoginHeader />
 
-          {/* Form */}
-          <View style={styles.form}>
-            {/* Email Input */}
-            <LoginInput
-              label={t("auth.email")}
-              placeholder={t("auth.email")}
-              value={email}
-              onChangeText={setEmail}
-              icon="mail"
-              keyboardType="email-address"
-            />
+        {/* Form */}
+        <View style={styles.form}>
+          {/* Email Input */}
+          <LoginInput
+            label={t("auth.email")}
+            placeholder={t("auth.email")}
+            value={email}
+            onChangeText={setEmail}
+            icon="mail"
+            keyboardType="email-address"
+          />
 
-            {/* Password Input */}
-            <LoginInput
-              label={t("auth.password")}
-              placeholder={t("auth.password")}
-              value={password}
-              onChangeText={setPassword}
-              icon="lock"
-              secureTextEntry
-            />
+          {/* Password Input */}
+          <LoginInput
+            label={t("auth.password")}
+            placeholder={t("auth.password")}
+            value={password}
+            onChangeText={setPassword}
+            icon="lock"
+            secureTextEntry
+          />
 
-            {/* Forgot Password */}
-            <ForgotPasswordLink onPress={handleForgotPassword} />
+          {/* Forgot Password */}
+          <ForgotPasswordLink onPress={handleForgotPassword} />
 
-            {/* Login Button */}
-            <LoginButton onPress={handleLogin} text={t("auth.login")} />
+          {/* Login Button */}
+          <LoginButton onPress={handleLogin} text={t("auth.login")} />
 
-            {/* Sign Up Link */}
-            <SignUpLink onPress={handleSignUp} />
+          {/* Sign Up Link */}
+          <SignUpLink onPress={handleSignUp} />
 
-            {/* Divider */}
-            <OrDivider />
+          {/* Divider */}
+          <OrDivider />
 
-            {/* Social Login Buttons */}
-            <SocialLoginButtons
-              onGooglePress={handleGoogleLogin}
-              onApplePress={handleAppleLogin}
-            />
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+          {/* Social Login Buttons */}
+          <SocialLoginButtons
+            onGooglePress={handleGoogleLogin}
+            onApplePress={handleAppleLogin}
+          />
+        </View>
+      </KeyboardAwareScrollView>
     </GradientBackground>
   );
 }

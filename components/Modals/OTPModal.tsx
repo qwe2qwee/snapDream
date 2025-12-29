@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import Modal from "react-native-modal";
 
 interface OTPModalProps {
@@ -154,89 +155,97 @@ export const OTPModal: React.FC<OTPModalProps> = ({
       style={styles.modal}
     >
       <View style={[styles.modalContent, dynamicStyles.modalContent]}>
-        {/* Close Button */}
-        <TouchableOpacity
-          style={[styles.closeButton, dynamicStyles.closeButton]}
-          onPress={onClose}
-          activeOpacity={0.7}
+        <KeyboardAwareScrollView
+          contentContainerStyle={{ alignItems: "center" }}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
         >
-          <Close
-            width={responsiveValues.closeButtonSize}
-            height={responsiveValues.closeButtonSize}
-            color="#8E8E93"
-          />
-        </TouchableOpacity>
-
-        {/* Title */}
-        <Text style={[styles.title, dynamicStyles.title]}>{displayTitle}</Text>
-
-        {/* Subtitle */}
-        <Text style={[styles.subtitle, dynamicStyles.subtitle]}>
-          {displaySubtitle}
-        </Text>
-        <Text style={[styles.email, dynamicStyles.email]}>{email}</Text>
-
-        {/* OTP Input Boxes */}
-        <View style={styles.otpContainer}>
-          {otp.map((digit, index) => (
-            <TextInput
-              key={index}
-              ref={(ref) => {
-                inputRefs.current[index] = ref;
-              }}
-              style={[
-                styles.otpBox,
-                dynamicStyles.otpBox,
-                digit && styles.otpBoxFilled,
-              ]}
-              value={digit}
-              onChangeText={(text) => handleChange(text, index)}
-              onKeyPress={(e) => handleKeyPress(e, index)}
-              keyboardType="number-pad"
-              maxLength={1}
-              selectTextOnFocus
-            />
-          ))}
-        </View>
-
-        {/* Verify Button */}
-        <TouchableOpacity
-          style={[
-            styles.button,
-            dynamicStyles.button,
-            !isComplete && styles.buttonDisabled,
-          ]}
-          onPress={handleVerify}
-          activeOpacity={0.9}
-          disabled={!isComplete}
-        >
-          <Text style={[styles.buttonText, dynamicStyles.buttonText]}>
-            {t("auth.verify")}
-          </Text>
-        </TouchableOpacity>
-
-        {/* Resend Link */}
-        <TouchableOpacity style={styles.resendContainer} activeOpacity={0.7}>
-          <Text
-            style={[
-              styles.resendText,
-              {
-                fontSize: responsiveValues.subtitleSize,
-                fontFamily: isArabic ? "Zain-Regular" : fonts.Regular,
-              },
-            ]}
+          {/* Close Button */}
+          <TouchableOpacity
+            style={[styles.closeButton, dynamicStyles.closeButton]}
+            onPress={onClose}
+            activeOpacity={0.7}
           >
-            {t("auth.didNotReceive")}{" "}
+            <Close
+              width={responsiveValues.closeButtonSize}
+              height={responsiveValues.closeButtonSize}
+              color="#8E8E93"
+            />
+          </TouchableOpacity>
+
+          {/* Title */}
+          <Text style={[styles.title, dynamicStyles.title]}>
+            {displayTitle}
+          </Text>
+
+          {/* Subtitle */}
+          <Text style={[styles.subtitle, dynamicStyles.subtitle]}>
+            {displaySubtitle}
+          </Text>
+          <Text style={[styles.email, dynamicStyles.email]}>{email}</Text>
+
+          {/* OTP Input Boxes */}
+          <View style={styles.otpContainer}>
+            {otp.map((digit, index) => (
+              <TextInput
+                key={index}
+                ref={(ref) => {
+                  inputRefs.current[index] = ref;
+                }}
+                style={[
+                  styles.otpBox,
+                  dynamicStyles.otpBox,
+                  digit && styles.otpBoxFilled,
+                ]}
+                value={digit}
+                onChangeText={(text) => handleChange(text, index)}
+                onKeyPress={(e) => handleKeyPress(e, index)}
+                keyboardType="number-pad"
+                maxLength={1}
+                selectTextOnFocus
+              />
+            ))}
+          </View>
+
+          {/* Verify Button */}
+          <TouchableOpacity
+            style={[
+              styles.button,
+              dynamicStyles.button,
+              !isComplete && styles.buttonDisabled,
+            ]}
+            onPress={handleVerify}
+            activeOpacity={0.9}
+            disabled={!isComplete}
+          >
+            <Text style={[styles.buttonText, dynamicStyles.buttonText]}>
+              {t("auth.verify")}
+            </Text>
+          </TouchableOpacity>
+
+          {/* Resend Link */}
+          <TouchableOpacity style={styles.resendContainer} activeOpacity={0.7}>
             <Text
               style={[
-                styles.resendLink,
-                { fontFamily: isArabic ? "Zain-Bold" : fonts.SemiBold },
+                styles.resendText,
+                {
+                  fontSize: responsiveValues.subtitleSize,
+                  fontFamily: isArabic ? "Zain-Regular" : fonts.Regular,
+                },
               ]}
             >
-              {t("auth.resend")}
+              {t("auth.didNotReceive")}{" "}
+              <Text
+                style={[
+                  styles.resendLink,
+                  { fontFamily: isArabic ? "Zain-Bold" : fonts.SemiBold },
+                ]}
+              >
+                {t("auth.resend")}
+              </Text>
             </Text>
-          </Text>
-        </TouchableOpacity>
+          </TouchableOpacity>
+        </KeyboardAwareScrollView>
       </View>
     </Modal>
   );

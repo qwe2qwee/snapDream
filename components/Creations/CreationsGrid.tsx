@@ -33,7 +33,8 @@ export const CreationsGrid: React.FC<CreationsGridProps> = ({
     },
     scrollContent: {
       paddingHorizontal: spacing.md,
-      paddingBottom: getResponsiveValue(100, 120, 120, 140, 160),
+      paddingBottom:
+        getResponsiveValue(100, 120, 120, 140, 160) + safeAreaBottom,
     },
     grid: {
       flexDirection: "row",

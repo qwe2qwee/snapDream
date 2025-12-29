@@ -23,13 +23,12 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useMemo, useState } from "react";
 import {
   Image,
-  KeyboardAvoidingView,
   Platform,
-  ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
 } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
 export default function GenericEffectScreen() {
   const { t } = useLanguageStore();
@@ -107,7 +106,7 @@ export default function GenericEffectScreen() {
       flex: 1,
     },
     scrollContent: {
-      paddingBottom: safeAreaBottom + 100,
+      flexGrow: 1,
     },
     imagePreviewContainer: {
       marginHorizontal: spacing.md,
@@ -131,81 +130,90 @@ export default function GenericEffectScreen() {
       padding: 6,
       zIndex: 10,
     },
+    buttonContainer: {
+      position: "absolute",
+      bottom: 0,
+      left: 0,
+      right: 0,
+      backgroundColor: "transparent",
+    },
   });
 
   return (
     <GradientBackground>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
+      <KeyboardAwareScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={[
+          styles.scrollContent,
+          {
+            paddingBottom: spacing.xl * 2 + safeAreaBottom + 80,
+          },
+        ]}
+        keyboardShouldPersistTaps="handled"
+        bottomOffset={Platform.OS === "ios" ? 40 : 0}
+        style={styles.container}
       >
-        <View style={styles.container}>
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.scrollContent}
-            keyboardShouldPersistTaps="handled"
-          >
-            <ImageGenHeader title={headerTitle} />
+        <ImageGenHeader title={headerTitle} />
 
-            <EffectSelector
-              title={headerTitle}
-              icon={currentEffect?.image}
-              onPress={() => setShowEffectsModal(true)}
-            />
-
-            {selectedImage ? (
-              <View style={styles.imagePreviewContainer}>
-                <Image
-                  source={{ uri: selectedImage }}
-                  style={styles.previewImage}
-                  resizeMode="cover"
-                />
-                <TouchableOpacity
-                  style={styles.closeButton}
-                  onPress={handleRemoveImage}
-                >
-                  <Feather name="x" size={20} color="white" />
-                </TouchableOpacity>
-              </View>
-            ) : (
-              <UploadView
-                onUpload={handleImageUpload}
-                label={
-                  isImageToVideo ? t("features.imageToVideo.upload") : undefined
-                }
-              />
-            )}
-
-            {isImageToVideo && (
-              <View style={{ marginTop: spacing.sm }}>
-                <PromptInput
-                  value={prompt}
-                  onChangeText={setPrompt}
-                  onAIGenerate={() => console.log("AI Generate prompt")}
-                  label={t("features.imageToVideo.promptLabel")}
-                  placeholder={t("features.imageToVideo.promptPlaceholder")}
-                />
-              </View>
-            )}
-          </ScrollView>
-
-          <ClothSwapGenerateButton
-            onPress={handleGenerate}
-            credits={10}
-            disabled={!selectedImage || loading}
-          />
-        </View>
-
-        <LoadingModal isVisible={loading} title={t("common.loading")} />
-
-        <EffectsModal
-          isVisible={showEffectsModal}
-          onClose={() => setShowEffectsModal(false)}
-          effects={imageEffects}
-          onSelectEffect={handleEffectChange}
-          currentEffectId={Number(id)}
+        <EffectSelector
+          title={headerTitle}
+          icon={currentEffect?.image}
+          onPress={() => setShowEffectsModal(true)}
         />
-      </KeyboardAvoidingView>
+
+        {selectedImage ? (
+          <View style={styles.imagePreviewContainer}>
+            <Image
+              source={{ uri: selectedImage }}
+              style={styles.previewImage}
+              resizeMode="cover"
+            />
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={handleRemoveImage}
+            >
+              <Feather name="x" size={20} color="white" />
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <UploadView
+            onUpload={handleImageUpload}
+            label={
+              isImageToVideo ? t("features.imageToVideo.upload") : undefined
+            }
+          />
+        )}
+
+        {isImageToVideo && (
+          <View style={{ marginTop: spacing.sm }}>
+            <PromptInput
+              value={prompt}
+              onChangeText={setPrompt}
+              onAIGenerate={() => console.log("AI Generate prompt")}
+              label={t("features.imageToVideo.promptLabel")}
+              placeholder={t("features.imageToVideo.promptPlaceholder")}
+            />
+          </View>
+        )}
+      </KeyboardAwareScrollView>
+
+      <View style={styles.buttonContainer}>
+        <ClothSwapGenerateButton
+          onPress={handleGenerate}
+          credits={10}
+          disabled={!selectedImage || loading}
+        />
+      </View>
+
+      <LoadingModal isVisible={loading} title={t("common.loading")} />
+
+      <EffectsModal
+        isVisible={showEffectsModal}
+        onClose={() => setShowEffectsModal(false)}
+        effects={imageEffects}
+        onSelectEffect={handleEffectChange}
+        currentEffectId={Number(id)}
+      />
     </GradientBackground>
   );
 }

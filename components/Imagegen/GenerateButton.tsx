@@ -20,7 +20,7 @@ export const GenerateButton: React.FC<GenerateButtonProps> = ({
   const { t, currentLanguage } = useLanguageStore();
   const isArabic = currentLanguage === "ar";
   const fonts = useFontFamily();
-  const { spacing, typography, getResponsiveValue, getBorderRadius } =
+  const { spacing, typography, getResponsiveValue, safeAreaBottom } =
     useResponsive();
 
   const buttonHeight = getResponsiveValue(54, 58, 62, 66, 70);
@@ -31,6 +31,7 @@ export const GenerateButton: React.FC<GenerateButtonProps> = ({
       paddingHorizontal: spacing.lg,
       gap: spacing.md,
       marginTop: spacing.xl,
+      paddingBottom: safeAreaBottom + spacing.sm,
     },
     optionsButton: {
       width: buttonHeight,

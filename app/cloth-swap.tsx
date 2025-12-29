@@ -3,20 +3,17 @@ import { ImageUploadBox } from "@/components/ClothSwap/ImageUploadBox";
 import { GradientBackground } from "@/components/GradientBackground";
 import { ImageGenHeader } from "@/components/Imagegen/ImageGenHeader";
 import { LoadingModal } from "@/components/Modals/LoadingModal";
+import { useResponsive } from "@/hooks/useResponsive";
 import useLanguageStore from "@/store/useLanguageStore";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 import React, { useState } from "react";
-import {
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-} from "react-native";
+import { Alert, Platform, StyleSheet, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
 export default function ClothSwapScreen() {
   const { t } = useLanguageStore();
+  const { spacing, safeAreaBottom, getResponsiveValue } = useResponsive();
   const [loading, setLoading] = useState(false);
   const [modelImage, setModelImage] = useState<string | undefined>(undefined);
   const [clothImage, setClothImage] = useState<string | undefined>(undefined);
@@ -79,56 +76,70 @@ export default function ClothSwapScreen() {
 
   const canGenerate = modelImage && clothImage;
 
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+    scrollContent: {
+      flexGrow: 1,
+    },
+    buttonContainer: {
+      position: "absolute",
+      bottom: 0,
+      left: 0,
+      right: 0,
+      backgroundColor: "transparent",
+      paddingHorizontal: spacing.lg,
+    },
+  });
+
   return (
     <GradientBackground>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
+      <KeyboardAwareScrollView
+        style={styles.container}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={[
+          styles.scrollContent,
+          {
+            paddingBottom: spacing.xl * 2 + safeAreaBottom + 80,
+          },
+        ]}
+        keyboardShouldPersistTaps="handled"
+        bottomOffset={Platform.OS === "ios" ? 40 : 0}
       >
-        <ScrollView
-          style={styles.container}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.scrollContent}
-        >
-          <ImageGenHeader title={t("clothSwap.title")} />
+        <ImageGenHeader title={t("clothSwap.title")} />
 
-          {/* Model Image Upload */}
-          <ImageUploadBox
-            label={t("clothSwap.modelImage")}
-            optional={true}
-            type="model"
-            selectedImage={modelImage}
-            onUpload={() => pickImage("model")}
-            onRemove={handleRemoveModelImage}
-          />
+        {/* Model Image Upload */}
+        <ImageUploadBox
+          label={t("clothSwap.modelImage")}
+          optional={true}
+          type="model"
+          selectedImage={modelImage}
+          onUpload={() => pickImage("model")}
+          onRemove={handleRemoveModelImage}
+        />
 
-          {/* Cloth Image Upload */}
-          <ImageUploadBox
-            label={t("clothSwap.selectCloth")}
-            optional={true}
-            type="cloth"
-            selectedImage={clothImage}
-            onUpload={() => pickImage("cloth")}
-            onRemove={handleRemoveClothImage}
-          />
-          {/* Generate Button */}
-          <ClothSwapGenerateButton
-            onPress={handleGenerate}
-            credits={10}
-            disabled={!canGenerate}
-          />
-        </ScrollView>
-      </KeyboardAvoidingView>
+        {/* Cloth Image Upload */}
+        <ImageUploadBox
+          label={t("clothSwap.selectCloth")}
+          optional={true}
+          type="cloth"
+          selectedImage={clothImage}
+          onUpload={() => pickImage("cloth")}
+          onRemove={handleRemoveClothImage}
+        />
+      </KeyboardAwareScrollView>
+
+      {/* Generate Button container with absolute positioning to match Hairstyle */}
+      <View style={styles.buttonContainer}>
+        <ClothSwapGenerateButton
+          onPress={handleGenerate}
+          credits={10}
+          disabled={!canGenerate}
+        />
+      </View>
+
       <LoadingModal isVisible={loading} />
     </GradientBackground>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingBottom: 0,
-  },
-});

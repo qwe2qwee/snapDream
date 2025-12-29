@@ -21,14 +21,8 @@ import useLanguageStore from "@/store/useLanguageStore";
 import { useSafeNavigate } from "@/utils/useSafeNavigate";
 import * as ImagePicker from "expo-image-picker";
 import React, { useState } from "react";
-import {
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  View,
-} from "react-native";
+import { Alert, Platform, StyleSheet, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
 export default function HairStyleScreen() {
   const { t, currentLanguage } = useLanguageStore();
@@ -136,76 +130,72 @@ export default function HairStyleScreen() {
 
   return (
     <GradientBackground>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.keyboardView}
+      <KeyboardAwareScrollView
+        style={styles.container}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={[
+          styles.scrollContent,
+          {
+            paddingBottom: spacing.xl * 2 + safeAreaBottom + 80,
+          },
+        ]}
+        keyboardShouldPersistTaps="handled"
+        bottomOffset={Platform.OS === "ios" ? 40 : 0}
       >
-        <ScrollView
-          style={styles.container}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={[
-            styles.scrollContent,
-            {
-              paddingBottom: spacing.xl * 2 + safeAreaBottom + 80,
-            },
-          ]}
-          keyboardShouldPersistTaps="handled"
-        >
-          {/* Header */}
-          <HairStyleHeader title={t("hairstyle.title")} />
+        {/* Header */}
+        <HairStyleHeader title={t("hairstyle.title")} />
 
-          {/* Hair Style Selector */}
-          <StyleSelector
-            label={t("hairstyle.selectStyle")}
-            selectedStyle={{
-              id: selectedStyle.id,
-              name: selectedStyle.name,
-              image: selectedStyle.image,
-            }}
-            onPress={() => setShowStyleModal(true)}
-          />
+        {/* Hair Style Selector */}
+        <StyleSelector
+          label={t("hairstyle.selectStyle")}
+          selectedStyle={{
+            id: selectedStyle.id,
+            name: selectedStyle.name,
+            image: selectedStyle.image,
+          }}
+          onPress={() => setShowStyleModal(true)}
+        />
 
-          {/* Hair Color Selector */}
-          <ColorSelector
-            label={t("hairstyle.selectColor")}
-            selectedColor={{
-              id: selectedColor.id,
-              name: selectedColor.name,
-              color: selectedColor.color,
-            }}
-            onPress={() => setShowColorModal(true)}
-          />
+        {/* Hair Color Selector */}
+        <ColorSelector
+          label={t("hairstyle.selectColor")}
+          selectedColor={{
+            id: selectedColor.id,
+            name: selectedColor.name,
+            color: selectedColor.color,
+          }}
+          onPress={() => setShowColorModal(true)}
+        />
 
-          {/* Image Upload */}
-          <ImageUploadBox
-            label={t("onboarding.slide1Title")} // Or create a new key
-            optional={false}
-            type="model"
-            selectedImage={userImage}
-            onUpload={pickImage}
-            onRemove={userImage ? handleRemoveImage : undefined}
-            isLoading={isUploadingImage}
-          />
-        </ScrollView>
+        {/* Image Upload */}
+        <ImageUploadBox
+          label={t("onboarding.slide1Title")} // Or create a new key
+          optional={false}
+          type="model"
+          selectedImage={userImage}
+          onUpload={pickImage}
+          onRemove={userImage ? handleRemoveImage : undefined}
+          isLoading={isUploadingImage}
+        />
+      </KeyboardAwareScrollView>
 
-        {/* Bottom Action Button */}
-        <View
-          style={[
-            styles.buttonContainer,
-            {
-              paddingHorizontal: spacing.lg,
-            },
-          ]}
-        >
-          <BottomAction
-            onGenerate={handleGenerate}
-            credits={10 * imageCount}
-            disabled={!canGenerate}
-            imageCount={imageCount}
-            onImageCountChange={setImageCount}
-          />
-        </View>
-      </KeyboardAvoidingView>
+      {/* Bottom Action Button */}
+      <View
+        style={[
+          styles.buttonContainer,
+          {
+            paddingHorizontal: spacing.lg,
+          },
+        ]}
+      >
+        <BottomAction
+          onGenerate={handleGenerate}
+          credits={10 * imageCount}
+          disabled={!canGenerate}
+          imageCount={imageCount}
+          onImageCountChange={setImageCount}
+        />
+      </View>
 
       {/* Hair Style Selection Modal */}
       <HairStyleModal

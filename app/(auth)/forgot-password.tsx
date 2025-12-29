@@ -7,13 +7,8 @@ import { useResponsive } from "@/hooks/useResponsive";
 import useLanguageStore from "@/store/useLanguageStore";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  View,
-} from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
 export default function ForgotPasswordScreen() {
   const { t } = useLanguageStore();
@@ -44,39 +39,35 @@ export default function ForgotPasswordScreen() {
 
   return (
     <GradientBackground>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
+      <KeyboardAwareScrollView
+        style={styles.container}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        bottomOffset={Platform.OS === "ios" ? 40 : 0}
       >
-        <ScrollView
-          style={styles.container}
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled"
-        >
-          {/* Header */}
-          <LoginHeader
-            title={t("auth.forgotPasswordtitle")}
-            subtitle={t("auth.forgotPasswordDesc")}
+        {/* Header */}
+        <LoginHeader
+          title={t("auth.forgotPasswordtitle")}
+          subtitle={t("auth.forgotPasswordDesc")}
+        />
+
+        {/* Form */}
+        <View style={styles.form}>
+          {/* Email Input */}
+          <LoginInput
+            label={t("auth.email")}
+            placeholder={t("auth.email")}
+            value={email}
+            onChangeText={setEmail}
+            icon="mail"
+            keyboardType="email-address"
           />
 
-          {/* Form */}
-          <View style={styles.form}>
-            {/* Email Input */}
-            <LoginInput
-              label={t("auth.email")}
-              placeholder={t("auth.email")}
-              value={email}
-              onChangeText={setEmail}
-              icon="mail"
-              keyboardType="email-address"
-            />
-
-            {/* Send Link Button */}
-            <LoginButton onPress={handleSendLink} text={t("auth.sendLink")} />
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+          {/* Send Link Button */}
+          <LoginButton onPress={handleSendLink} text={t("auth.sendLink")} />
+        </View>
+      </KeyboardAwareScrollView>
 
       <SuccessModal
         isVisible={showSuccess}

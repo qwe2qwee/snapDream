@@ -12,13 +12,8 @@ import { useResponsive } from "@/hooks/useResponsive";
 import useLanguageStore from "@/store/useLanguageStore";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  View,
-} from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
 export default function RegisterScreen() {
   const { t } = useLanguageStore();
@@ -92,71 +87,67 @@ export default function RegisterScreen() {
 
   return (
     <GradientBackground>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
+      <KeyboardAwareScrollView
+        style={styles.container}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        bottomOffset={Platform.OS === "ios" ? 40 : 0}
       >
-        <ScrollView
-          style={styles.container}
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled"
-        >
-          {/* Header */}
-          <RegisterHeader />
+        {/* Header */}
+        <RegisterHeader />
 
-          {/* Form */}
-          <View style={styles.form}>
-            {/* Email Input */}
-            <LoginInput
-              label={t("auth.email")}
-              placeholder={t("auth.email")}
-              value={email}
-              onChangeText={setEmail}
-              icon="mail"
-              keyboardType="email-address"
-            />
+        {/* Form */}
+        <View style={styles.form}>
+          {/* Email Input */}
+          <LoginInput
+            label={t("auth.email")}
+            placeholder={t("auth.email")}
+            value={email}
+            onChangeText={setEmail}
+            icon="mail"
+            keyboardType="email-address"
+          />
 
-            {/* Password Input */}
-            <LoginInput
-              label={t("auth.password")}
-              placeholder={t("auth.password")}
-              value={password}
-              onChangeText={setPassword}
-              icon="lock"
-              secureTextEntry
-            />
+          {/* Password Input */}
+          <LoginInput
+            label={t("auth.password")}
+            placeholder={t("auth.password")}
+            value={password}
+            onChangeText={setPassword}
+            icon="lock"
+            secureTextEntry
+          />
 
-            {/* Confirm Password Input */}
-            <LoginInput
-              label={t("auth.confirmPassword")}
-              placeholder={t("auth.confirmPasswordPlaceholder")}
-              value={confirmPassword}
-              onChangeText={setConfirmPassword}
-              icon="lock"
-              secureTextEntry
-            />
+          {/* Confirm Password Input */}
+          <LoginInput
+            label={t("auth.confirmPassword")}
+            placeholder={t("auth.confirmPasswordPlaceholder")}
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+            icon="lock"
+            secureTextEntry
+          />
 
-            {/* Sign Up Button */}
-            <LoginButton
-              onPress={() => setShowOTP(true)}
-              text={t("auth.signUp")}
-            />
+          {/* Sign Up Button */}
+          <LoginButton
+            onPress={() => setShowOTP(true)}
+            text={t("auth.signUp")}
+          />
 
-            {/* Login Link */}
-            <LoginLink onPress={handleLogin} />
+          {/* Login Link */}
+          <LoginLink onPress={handleLogin} />
 
-            {/* Divider */}
-            <OrDivider />
+          {/* Divider */}
+          <OrDivider />
 
-            {/* Social Sign Up Buttons */}
-            <SocialLoginButtons
-              onGooglePress={handleGoogleSignUp}
-              onApplePress={handleAppleSignUp}
-            />
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
+          {/* Social Sign Up Buttons */}
+          <SocialLoginButtons
+            onGooglePress={handleGoogleSignUp}
+            onApplePress={handleAppleSignUp}
+          />
+        </View>
+      </KeyboardAwareScrollView>
       {/* OTP Modal */}
       <OTPModal
         isVisible={showOTP}

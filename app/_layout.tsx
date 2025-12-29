@@ -5,6 +5,7 @@ import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { View } from "react-native";
+import { KeyboardProvider } from "react-native-keyboard-controller";
 
 export const unstable_settings = {
   initialRouteName: "onboarding",
@@ -28,30 +29,32 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={DefaultTheme}>
-      <View style={{ flex: 1 }} key={currentLanguage}>
-        <Stack
-          screenOptions={{
-            headerShown: false,
-            animation: "fade",
-          }}
-        >
-          <Stack.Screen name="index" />
-          <Stack.Screen name="onboarding" />
-          <Stack.Screen name="(tabs)" />
-          <Stack.Screen name="(auth)" />
-          <Stack.Screen name="hairstyle" />
-          <Stack.Screen name="cloth-swap" />
-          <Stack.Screen name="image-result" />
-          <Stack.Screen name="video-result" />
-          <Stack.Screen name="details/[id]" />
-          <Stack.Screen name="[...not-found]" />
-          <Stack.Screen
-            name="modal"
-            options={{ presentation: "modal", title: "Modal" }}
-          />
-        </Stack>
-        <StatusBar style="light" />
-      </View>
+      <KeyboardProvider>
+        <View style={{ flex: 1 }} key={currentLanguage}>
+          <Stack
+            screenOptions={{
+              headerShown: false,
+              animation: "fade",
+            }}
+          >
+            <Stack.Screen name="index" />
+            <Stack.Screen name="onboarding" />
+            <Stack.Screen name="(tabs)" />
+            <Stack.Screen name="(auth)" />
+            <Stack.Screen name="hairstyle" />
+            <Stack.Screen name="cloth-swap" />
+            <Stack.Screen name="image-result" />
+            <Stack.Screen name="video-result" />
+            <Stack.Screen name="details/[id]" />
+            <Stack.Screen name="[...not-found]" />
+            <Stack.Screen
+              name="modal"
+              options={{ presentation: "modal", title: "Modal" }}
+            />
+          </Stack>
+          <StatusBar style="light" />
+        </View>
+      </KeyboardProvider>
     </ThemeProvider>
   );
 }

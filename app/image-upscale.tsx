@@ -11,7 +11,6 @@ import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   Image,
-  Platform,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -62,7 +61,8 @@ export default function ImageUpscaleScreen() {
       flex: 1,
     },
     scrollContent: {
-      paddingBottom: safeAreaBottom + 100,
+      flexGrow: 1,
+      paddingBottom: spacing.xl * 2 + safeAreaBottom + 80,
     },
     imagePreviewContainer: {
       marginHorizontal: spacing.lg,
@@ -86,7 +86,10 @@ export default function ImageUpscaleScreen() {
       zIndex: 10,
     },
     bottomContainer: {
-      paddingBottom: Platform.OS === "ios" ? 40 : 20,
+      position: "absolute",
+      bottom: 0,
+      left: 0,
+      right: 0,
       backgroundColor: "transparent",
     },
   });

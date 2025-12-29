@@ -8,16 +8,11 @@ import { useResponsive } from "@/hooks/useResponsive";
 import useLanguageStore from "@/store/useLanguageStore";
 import { router } from "expo-router";
 import React, { useState } from "react";
-import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  View,
-} from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
 export default function VideoGenScreen() {
-  const { spacing } = useResponsive();
+  const { currentLanguage, t } = useLanguageStore();
   const [prompt, setPrompt] = useState("");
   const [showOptions, setShowOptions] = useState(false);
 
@@ -25,9 +20,6 @@ export default function VideoGenScreen() {
   const [aspectRatio, setAspectRatio] = useState("16:9");
   const [resolution, setResolution] = useState("1080p");
   const [duration, setDuration] = useState("5s");
-
-  const { currentLanguage, t } = useLanguageStore();
-  const isArabic = currentLanguage === "ar";
 
   const handleGenerate = () => {
     console.log("Generate Video with:", {
@@ -47,69 +39,78 @@ export default function VideoGenScreen() {
     console.log("Select model");
   };
 
+  const { spacing, safeAreaBottom, getResponsiveValue } = useResponsive();
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+    scrollContent: {
+      flexGrow: 1,
+    },
+    bottomContainer: {
+      position: "absolute",
+      bottom: 0,
+      left: 0,
+      right: 0,
+      backgroundColor: "transparent",
+    },
+  });
+
   return (
     <GradientBackground>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
+      <KeyboardAwareScrollView
+        style={styles.container}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={[
+          styles.scrollContent,
+          {
+            paddingBottom: spacing.xl * 2 + safeAreaBottom + 80,
+          },
+        ]}
+        keyboardShouldPersistTaps="handled"
+        bottomOffset={Platform.OS === "ios" ? 40 : 0}
       >
-        <ScrollView
-          style={styles.container}
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled"
-        >
-          <ImageGenHeader title={t("videoGen.title")} />
+        <ImageGenHeader title={t("videoGen.title")} />
 
-          <ModelSelector
-            modelName={t("models.soraTurbo")}
-            modelIcon="https://example.com/sora-icon.png" // Placeholder
-            onPress={handleModelSelect}
-          />
-
-          <PromptInput
-            value={prompt}
-            onChangeText={setPrompt}
-            onAIGenerate={handleAIGenerate}
-            label={t("imageGen.prompt")}
-            placeholder={t("imageGen.promptPlaceholder")}
-          />
-          <View style={{ height: spacing.xl }} />
-        </ScrollView>
-
-        <View style={styles.bottomContainer}>
-          <GenerateButton
-            onPress={handleGenerate}
-            credits={20}
-            onOptionsPress={() => setShowOptions(true)}
-          />
-        </View>
-
-        <OptionsBottomSheet
-          isVisible={showOptions}
-          onClose={() => setShowOptions(false)}
-          type="video"
-          // Image props (ignored/defaults)
-          numberOfImages={1}
-          onNumberOfImagesChange={() => {}}
-          // Shared/Video props
-          aspectRatio={aspectRatio}
-          onAspectRatioChange={setAspectRatio}
-          resolution={resolution}
-          onResolutionChange={setResolution}
-          duration={duration}
-          onDurationChange={setDuration}
+        <ModelSelector
+          modelName={t("models.soraTurbo")}
+          modelIcon="https://example.com/sora-icon.png" // Placeholder
+          onPress={handleModelSelect}
         />
-      </KeyboardAvoidingView>
+
+        <PromptInput
+          value={prompt}
+          onChangeText={setPrompt}
+          onAIGenerate={handleAIGenerate}
+          label={t("imageGen.prompt")}
+          placeholder={t("imageGen.promptPlaceholder")}
+        />
+        <View style={{ height: spacing.xl }} />
+      </KeyboardAwareScrollView>
+
+      <View style={styles.bottomContainer}>
+        <GenerateButton
+          onPress={handleGenerate}
+          credits={20}
+          onOptionsPress={() => setShowOptions(true)}
+        />
+      </View>
+
+      <OptionsBottomSheet
+        isVisible={showOptions}
+        onClose={() => setShowOptions(false)}
+        type="video"
+        // Image props (ignored/defaults)
+        numberOfImages={1}
+        onNumberOfImagesChange={() => {}}
+        // Shared/Video props
+        aspectRatio={aspectRatio}
+        onAspectRatioChange={setAspectRatio}
+        resolution={resolution}
+        onResolutionChange={setResolution}
+        duration={duration}
+        onDurationChange={setDuration}
+      />
     </GradientBackground>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  bottomContainer: {
-    paddingBottom: Platform.OS === "ios" ? 40 : 20,
-    backgroundColor: "transparent",
-  },
-});

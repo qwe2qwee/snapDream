@@ -6,19 +6,17 @@ import { useResponsive } from "@/hooks/useResponsive";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 import React, { useState } from "react";
-import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { Platform, StyleSheet, Text, TextInput, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
 export default function SketchToImageScreen() {
-  const { spacing, typography, getBorderRadius, getResponsiveValue } =
-    useResponsive();
+  const {
+    spacing,
+    typography,
+    getBorderRadius,
+    getResponsiveValue,
+    safeAreaBottom,
+  } = useResponsive();
 
   const [sketchImage, setSketchImage] = useState<string | undefined>(undefined);
   const [prompt, setPrompt] = useState("");
@@ -51,7 +49,15 @@ export default function SketchToImageScreen() {
       flex: 1,
     },
     scrollContent: {
-      paddingBottom: getResponsiveValue(100, 120, 120, 140, 160),
+      flexGrow: 1,
+    },
+    buttonContainer: {
+      position: "absolute",
+      bottom: 0,
+      left: 0,
+      right: 0,
+      backgroundColor: "transparent",
+      paddingHorizontal: spacing.lg,
     },
     sectionTitle: {
       fontSize: typography.body,
@@ -81,49 +87,53 @@ export default function SketchToImageScreen() {
 
   return (
     <GradientBackground>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
+      <KeyboardAwareScrollView
+        style={styles.container}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={[
+          styles.scrollContent,
+          {
+            paddingBottom: spacing.xl * 2 + safeAreaBottom + 80,
+          },
+        ]}
+        keyboardShouldPersistTaps="handled"
+        bottomOffset={Platform.OS === "ios" ? 40 : 0}
       >
-        <ScrollView
-          style={styles.container}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.scrollContent}
-        >
-          <ImageGenHeader title="Sketch to Image" />
+        <ImageGenHeader title="Sketch to Image" />
 
-          {/* Sketch Upload */}
-          <Text style={styles.sectionTitle}>1. Upload Sketch</Text>
-          <ImageUploadBox
-            label="Sketch Image"
-            optional={false}
-            type="model"
-            selectedImage={sketchImage}
-            onUpload={pickImage}
-            onRemove={handleRemoveImage}
+        {/* Sketch Upload */}
+        <Text style={styles.sectionTitle}>1. Upload Sketch</Text>
+        <ImageUploadBox
+          label="Sketch Image"
+          optional={false}
+          type="model"
+          selectedImage={sketchImage}
+          onUpload={pickImage}
+          onRemove={handleRemoveImage}
+        />
+
+        {/* Prompt Input */}
+        <Text style={styles.sectionTitle}>2. Description (Optional)</Text>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Describe the desired outcome..."
+            placeholderTextColor="rgba(255, 255, 255, 0.5)"
+            multiline
+            value={prompt}
+            onChangeText={setPrompt}
           />
+        </View>
+      </KeyboardAwareScrollView>
 
-          {/* Prompt Input */}
-          <Text style={styles.sectionTitle}>2. Description (Optional)</Text>
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.input}
-              placeholder="Describe the desired outcome..."
-              placeholderTextColor="rgba(255, 255, 255, 0.5)"
-              multiline
-              value={prompt}
-              onChangeText={setPrompt}
-            />
-          </View>
-
-          {/* Generate Button */}
-          <ClothSwapGenerateButton
-            onPress={handleGenerate}
-            credits={10}
-            disabled={!sketchImage}
-          />
-        </ScrollView>
-      </KeyboardAvoidingView>
+      {/* Generate Button container with absolute positioning to match Hairstyle */}
+      <View style={styles.buttonContainer}>
+        <ClothSwapGenerateButton
+          onPress={handleGenerate}
+          credits={10}
+          disabled={!sketchImage}
+        />
+      </View>
     </GradientBackground>
   );
 }

@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import {
   Alert,
-  KeyboardAvoidingView,
   Platform,
-  ScrollView,
   StatusBar,
   StyleSheet,
   Text,
@@ -11,6 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
 import { GradientBackground } from "@/components/GradientBackground";
 import { ImageGenHeader } from "@/components/Imagegen/ImageGenHeader";
@@ -66,8 +65,7 @@ export default function FeedbackScreen() {
     },
     scrollContent: {
       paddingHorizontal: spacing.md,
-      paddingBottom:
-        getResponsiveValue(120, 140, 140, 160, 180) + safeAreaBottom,
+      flexGrow: 1,
     },
     section: {
       marginBottom: spacing.lg,
@@ -145,6 +143,15 @@ export default function FeedbackScreen() {
       lineHeight: typography.small * 1.5,
       marginBottom: spacing.lg,
     },
+    buttonContainer: {
+      position: "absolute",
+      bottom: 0,
+      left: 0,
+      right: 0,
+      backgroundColor: "transparent",
+      paddingHorizontal: spacing.md,
+      paddingBottom: safeAreaBottom + spacing.md,
+    },
   });
 
   const isFormValid = selectedCategory && feedback.trim();
@@ -157,132 +164,136 @@ export default function FeedbackScreen() {
         {/* Header */}
         <ImageGenHeader title={t("feedback.title")} />
 
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={{ flex: 1 }}
+        <KeyboardAwareScrollView
+          style={styles.scrollView}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={[
+            styles.scrollContent,
+            {
+              paddingBottom: spacing.xl * 2 + safeAreaBottom + 80,
+            },
+          ]}
+          keyboardShouldPersistTaps="handled"
+          bottomOffset={Platform.OS === "ios" ? 40 : 0}
         >
-          <ScrollView
-            style={styles.scrollView}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.scrollContent}
+          <Text
+            style={[
+              styles.description,
+              isArabic && { fontFamily: fonts.Regular },
+            ]}
+          >
+            {t("feedback.desc")}
+          </Text>
+
+          {/* Category Selection */}
+          <View style={styles.section}>
+            <Text
+              style={[
+                styles.sectionTitle,
+                isArabic && { fontFamily: fonts.SemiBold },
+              ]}
+            >
+              {t("feedback.category")}
+            </Text>
+            <View style={styles.categoriesContainer}>
+              {categories.map((category) => (
+                <TouchableOpacity
+                  key={category.id}
+                  style={[
+                    styles.categoryButton,
+                    selectedCategory === category.id &&
+                      styles.categoryButtonSelected,
+                  ]}
+                  onPress={() => setSelectedCategory(category.id)}
+                  activeOpacity={0.7}
+                >
+                  <Text style={styles.categoryEmoji}>{category.emoji}</Text>
+                  <Text
+                    style={[
+                      styles.categoryLabel,
+                      selectedCategory === category.id &&
+                        styles.categoryLabelSelected,
+                      isArabic && { fontFamily: fonts.Medium },
+                    ]}
+                  >
+                    {category.label}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+
+          {/* Feedback Text */}
+          <View style={styles.section}>
+            <Text
+              style={[
+                styles.sectionTitle,
+                isArabic && { fontFamily: fonts.SemiBold },
+              ]}
+            >
+              {t("feedback.yourFeedback")}
+            </Text>
+            <TextInput
+              style={[
+                styles.input,
+                styles.textArea,
+                isArabic && { fontFamily: fonts.Regular, textAlign: "right" },
+              ]}
+              placeholder={t("feedback.feedbackPlaceholder")}
+              placeholderTextColor="#666666"
+              multiline
+              value={feedback}
+              onChangeText={setFeedback}
+              maxLength={1000}
+            />
+          </View>
+
+          {/* Email (Optional) */}
+          <View style={styles.section}>
+            <Text
+              style={[
+                styles.sectionTitle,
+                isArabic && { fontFamily: fonts.SemiBold },
+              ]}
+            >
+              {t("feedback.emailOptional")}
+            </Text>
+            <TextInput
+              style={[
+                styles.input,
+                isArabic && { fontFamily: fonts.Regular, textAlign: "right" },
+              ]}
+              placeholder={t("feedback.emailPlaceholder")}
+              placeholderTextColor="#666666"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              value={email}
+              onChangeText={setEmail}
+            />
+          </View>
+        </KeyboardAwareScrollView>
+
+        {/* Submit Button */}
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={[
+              styles.submitButton,
+              !isFormValid && styles.submitButtonDisabled,
+            ]}
+            onPress={handleSubmit}
+            disabled={!isFormValid}
+            activeOpacity={0.7}
           >
             <Text
               style={[
-                styles.description,
-                isArabic && { fontFamily: fonts.Regular },
+                styles.submitButtonText,
+                isArabic && { fontFamily: fonts.Bold },
               ]}
             >
-              {t("feedback.desc")}
+              {t("feedback.submit")}
             </Text>
-
-            {/* Category Selection */}
-            <View style={styles.section}>
-              <Text
-                style={[
-                  styles.sectionTitle,
-                  isArabic && { fontFamily: fonts.SemiBold },
-                ]}
-              >
-                {t("feedback.category")}
-              </Text>
-              <View style={styles.categoriesContainer}>
-                {categories.map((category) => (
-                  <TouchableOpacity
-                    key={category.id}
-                    style={[
-                      styles.categoryButton,
-                      selectedCategory === category.id &&
-                        styles.categoryButtonSelected,
-                    ]}
-                    onPress={() => setSelectedCategory(category.id)}
-                    activeOpacity={0.7}
-                  >
-                    <Text style={styles.categoryEmoji}>{category.emoji}</Text>
-                    <Text
-                      style={[
-                        styles.categoryLabel,
-                        selectedCategory === category.id &&
-                          styles.categoryLabelSelected,
-                        isArabic && { fontFamily: fonts.Medium },
-                      ]}
-                    >
-                      {category.label}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </View>
-
-            {/* Feedback Text */}
-            <View style={styles.section}>
-              <Text
-                style={[
-                  styles.sectionTitle,
-                  isArabic && { fontFamily: fonts.SemiBold },
-                ]}
-              >
-                {t("feedback.yourFeedback")}
-              </Text>
-              <TextInput
-                style={[
-                  styles.input,
-                  styles.textArea,
-                  isArabic && { fontFamily: fonts.Regular, textAlign: "right" },
-                ]}
-                placeholder={t("feedback.feedbackPlaceholder")}
-                placeholderTextColor="#666666"
-                multiline
-                value={feedback}
-                onChangeText={setFeedback}
-                maxLength={1000}
-              />
-            </View>
-
-            {/* Email (Optional) */}
-            <View style={styles.section}>
-              <Text
-                style={[
-                  styles.sectionTitle,
-                  isArabic && { fontFamily: fonts.SemiBold },
-                ]}
-              >
-                {t("feedback.emailOptional")}
-              </Text>
-              <TextInput
-                style={[
-                  styles.input,
-                  isArabic && { fontFamily: fonts.Regular, textAlign: "right" },
-                ]}
-                placeholder={t("feedback.emailPlaceholder")}
-                placeholderTextColor="#666666"
-                keyboardType="email-address"
-                autoCapitalize="none"
-                value={email}
-                onChangeText={setEmail}
-              />
-            </View>
-
-            {/* Submit Button */}
-            <TouchableOpacity
-              style={[
-                styles.submitButton,
-                !isFormValid && styles.submitButtonDisabled,
-              ]}
-              onPress={handleSubmit}
-              disabled={!isFormValid}
-              activeOpacity={0.7}
-            >
-              <Text
-                style={[
-                  styles.submitButtonText,
-                  isArabic && { fontFamily: fonts.Bold },
-                ]}
-              >
-                {t("feedback.submit")}
-              </Text>
-            </TouchableOpacity>
-          </ScrollView>
-        </KeyboardAvoidingView>
+          </TouchableOpacity>
+        </View>
       </GradientBackground>
     </View>
   );

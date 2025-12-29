@@ -10,13 +10,8 @@ import useLanguageStore from "@/store/useLanguageStore";
 import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import {
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-} from "react-native";
+import { Alert, Platform, StyleSheet, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
 export default function MultipleImageUploadScreen() {
   const { t } = useLanguageStore();
@@ -27,7 +22,7 @@ export default function MultipleImageUploadScreen() {
   const [numberOfImages, setNumberOfImages] = useState(1);
   const [aspectRatio, setAspectRatio] = useState("2:3");
   const [resolution, setResolution] = useState("2K");
-  const { spacing, safeAreaBottom } = useResponsive();
+  const { spacing, safeAreaBottom, getResponsiveValue } = useResponsive();
 
   const handleAddImage = async () => {
     if (images.length >= 10) {
@@ -86,66 +81,76 @@ export default function MultipleImageUploadScreen() {
   const handleModelSelect = () => {
     Alert.alert(t("common.modelSelection"), t("common.modelSelectionDesc"));
   };
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+    scrollContent: {
+      flexGrow: 1,
+    },
+    bottomContainer: {
+      position: "absolute",
+      bottom: 0,
+      left: 0,
+      right: 0,
+      backgroundColor: "transparent",
+    },
+  });
 
   return (
     <GradientBackground>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
+      <KeyboardAwareScrollView
+        style={styles.container}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={[
+          styles.scrollContent,
+          {
+            paddingBottom: spacing.xl * 2 + safeAreaBottom + 80,
+          },
+        ]}
+        bottomOffset={Platform.OS === "ios" ? 40 : 0}
       >
-        <ScrollView
-          style={styles.container}
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled"
-          contentContainerStyle={{
-            paddingBottom: safeAreaBottom,
-          }}
-        >
-          <ImageGenHeader title={t("features.consistency.title")} />
+        <ImageGenHeader title={t("features.consistency.title")} />
 
-          <ModelSelector
-            modelName={t("models.nanoBananaPro")}
-            modelIcon="https://via.placeholder.com/32"
-            onPress={handleModelSelect}
-          />
+        <ModelSelector
+          modelName={t("models.nanoBananaPro")}
+          modelIcon="https://via.placeholder.com/32"
+          onPress={handleModelSelect}
+        />
 
-          <MultiImageUpload
-            images={images}
-            maxImages={10}
-            onAddImage={handleAddImage}
-            onRemoveImage={handleRemoveImage}
-          />
+        <MultiImageUpload
+          images={images}
+          maxImages={10}
+          onAddImage={handleAddImage}
+          onRemoveImage={handleRemoveImage}
+        />
 
-          <PromptInput
-            value={prompt}
-            onChangeText={setPrompt}
-            onAIGenerate={handleAIGenerate}
-          />
-        </ScrollView>
+        <PromptInput
+          value={prompt}
+          onChangeText={setPrompt}
+          onAIGenerate={handleAIGenerate}
+        />
+      </KeyboardAwareScrollView>
 
+      <View style={styles.bottomContainer}>
         <GenerateButton
           onPress={handleGenerate}
           credits={10}
           onOptionsPress={() => setShowOptions(true)}
         />
+      </View>
 
-        <OptionsBottomSheet
-          isVisible={showOptions}
-          onClose={() => setShowOptions(false)}
-          numberOfImages={numberOfImages}
-          onNumberOfImagesChange={setNumberOfImages}
-          aspectRatio={aspectRatio}
-          onAspectRatioChange={setAspectRatio}
-          resolution={resolution}
-          onResolutionChange={setResolution}
-        />
-      </KeyboardAvoidingView>
+      <OptionsBottomSheet
+        isVisible={showOptions}
+        onClose={() => setShowOptions(false)}
+        numberOfImages={numberOfImages}
+        onNumberOfImagesChange={setNumberOfImages}
+        aspectRatio={aspectRatio}
+        onAspectRatioChange={setAspectRatio}
+        resolution={resolution}
+        onResolutionChange={setResolution}
+      />
     </GradientBackground>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
