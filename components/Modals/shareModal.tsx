@@ -220,6 +220,10 @@ export const ShareModal: React.FC<ShareModalProps> = ({
       closeButton: {
         width: responsiveValues.closeButtonSize,
         height: responsiveValues.closeButtonSize,
+        position: "absolute" as const,
+        top: 16,
+        right: isArabic ? undefined : 16,
+        left: isArabic ? 16 : undefined,
       },
       title: {
         fontSize: responsiveValues.titleSize,
@@ -349,9 +353,6 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   closeButton: {
-    position: "absolute",
-    top: 16,
-    right: 16,
     justifyContent: "center",
     alignItems: "center",
     zIndex: 10,

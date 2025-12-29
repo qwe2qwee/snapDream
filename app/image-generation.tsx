@@ -61,10 +61,9 @@ export default function ImageGenScreen() {
           <ImageGenHeader title={t("imageGen.title")} />
 
           <ModelSelector
-            modelName="Nano Banana Pro"
+            modelName={t("models.nanoBananaPro")}
             modelIcon="https://example.com/model-icon.png"
             onPress={handleModelSelect}
-            label={t("imageGen.model")}
           />
 
           <PromptInput

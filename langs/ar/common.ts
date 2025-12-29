@@ -6,6 +6,8 @@ const common = {
   cancel: "إلغاء",
   save: "حفظ",
   done: "تم",
+  credits: "الرصيد",
+  images: "صور",
   next: "التالي",
   back: "رجوع",
   getStarted: "ابدأ الآن",
@@ -57,6 +59,11 @@ const common = {
   oops: "عفواً!",
   notExist: "هذه الصفحة غير موجودة.",
   goHome: "العودة للرئيسية",
+  unknownEffect: "تأثير غير معروف",
+  unknownModel: "نموذج غير معروف",
+  all: "الكل",
+  image: "صورة",
+  video: "فيديو",
 };
 
 export default common;

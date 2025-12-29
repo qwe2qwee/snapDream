@@ -1,5 +1,6 @@
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -12,6 +13,8 @@ interface PricingHeaderProps {
 export const PricingHeader: React.FC<PricingHeaderProps> = ({ title }) => {
   const router = useRouter();
   const fonts = useFontFamily();
+  const { currentLanguage } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
   const { spacing, typography, getResponsiveValue, isTablet } = useResponsive();
 
   const backIconSize = getResponsiveValue(40, 44, 48, 50, 52);
@@ -19,7 +22,7 @@ export const PricingHeader: React.FC<PricingHeaderProps> = ({ title }) => {
 
   const styles = StyleSheet.create({
     header: {
-      flexDirection: "row",
+      flexDirection: isArabic ? "row-reverse" : "row",
       alignItems: "center",
       justifyContent: "space-between",
       paddingHorizontal: horizontalPadding,
@@ -35,7 +38,7 @@ export const PricingHeader: React.FC<PricingHeaderProps> = ({ title }) => {
     },
     title: {
       fontSize: getResponsiveValue(18, 20, 22, 24, 26),
-      fontFamily: fonts.SemiBold,
+      fontFamily: isArabic ? "Zain-SemiBold" : fonts.SemiBold,
       color: "#FFFFFF",
     },
     spacer: {
@@ -50,7 +53,11 @@ export const PricingHeader: React.FC<PricingHeaderProps> = ({ title }) => {
         style={styles.backButton}
         activeOpacity={0.7}
       >
-        <Feather name="chevron-left" size={28} color="#FFFFFF" />
+        <Feather
+          name={isArabic ? "chevron-right" : "chevron-left"}
+          size={28}
+          color="#FFFFFF"
+        />
       </TouchableOpacity>
 
       <Text style={styles.title}>{title}</Text>

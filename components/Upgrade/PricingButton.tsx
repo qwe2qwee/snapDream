@@ -1,5 +1,6 @@
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 
@@ -13,6 +14,8 @@ export const PricingButton: React.FC<PricingButtonProps> = ({
   text,
 }) => {
   const fonts = useFontFamily();
+  const { currentLanguage } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
   const { getResponsiveValue } = useResponsive();
 
   const buttonHeight = getResponsiveValue(54, 58, 62, 66, 70);
@@ -28,7 +31,7 @@ export const PricingButton: React.FC<PricingButtonProps> = ({
     },
     buttonText: {
       fontSize: textSize,
-      fontFamily: fonts.Medium,
+      fontFamily: isArabic ? "Zain-Medium" : fonts.Medium,
       color: "#0D0D0F",
     },
   });

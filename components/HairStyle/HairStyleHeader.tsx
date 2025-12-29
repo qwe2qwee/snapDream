@@ -63,7 +63,11 @@ export const HairStyleHeader: React.FC<HairStyleHeaderProps> = ({ title }) => {
           onPress={() => router.back()}
           activeOpacity={0.7}
         >
-          <Feather name="chevron-left" size={24} color="#FFFFFF" />
+          <Feather
+            name={isArabic ? "chevron-right" : "chevron-left"}
+            size={24}
+            color="#FFFFFF"
+          />
         </TouchableOpacity>
 
         <Text style={styles.title}>{displayTitle}</Text>

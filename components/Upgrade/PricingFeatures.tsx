@@ -1,5 +1,6 @@
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
@@ -16,6 +17,8 @@ export const PricingFeatures: React.FC<PricingFeaturesProps> = ({
   features,
 }) => {
   const fonts = useFontFamily();
+  const { currentLanguage } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
   const { spacing, getResponsiveValue, isTablet } = useResponsive();
 
   const featureIconSize = getResponsiveValue(14, 16, 18, 20, 22);
@@ -33,7 +36,7 @@ export const PricingFeatures: React.FC<PricingFeaturesProps> = ({
       marginBottom: spacing.xxl,
     },
     featuresGrid: {
-      flexDirection: "row",
+      flexDirection: isArabic ? "row-reverse" : "row",
       gap: spacing.md,
     },
     column: {
@@ -41,15 +44,16 @@ export const PricingFeatures: React.FC<PricingFeaturesProps> = ({
       gap: featureGap,
     },
     featureItem: {
-      flexDirection: "row",
+      flexDirection: isArabic ? "row-reverse" : "row",
       alignItems: "center",
       gap: spacing.sm,
     },
     featureText: {
       fontSize: featureTextSize,
-      fontFamily: fonts.Regular,
+      fontFamily: isArabic ? "Zain-Regular" : fonts.Regular,
       color: "#FFFFFF",
       flex: 1,
+      textAlign: isArabic ? "right" : "left",
     },
   });
 

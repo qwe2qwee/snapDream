@@ -1,10 +1,13 @@
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export const PricingFooter: React.FC = () => {
   const fonts = useFontFamily();
+  const { t, currentLanguage } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
   const { spacing, getResponsiveValue, isTablet } = useResponsive();
 
   const footerTextSize = getResponsiveValue(13, 14, 15, 15, 16);
@@ -12,7 +15,7 @@ export const PricingFooter: React.FC = () => {
 
   const styles = StyleSheet.create({
     footer: {
-      flexDirection: "row",
+      flexDirection: isArabic ? "row-reverse" : "row",
       justifyContent: "center",
       alignItems: "center",
       gap: spacing.sm + spacing.xs,
@@ -20,7 +23,7 @@ export const PricingFooter: React.FC = () => {
     },
     link: {
       fontSize: footerTextSize,
-      fontFamily: fonts.Regular,
+      fontFamily: isArabic ? "Zain-Regular" : fonts.Regular,
       color: "#8E8E93",
     },
     separator: {
@@ -32,19 +35,19 @@ export const PricingFooter: React.FC = () => {
   return (
     <View style={styles.footer}>
       <TouchableOpacity activeOpacity={0.7}>
-        <Text style={styles.link}>Learn More</Text>
+        <Text style={styles.link}>{t("settings.learnMore")}</Text>
       </TouchableOpacity>
 
       <Text style={styles.separator}>|</Text>
 
       <TouchableOpacity activeOpacity={0.7}>
-        <Text style={styles.link}>Terms of Use</Text>
+        <Text style={styles.link}>{t("settings.termsOfUse")}</Text>
       </TouchableOpacity>
 
       <Text style={styles.separator}>|</Text>
 
       <TouchableOpacity activeOpacity={0.7}>
-        <Text style={styles.link}>Privacy Policy</Text>
+        <Text style={styles.link}>{t("common.privacyPolicy")}</Text>
       </TouchableOpacity>
     </View>
   );

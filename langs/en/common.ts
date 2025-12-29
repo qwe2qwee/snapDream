@@ -31,6 +31,8 @@ const common = {
   contactUs: "Contact Us",
   home: "Home",
   profile: "Profile",
+  credits: "Credits",
+  images: "Images",
   creations: "Creations",
   community: "Community",
   share: "Share",
@@ -57,6 +59,11 @@ const common = {
   oops: "Oops!",
   notExist: "This screen doesn't exist.",
   goHome: "Go to home screen!",
+  unknownEffect: "Unknown Effect",
+  unknownModel: "Unknown Model",
+  all: "All",
+  image: "Image",
+  video: "Video",
 };
 
 export default common;

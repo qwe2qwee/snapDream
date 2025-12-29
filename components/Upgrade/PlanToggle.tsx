@@ -1,5 +1,6 @@
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
@@ -15,6 +16,8 @@ export const PlanToggle: React.FC<PlanToggleProps> = ({
   onSelectPlan,
 }) => {
   const fonts = useFontFamily();
+  const { t, currentLanguage } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
   const { spacing, getResponsiveValue, isTablet } = useResponsive();
 
   const featureTextSize = getResponsiveValue(15, 16, 17, 18, 19);
@@ -27,7 +30,7 @@ export const PlanToggle: React.FC<PlanToggleProps> = ({
       marginBottom: spacing.xl,
     },
     toggleContainer: {
-      flexDirection: "row",
+      flexDirection: isArabic ? "row-reverse" : "row",
       backgroundColor: "rgba(255, 255, 255, 0.05)",
       borderRadius: 50,
       padding: spacing.xs,
@@ -46,7 +49,7 @@ export const PlanToggle: React.FC<PlanToggleProps> = ({
     },
     toggleText: {
       fontSize: featureTextSize,
-      fontFamily: fonts.SemiBold,
+      fontFamily: isArabic ? "Zain-SemiBold" : fonts.SemiBold,
       color: "#8E8E93",
     },
     toggleTextActive: {
@@ -71,7 +74,7 @@ export const PlanToggle: React.FC<PlanToggleProps> = ({
               selectedPlan === "basic" && styles.toggleTextActive,
             ]}
           >
-            Basic
+            {t("settings.basic")}
           </Text>
         </TouchableOpacity>
 
@@ -89,7 +92,7 @@ export const PlanToggle: React.FC<PlanToggleProps> = ({
               selectedPlan === "premium" && styles.toggleTextActive,
             ]}
           >
-            Premium
+            {t("settings.premium")}
           </Text>
         </TouchableOpacity>
       </View>

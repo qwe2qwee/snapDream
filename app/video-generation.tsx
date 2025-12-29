@@ -61,10 +61,9 @@ export default function VideoGenScreen() {
           <ImageGenHeader title={t("videoGen.title")} />
 
           <ModelSelector
-            modelName="Sora Turbo"
+            modelName={t("models.soraTurbo")}
             modelIcon="https://example.com/sora-icon.png" // Placeholder
             onPress={handleModelSelect}
-            label={t("videoGen.model")}
           />
 
           <PromptInput

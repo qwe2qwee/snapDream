@@ -8,6 +8,7 @@ import {
 } from "@/constants/hairStyleData";
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import { Feather } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useState } from "react";
@@ -38,6 +39,8 @@ export const HairStyleModal: React.FC<HairStyleModalProps> = ({
   selectedStyle,
   onSelectStyle,
 }) => {
+  const { t, currentLanguage } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
   const fonts = useFontFamily();
   const { spacing, typography, getBorderRadius, width, safeAreaTop } =
     useResponsive();
@@ -135,14 +138,15 @@ export const HairStyleModal: React.FC<HairStyleModalProps> = ({
     styleName: {
       padding: spacing.sm,
       fontSize: typography.caption,
-      fontFamily: fonts.Medium,
+      fontFamily: isArabic ? "Zain-Medium" : fonts.Medium,
       color: "#FFFFFF",
       textAlign: "center",
     },
     checkmark: {
       position: "absolute",
       top: spacing.sm,
-      right: spacing.sm,
+      right: isArabic ? undefined : spacing.sm,
+      left: isArabic ? spacing.sm : undefined,
       width: 24,
       height: 24,
       borderRadius: 12,
@@ -167,9 +171,13 @@ export const HairStyleModal: React.FC<HairStyleModalProps> = ({
       <View style={styles.modalContent}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.title}>Select Hair Style</Text>
+          <Text style={styles.title}>{t("hairstyle.selectStyle")}</Text>
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-            <Feather name="x" size={20} color="#FFFFFF" />
+            <Feather
+              name={isArabic ? "chevron-right" : "x"}
+              size={20}
+              color="#FFFFFF"
+            />
           </TouchableOpacity>
         </View>
 
@@ -197,7 +205,7 @@ export const HairStyleModal: React.FC<HairStyleModalProps> = ({
                     selectedCategory === key && styles.categoryTextActive,
                   ]}
                 >
-                  {label}
+                  {t(`hairstyle.categories.${key}`)}
                 </Text>
               </TouchableOpacity>
             ))}
@@ -223,7 +231,9 @@ export const HairStyleModal: React.FC<HairStyleModalProps> = ({
                 activeOpacity={0.7}
               >
                 <Image source={{ uri: item.image }} style={styles.styleImage} />
-                <Text style={styles.styleName}>{item.name}</Text>
+                <Text style={styles.styleName}>
+                  {t(`hairstyle.items.${item.id}`) || item.name}
+                </Text>
                 {isSelected && (
                   <View style={styles.checkmark}>
                     <Feather name="check" size={16} color="#000000" />
@@ -254,6 +264,8 @@ export const HairColorModal: React.FC<HairColorModalProps> = ({
   selectedColor,
   onSelectColor,
 }) => {
+  const { t, currentLanguage } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
   const fonts = useFontFamily();
   const { spacing, typography, getBorderRadius, width } = useResponsive();
 
@@ -350,7 +362,7 @@ export const HairColorModal: React.FC<HairColorModalProps> = ({
     },
     colorName: {
       fontSize: typography.small,
-      fontFamily: fonts.Regular,
+      fontFamily: isArabic ? "Zain-Regular" : fonts.Regular,
       color: "#FFFFFF",
       textAlign: "center",
     },
@@ -383,9 +395,13 @@ export const HairColorModal: React.FC<HairColorModalProps> = ({
       <View style={styles.modalContent}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.title}>Select Hair Color</Text>
+          <Text style={styles.title}>{t("hairstyle.selectColor")}</Text>
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-            <Feather name="x" size={20} color="#FFFFFF" />
+            <Feather
+              name={isArabic ? "chevron-right" : "x"}
+              size={20}
+              color="#FFFFFF"
+            />
           </TouchableOpacity>
         </View>
 
@@ -413,7 +429,7 @@ export const HairColorModal: React.FC<HairColorModalProps> = ({
                     selectedCategory === key && styles.categoryTextActive,
                   ]}
                 >
-                  {label}
+                  {t(`hairstyle.categories.${key}`)}
                 </Text>
               </TouchableOpacity>
             ))}
@@ -455,7 +471,7 @@ export const HairColorModal: React.FC<HairColorModalProps> = ({
                   />
                 )}
                 <Text style={styles.colorName} numberOfLines={2}>
-                  {item.name}
+                  {t(`hairstyle.items.${item.id}`) || item.name}
                 </Text>
                 {isSelected && (
                   <View style={styles.checkmark}>

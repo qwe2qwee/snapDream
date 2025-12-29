@@ -1,5 +1,6 @@
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
@@ -14,8 +15,11 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
   modelName,
   modelIcon,
   onPress,
-  label = "Model",
+  label,
 }) => {
+  const { t, currentLanguage } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
+  const displayLabel = label || t("models.label");
   const fonts = useFontFamily();
   const { spacing, typography, getBorderRadius } = useResponsive();
 
@@ -26,7 +30,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
     },
     label: {
       fontSize: typography.caption,
-      fontFamily: fonts.Regular,
+      fontFamily: isArabic ? "Zain-Regular" : fonts.Regular,
       color: "#FFFFFF",
       marginBottom: spacing.sm,
     },
@@ -50,14 +54,14 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
     },
     modelName: {
       fontSize: typography.body,
-      fontFamily: fonts.Medium,
+      fontFamily: isArabic ? "Zain-Medium" : fonts.Medium,
       color: "#FFFFFF",
     },
   });
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>{label}</Text>
+      <Text style={styles.label}>{displayLabel}</Text>
       <TouchableOpacity
         style={styles.selector}
         onPress={onPress}

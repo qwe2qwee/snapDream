@@ -7,6 +7,8 @@ const features = {
   },
   videoGen: {
     title: "توليد الفيديو بالذكاء الاصطناعي",
+    upload: "ارفع صورة لتحريكها",
+    promptLabel: "وصف التحريك",
     promptPlaceholder: "صف مشهد الفيديو...",
     generate: "توليد فيديو",
   },
@@ -27,6 +29,12 @@ const features = {
   },
   consistency: {
     title: "نموذج التناسق",
+  },
+  imageToVideo: {
+    title: "تحويل الصورة إلى فيديو",
+    upload: "ارفع صورة لتحريكها",
+    promptLabel: "وصف التحريك",
+    promptPlaceholder: "صف كيف تريد تحريك الصورة...",
   },
 };
 

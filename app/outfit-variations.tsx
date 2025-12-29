@@ -109,7 +109,7 @@ export default function OutfitVariationsScreen() {
           <ImageGenHeader title={t("features.outfit.title")} />
 
           <ModelSelector
-            modelName="Nano Banana Pro"
+            modelName={t("models.nanoBananaPro")}
             modelIcon="https://via.placeholder.com/32"
             onPress={handleModelSelect}
           />

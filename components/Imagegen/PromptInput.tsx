@@ -1,6 +1,7 @@
 import MagicPen from "@/assets/icons/Magicpen.svg";
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import React from "react";
 import {
   StyleSheet,
@@ -22,9 +23,12 @@ export const PromptInput: React.FC<PromptInputProps> = ({
   value,
   onChangeText,
   onAIGenerate,
-  label = "Prompt",
-  placeholder = "Enter prompt or Generate prompt with Image",
+  label,
+  placeholder,
 }) => {
+  const { t } = useLanguageStore();
+  const displayLabel = label || t("common.noPrompt");
+  const displayPlaceholder = placeholder || t("common.noPromptDesc");
   const fonts = useFontFamily();
   const { spacing, typography, getBorderRadius, getResponsiveValue } =
     useResponsive();
@@ -70,11 +74,11 @@ export const PromptInput: React.FC<PromptInputProps> = ({
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>{label}</Text>
+      <Text style={styles.label}>{displayLabel}</Text>
       <View style={styles.inputWrapper}>
         <TextInput
           style={styles.input}
-          placeholder={placeholder}
+          placeholder={displayPlaceholder}
           placeholderTextColor="#8E8E93"
           value={value}
           onChangeText={onChangeText}

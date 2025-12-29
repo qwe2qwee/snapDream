@@ -1,5 +1,6 @@
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import { Feather } from "@expo/vector-icons";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -20,6 +21,8 @@ export const BottomAction: React.FC<BottomActionProps> = ({
   imageCount,
   onImageCountChange,
 }) => {
+  const { t, currentLanguage } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
   const fonts = useFontFamily();
   const { spacing, typography, getResponsiveValue, safeAreaBottom } =
     useResponsive();
@@ -78,11 +81,11 @@ export const BottomAction: React.FC<BottomActionProps> = ({
             styles.generateText,
             {
               fontSize: typography.body,
-              fontFamily: fonts.Bold,
+              fontFamily: isArabic ? "Zain-Bold" : fonts.Bold,
             },
           ]}
         >
-          Generate
+          {t("hairstyle.generate")}
         </Text>
       </TouchableOpacity>
     </View>

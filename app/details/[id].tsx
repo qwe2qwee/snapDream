@@ -16,6 +16,7 @@ import {
   videoEffects,
 } from "@/constants/data";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import { Feather } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -31,6 +32,7 @@ import {
 } from "react-native";
 
 export default function GenericEffectScreen() {
+  const { t } = useLanguageStore();
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { spacing, getBorderRadius, getResponsiveValue, safeAreaBottom } =
@@ -56,6 +58,12 @@ export default function GenericEffectScreen() {
     ];
     return allEffects.find((e) => e.id === Number(id));
   }, [id]);
+
+  const isImageToVideo = Number(id) === 10;
+
+  const headerTitle = isImageToVideo
+    ? t("features.imageToVideo.title")
+    : currentEffect?.title || t("home.imageEffects");
 
   const handleImageUpload = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -137,10 +145,10 @@ export default function GenericEffectScreen() {
             contentContainerStyle={styles.scrollContent}
             keyboardShouldPersistTaps="handled"
           >
-            <ImageGenHeader title={currentEffect?.title || "Image Effects"} />
+            <ImageGenHeader title={headerTitle} />
 
             <EffectSelector
-              title={currentEffect?.title || "Unknown Effect"}
+              title={headerTitle}
               icon={currentEffect?.image}
               onPress={() => setShowEffectsModal(true)}
             />
@@ -160,15 +168,22 @@ export default function GenericEffectScreen() {
                 </TouchableOpacity>
               </View>
             ) : (
-              <UploadView onUpload={handleImageUpload} />
+              <UploadView
+                onUpload={handleImageUpload}
+                label={
+                  isImageToVideo ? t("features.imageToVideo.upload") : undefined
+                }
+              />
             )}
 
-            {Number(id) === 10 && (
+            {isImageToVideo && (
               <View style={{ marginTop: spacing.sm }}>
                 <PromptInput
                   value={prompt}
                   onChangeText={setPrompt}
                   onAIGenerate={() => console.log("AI Generate prompt")}
+                  label={t("features.imageToVideo.promptLabel")}
+                  placeholder={t("features.imageToVideo.promptPlaceholder")}
                 />
               </View>
             )}
@@ -181,7 +196,7 @@ export default function GenericEffectScreen() {
           />
         </View>
 
-        <LoadingModal isVisible={loading} />
+        <LoadingModal isVisible={loading} title={t("common.loading")} />
 
         <EffectsModal
           isVisible={showEffectsModal}

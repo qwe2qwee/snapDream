@@ -12,8 +12,10 @@ import { ResultHeader } from "@/components/CommunityDetails/ResultHeader";
 import { ResultImage } from "@/components/CommunityDetails/ResultImage";
 import { COMMUNITY_IMAGES } from "@/constants/data";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 
 export default function TextToImageResultScreen() {
+  const { t } = useLanguageStore();
   const { id } = useLocalSearchParams<{ id: string }>();
   const numericId = Number(id);
   const item = COMMUNITY_IMAGES.find((it) => it.id === numericId);
@@ -23,32 +25,32 @@ export default function TextToImageResultScreen() {
   const handleShare = async () => {
     try {
       await Share.share({
-        message: `Check out this AI generated image!\n\nPrompt: ${item?.prompt}`,
+        message: t("community.shareMessage").replace(
+          "{prompt}",
+          item?.prompt || ""
+        ),
         url: item?.uri || "",
       });
     } catch (error) {
-      Alert.alert("Error", "Failed to share image");
+      Alert.alert(t("common.error"), t("common.error"));
     }
   };
 
   const handleRegenerate = () => {
-    Alert.alert(
-      "Regenerate",
-      "This will generate a new image with the same prompt"
-    );
+    Alert.alert(t("common.regenerate"), t("community.regenerateDesc"));
   };
 
   const handleDownload = () => {
-    Alert.alert("Download", "Image will be saved to your gallery");
+    Alert.alert(t("common.download"), t("common.savedToGallery"));
   };
 
   const copyPrompt = async () => {
     await Clipboard.setStringAsync(item?.prompt || "");
-    Alert.alert("Copied!", "Prompt copied to clipboard");
+    Alert.alert(t("common.copied"), t("common.copied"));
   };
 
   const copyImageInfo = () => {
-    Alert.alert("Copy", "Image info copied");
+    Alert.alert(t("common.copy"), t("common.copied"));
   };
 
   const styles = StyleSheet.create({
@@ -69,13 +71,13 @@ export default function TextToImageResultScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* Header */}
-        <ResultHeader title="Text to Image" />
+        <ResultHeader title={t("community.textToImage")} />
         {/* Generated Image */}
         <ResultImage imageUri={item?.uri || ""} />
         {/* Image Info Bar */}
         <ImageInfoBar
-          model={item?.AIModel || "Stable Diffusion v1.5"}
-          aspectRatio={item?.height || "3:4 Aspect Ratio"}
+          model={item?.AIModel || t("common.unknownModel")}
+          aspectRatio={item?.height || `3:4 ${t("creations.aspectRatio")}`}
         />
         {/* Prompt Section */}
         <PromptSection prompt={item?.prompt || ""} onCopy={copyPrompt} />

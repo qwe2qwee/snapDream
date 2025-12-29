@@ -25,6 +25,11 @@ const settings = {
   security: "الأمان",
   deleteAccount: "حذف الحساب",
   deleteAccountConfirmSub: "حذف الحساب نهائياً؟ سيتم فقدان كل شيء.",
+  basic: "أساسي",
+  premium: "بريميوم",
+  off: "خصم",
+  learnMore: "تعرف على المزيد",
+  termsOfUse: "شروط الاستخدام",
 };
 
 export default settings;

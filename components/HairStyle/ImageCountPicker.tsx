@@ -1,5 +1,6 @@
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import { Feather } from "@expo/vector-icons";
 import React, { useState } from "react";
 import {
@@ -22,6 +23,8 @@ export const ImageCountPicker: React.FC<ImageCountPickerProps> = ({
   onSelectCount,
   maxCount = 4,
 }) => {
+  const { t, currentLanguage } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
   const [isOpen, setIsOpen] = useState(false);
   const [buttonLayout, setButtonLayout] = useState({
     x: 0,
@@ -84,11 +87,11 @@ export const ImageCountPicker: React.FC<ImageCountPickerProps> = ({
               styles.countText,
               {
                 fontSize: getResponsiveValue(14, 15, 16, 17, 18),
-                fontFamily: fonts.Medium,
+                fontFamily: isArabic ? "Zain-Medium" : fonts.Medium,
               },
             ]}
           >
-            {selectedCount} Img
+            {selectedCount} {t("common.images")}
           </Text>
           <Feather
             name={isOpen ? "chevron-up" : "chevron-down"}
@@ -143,12 +146,12 @@ export const ImageCountPicker: React.FC<ImageCountPickerProps> = ({
                         styles.dropdownText,
                         {
                           fontSize: getResponsiveValue(14, 15, 16, 17, 18),
-                          fontFamily: fonts.Medium,
+                          fontFamily: isArabic ? "Zain-Medium" : fonts.Medium,
                         },
                         selectedCount === count && styles.dropdownTextSelected,
                       ]}
                     >
-                      {count} Img
+                      {count} {t("common.images")}
                     </Text>
                     {selectedCount === count && (
                       <Feather name="check" size={18} color="#FFFFFF" />

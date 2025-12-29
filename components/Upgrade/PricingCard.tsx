@@ -40,7 +40,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
       padding: spacing.md,
     },
     cardContent: {
-      flexDirection: "row",
+      flexDirection: isArabic ? "row-reverse" : "row",
       alignItems: "center",
       gap: spacing.md,
     },
@@ -56,6 +56,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
     },
     leftSection: {
       flex: 1,
+      alignItems: isArabic ? "flex-end" : "flex-start",
     },
     price: {
       fontSize: priceSize,
@@ -70,7 +71,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
       color: "#8E8E93",
     },
     rightSection: {
-      alignItems: "flex-end",
+      alignItems: isArabic ? "flex-start" : "flex-end",
       gap: spacing.sm,
     },
     badge: {
@@ -117,10 +118,14 @@ export const PricingCard: React.FC<PricingCardProps> = ({
         <View style={styles.rightSection}>
           {discount && (
             <View style={styles.badge}>
-              <Text style={styles.badgeText}>{discount}</Text>
+              <Text style={styles.badgeText}>
+                {discount.replace("off", t("settings.off"))}
+              </Text>
             </View>
           )}
-          <Text style={styles.credits}>{credits}</Text>
+          <Text style={styles.credits}>
+            {credits.replace("Credits", t("common.credits"))}
+          </Text>
         </View>
       </View>
     </TouchableOpacity>

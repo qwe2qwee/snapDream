@@ -1,5 +1,6 @@
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
@@ -8,10 +9,9 @@ interface UploadViewProps {
   label?: string;
 }
 
-export const UploadView: React.FC<UploadViewProps> = ({
-  onUpload,
-  label = "Upload Image",
-}) => {
+export const UploadView: React.FC<UploadViewProps> = ({ onUpload, label }) => {
+  const { t } = useLanguageStore();
+  const displayLabel = label || t("features.upscale.upload");
   const fonts = useFontFamily();
   const { spacing, typography, getBorderRadius, getResponsiveValue } =
     useResponsive();
@@ -104,7 +104,7 @@ export const UploadView: React.FC<UploadViewProps> = ({
               resizeMode="contain"
             />
           </View>
-          <Text style={styles.uploadText}>{label}</Text>
+          <Text style={styles.uploadText}>{displayLabel}</Text>
         </TouchableOpacity>
       </View>
     </View>

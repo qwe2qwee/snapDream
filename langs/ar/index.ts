@@ -1,6 +1,7 @@
 import auth from "./auth";
 import clothSwap from "./clothSwap";
 import common from "./common";
+import community from "./community";
 import contact from "./contact";
 import creations from "./creations";
 import features from "./features";
@@ -9,6 +10,7 @@ import hairstyle from "./hairstyle";
 import home from "./home";
 import imageGen from "./imageGen";
 import legal from "./legal";
+import models from "./models";
 import onboarding from "./onboarding";
 import rateApp from "./rateApp";
 import result from "./result";
@@ -20,6 +22,7 @@ export default {
   home,
   onboarding,
   clothSwap,
+  community,
   creations,
   auth,
   hairstyle,
@@ -32,4 +35,5 @@ export default {
   feedback,
   rateApp,
   legal,
+  models,
 };

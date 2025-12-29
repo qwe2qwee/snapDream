@@ -26,6 +26,11 @@ const settings = {
   deleteAccount: "Delete Account",
   deleteAccountConfirmSub:
     "Permanently delete account? Everything will be lost.",
+  basic: "Basic",
+  premium: "Premium",
+  off: "off",
+  learnMore: "Learn More",
+  termsOfUse: "Terms of Use",
 };
 
 export default settings;

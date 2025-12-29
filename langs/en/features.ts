@@ -7,6 +7,8 @@ const features = {
   },
   videoGen: {
     title: "AI Video Generation",
+    upload: "Upload image to animate",
+    promptLabel: "Animation Prompt",
     promptPlaceholder: "Describe the video scene...",
     generate: "Generate Video",
   },
@@ -27,6 +29,12 @@ const features = {
   },
   consistency: {
     title: "Consistency Model",
+  },
+  imageToVideo: {
+    title: "Image to Video",
+    upload: "Upload image to animate",
+    promptLabel: "Animation Prompt",
+    promptPlaceholder: "Describe how you want to animate the image...",
   },
 };
 

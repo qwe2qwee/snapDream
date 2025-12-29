@@ -104,7 +104,7 @@ export default function MultipleImageUploadScreen() {
           <ImageGenHeader title={t("features.consistency.title")} />
 
           <ModelSelector
-            modelName="Nano Banana Pro"
+            modelName={t("models.nanoBananaPro")}
             modelIcon="https://via.placeholder.com/32"
             onPress={handleModelSelect}
           />

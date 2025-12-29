@@ -1,6 +1,5 @@
 export default {
   title: "توليد الصور",
-  model: "النموذج",
   prompt: "الوصف",
   promptPlaceholder: "أدخل الوصف أو قم بتوليد وصف من صورة",
   generate: "توليد",

@@ -1,12 +1,13 @@
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import { Feather } from "@expo/vector-icons";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface ColorSelectorProps {
   label: string;
-  selectedColor?: { name: string; color: string };
+  selectedColor?: { id: string; name: string; color: string };
   onPress: () => void;
 }
 
@@ -15,6 +16,8 @@ export const ColorSelector: React.FC<ColorSelectorProps> = ({
   selectedColor,
   onPress,
 }) => {
+  const { t, currentLanguage } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
   const fonts = useFontFamily();
   const { spacing, typography, getBorderRadius } = useResponsive();
 
@@ -25,7 +28,7 @@ export const ColorSelector: React.FC<ColorSelectorProps> = ({
     },
     label: {
       fontSize: typography.body,
-      fontFamily: fonts.Medium,
+      fontFamily: isArabic ? "Zain-Medium" : fonts.Medium,
       color: "#FFFFFF",
       marginBottom: spacing.xs,
     },
@@ -51,14 +54,14 @@ export const ColorSelector: React.FC<ColorSelectorProps> = ({
     },
     colorName: {
       fontSize: typography.body,
-      fontFamily: fonts.Regular,
+      fontFamily: isArabic ? "Zain-Regular" : fonts.Regular,
       color: "#FFFFFF",
     },
     placeholderText: {
       fontSize: typography.body,
-      fontFamily: fonts.Regular,
+      fontFamily: isArabic ? "Zain-Regular" : fonts.Regular,
       color: "#8E8E93",
-      marginLeft: spacing.sm,
+      marginStart: spacing.sm,
     },
   });
 
@@ -79,13 +82,21 @@ export const ColorSelector: React.FC<ColorSelectorProps> = ({
                   { backgroundColor: selectedColor.color },
                 ]}
               />
-              <Text style={styles.colorName}>{selectedColor.name}</Text>
+              <Text style={styles.colorName}>
+                {t(`hairstyle.items.${selectedColor.id}`) || selectedColor.name}
+              </Text>
             </>
           ) : (
-            <Text style={styles.placeholderText}>Select Color</Text>
+            <Text style={styles.placeholderText}>
+              {t("hairstyle.selectColor")}
+            </Text>
           )}
         </View>
-        <Feather name="chevron-right" size={20} color="#8E8E93" />
+        <Feather
+          name={isArabic ? "chevron-left" : "chevron-right"}
+          size={20}
+          color="#8E8E93"
+        />
       </TouchableOpacity>
     </View>
   );

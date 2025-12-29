@@ -38,11 +38,11 @@ export default function CreationDetailScreen() {
   };
 
   const handleRegenerate = () => {
-    Alert.alert("Regenerate", "Generating a new version of this creation...");
+    Alert.alert(t("common.regenerate"), t("creations.regenerating"));
   };
 
   const handleDownload = () => {
-    Alert.alert("Download", "Creation saved to gallery");
+    Alert.alert(t("common.download"), t("creations.downloading"));
   };
 
   const handleDelete = () => {
@@ -51,17 +51,14 @@ export default function CreationDetailScreen() {
   };
 
   const confirmDelete = () => {
-    // In a real app, you would call an API or update state here
-    // Example: await deleteCreationAPI(numericId);
-
-    Alert.alert("Deleted", "Creation has been removed");
+    Alert.alert(t("creations.deleted"), t("creations.removed"));
     router.back();
   };
 
   const copyPrompt = async () => {
     if (item?.prompt) {
       await Clipboard.setStringAsync(item.prompt);
-      Alert.alert("Copied!", "Prompt copied to clipboard");
+      Alert.alert(t("common.copied"), t("common.copied"));
     }
   };
 

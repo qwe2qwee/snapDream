@@ -59,13 +59,9 @@ export default function HairStyleScreen() {
         await ImagePicker.requestMediaLibraryPermissionsAsync();
 
       if (status !== "granted") {
-        Alert.alert(
-          t("common.error"),
-          isArabic
-            ? "يرجى منح أذونات مكتبة الصور لتحميل الصور."
-            : "Please grant camera roll permissions to upload images.",
-          [{ text: t("common.ok") }]
-        );
+        Alert.alert(t("common.error"), t("hairstyle.permissionsError"), [
+          { text: t("common.ok") },
+        ]);
         return;
       }
 
@@ -130,14 +126,9 @@ export default function HairStyleScreen() {
     } catch (error) {
       setIsGenerating(false);
       console.error("Generation error:", error);
-      Alert.alert(
-        t("common.error"),
-        t("hairstyle.generateError") ||
-          (isArabic
-            ? "فشل توليد تسريحة الشعر. يرجى المحاولة مرة أخرى."
-            : "Failed to generate hairstyle. Please try again."),
-        [{ text: t("common.ok") }]
-      );
+      Alert.alert(t("common.error"), t("hairstyle.generateError"), [
+        { text: t("common.ok") },
+      ]);
     }
   };
 
@@ -166,14 +157,22 @@ export default function HairStyleScreen() {
           {/* Hair Style Selector */}
           <StyleSelector
             label={t("hairstyle.selectStyle")}
-            selectedStyle={selectedStyle}
+            selectedStyle={{
+              id: selectedStyle.id,
+              name: selectedStyle.name,
+              image: selectedStyle.image,
+            }}
             onPress={() => setShowStyleModal(true)}
           />
 
           {/* Hair Color Selector */}
           <ColorSelector
             label={t("hairstyle.selectColor")}
-            selectedColor={selectedColor}
+            selectedColor={{
+              id: selectedColor.id,
+              name: selectedColor.name,
+              color: selectedColor.color,
+            }}
             onPress={() => setShowColorModal(true)}
           />
 
@@ -230,8 +229,14 @@ export default function HairStyleScreen() {
         title={t("hairstyle.processing")}
         subtitle={t("hairstyle.processingDesc")
           .replace("{count}", imageCount.toString())
-          .replace("{style}", selectedStyle.name)
-          .replace("{color}", selectedColor.name)}
+          .replace(
+            "{style}",
+            t(`hairstyle.items.${selectedStyle.id}`) || selectedStyle.name
+          )
+          .replace(
+            "{color}",
+            t(`hairstyle.items.${selectedColor.id}`) || selectedColor.name
+          )}
       />
     </GradientBackground>
   );

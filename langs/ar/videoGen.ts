@@ -1,6 +1,5 @@
 export default {
   title: "توليد الفيديو",
-  model: "النموذج",
   duration: "المدة",
   fps: "معدل الإطارات",
   resolution: "الدقة",

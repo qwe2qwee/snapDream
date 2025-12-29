@@ -1,5 +1,6 @@
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import { Feather } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import { useRouter } from "expo-router";
@@ -43,6 +44,8 @@ export const CreationCard: React.FC<CreationCardProps> = ({
 }) => {
   const router = useRouter();
   const [showMenu, setShowMenu] = useState(false);
+  const { currentLanguage, t } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
   const { width, spacing, getResponsiveValue, getBorderRadius, typography } =
     useResponsive();
   const fonts = useFontFamily();
@@ -88,8 +91,8 @@ export const CreationCard: React.FC<CreationCardProps> = ({
       zIndex: 10,
     },
     moreButton: {
-      left: undefined,
-      right: spacing.sm + spacing.xs,
+      left: isArabic ? spacing.sm + spacing.xs : undefined,
+      right: isArabic ? undefined : spacing.sm + spacing.xs,
     },
     blurContainer: {
       width: "100%",
@@ -108,7 +111,8 @@ export const CreationCard: React.FC<CreationCardProps> = ({
     menuContainer: {
       position: "absolute",
       top: getResponsiveValue(50, 54, 56, 58, 60),
-      right: spacing.sm + spacing.xs,
+      right: isArabic ? undefined : spacing.sm + spacing.xs,
+      left: isArabic ? spacing.sm + spacing.xs : undefined,
       width: getResponsiveValue(120, 130, 140, 150, 160),
       borderRadius: getBorderRadius("large") + 2,
       overflow: "hidden",
@@ -128,7 +132,7 @@ export const CreationCard: React.FC<CreationCardProps> = ({
     menuOptionText: {
       fontSize: typography.body,
       color: "#FFFFFF",
-      fontFamily: fonts.Medium,
+      fontFamily: isArabic ? "Zain-Medium" : fonts.Medium,
     },
     deleteText: {
       color: "#FF4B4B",
@@ -187,7 +191,9 @@ export const CreationCard: React.FC<CreationCardProps> = ({
                 style={styles.menuOption}
                 onPress={() => handleOptionPress(onDownload)}
               >
-                <Text style={styles.menuOptionText}>Download</Text>
+                <Text style={styles.menuOptionText}>
+                  {t("common.download")}
+                </Text>
               </TouchableOpacity>
 
               <View style={styles.menuDivider} />
@@ -196,7 +202,7 @@ export const CreationCard: React.FC<CreationCardProps> = ({
                 style={styles.menuOption}
                 onPress={() => handleOptionPress(onShare)}
               >
-                <Text style={styles.menuOptionText}>Share</Text>
+                <Text style={styles.menuOptionText}>{t("common.share")}</Text>
               </TouchableOpacity>
 
               <View style={styles.menuDivider} />
@@ -206,7 +212,7 @@ export const CreationCard: React.FC<CreationCardProps> = ({
                 onPress={() => handleOptionPress(onDelete)}
               >
                 <Text style={[styles.menuOptionText, styles.deleteText]}>
-                  Delete
+                  {t("common.delete")}
                 </Text>
               </TouchableOpacity>
             </BlurView>
