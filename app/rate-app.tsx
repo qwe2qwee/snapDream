@@ -210,6 +210,7 @@ export default function RateAppScreen() {
           title={t("rateApp.thankYou")}
           subtitle={t("rateApp.storeRedirectDesc")}
           confirmText={t("rateApp.rateNow")}
+          cancelText={t("common.cancel")}
           showCloseButton={true}
         />
 
@@ -223,6 +224,7 @@ export default function RateAppScreen() {
           title={t("rateApp.thankYou")}
           subtitle={t("rateApp.improveDesc")}
           confirmText={t("rateApp.giveFeedback")}
+          cancelText={t("common.cancel")}
           showCloseButton={true}
         />
       </GradientBackground>

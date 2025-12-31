@@ -134,6 +134,8 @@ export default function VideoResultScreen() {
           title={t("result.deleteTitle")}
           subtitle={t("result.deleteConfirm")}
           confirmText={t("common.delete")}
+          cancelText={t("common.cancel")}
+          isDestructive={true}
           showCloseButton={true}
         />
 

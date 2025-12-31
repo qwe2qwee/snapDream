@@ -195,6 +195,8 @@ export default function ProfileScreen() {
           title={t("settings.logout")}
           subtitle={t("common.logoutConfirm")}
           confirmText={t("settings.logout")}
+          cancelText={t("common.cancel")}
+          isDestructive={true}
           showCloseButton={true}
         />
 
@@ -208,6 +210,8 @@ export default function ProfileScreen() {
           title={t("settings.deleteAccount")}
           subtitle={t("settings.deleteAccountConfirmSub")}
           confirmText={t("common.delete")}
+          cancelText={t("common.cancel")}
+          isDestructive={true}
           showCloseButton={true}
         />
       </GradientBackground>

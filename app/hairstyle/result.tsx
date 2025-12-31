@@ -112,6 +112,8 @@ export default function HairStyleResultScreen() {
           title={t("result.deleteTitle")}
           subtitle={t("result.deleteConfirm")}
           confirmText={t("common.delete")}
+          cancelText={t("common.cancel")}
+          isDestructive={true}
           showCloseButton={true}
         />
 
