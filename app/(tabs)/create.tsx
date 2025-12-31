@@ -1,17 +1,19 @@
 import { useFontFamily } from "@/hooks/useFontFamily";
-import useLanguageStore from "@/store/useLanguageStore";
 import { router } from "expo-router";
-import { Button, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function Create() {
   const fonts = useFontFamily();
-  const { toggleLanguage } = useLanguageStore();
 
   return (
     <View style={styles.container}>
       <Text style={[styles.text, { fontFamily: fonts.SemiBold }]}>Create</Text>
-      <Button title="Open Modal" onPress={() => router.push("/(auth)/login")} />
-      <Button title="Toggle Language" onPress={toggleLanguage} />
+      <TouchableOpacity
+        onPress={() => router.push("/(auth)/login")}
+        style={styles.button}
+      >
+        <Text style={[styles.text, { fontFamily: fonts.SemiBold }]}>Login</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -25,5 +27,12 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 20,
+    color: "#ffffffff",
+  },
+  button: {
+    marginTop: 20,
+    padding: 10,
+    backgroundColor: "#000000",
+    borderRadius: 5,
   },
 });
