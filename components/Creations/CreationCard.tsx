@@ -1,7 +1,6 @@
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
 import useLanguageStore from "@/store/useLanguageStore";
-import { Feather } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -9,6 +8,7 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 // SVG icons (both)
 import ImageIcon from "../../assets/icons/ImageIcon.svg";
+import MoreIcon from "../../assets/icons/More.svg";
 import VideoIcon from "../../assets/icons/VideoIcon.svg";
 
 interface CreationCardProps {
@@ -175,10 +175,9 @@ export const CreationCard: React.FC<CreationCardProps> = ({
         onPress={() => setShowMenu((prev) => !prev)}
       >
         <BlurView intensity={80} tint="dark" style={styles.blurContainer}>
-          <Feather
-            name="more-vertical"
-            size={getResponsiveValue(18, 19, 20, 21, 22)}
-            color="#FFFFFF"
+          <MoreIcon
+            width={getResponsiveValue(18, 19, 20, 21, 22)}
+            height={getResponsiveValue(18, 19, 20, 21, 22)}
           />
         </BlurView>
       </TouchableOpacity>
