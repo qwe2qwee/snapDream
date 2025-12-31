@@ -65,6 +65,7 @@ const common = {
   image: "Image",
   video: "Video",
   currentPlan: "Current Plan",
+  day: "Day",
 };
 
 export default common;

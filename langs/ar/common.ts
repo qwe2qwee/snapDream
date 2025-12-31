@@ -65,6 +65,7 @@ const common = {
   image: "صورة",
   video: "فيديو",
   currentPlan: "الخطة الحالية",
+  day: "يوم",
 };
 
 export default common;

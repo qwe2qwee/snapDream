@@ -124,7 +124,9 @@ export const PricingCard: React.FC<PricingCardProps> = ({
             </View>
           )}
           <Text style={styles.credits}>
-            {credits.replace("Credits", t("common.credits"))}
+            {credits
+              .replace("Credits", t("common.credits"))
+              .replace("day", t("common.day"))}
           </Text>
         </View>
       </View>

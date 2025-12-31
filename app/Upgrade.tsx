@@ -58,6 +58,9 @@ export default function PricingScreen() {
       label: t("settings.standardGen") || "Standard Generation",
     },
     { icon: SaveIcon, label: t("settings.limitedSaves") || "Limited Saves" },
+    { icon: LifetimeIcon, label: t("settings.limitedAccess") },
+    { icon: AdIcon, label: t("settings.adsIncluded") },
+    { icon: HDIcon, label: t("settings.standardDownloads") },
     {
       icon: CustomerIcon,
       label: t("settings.basicSupport") || "Basic Support",
@@ -158,15 +161,15 @@ export default function PricingScreen() {
                       type="monthly"
                       price="$10.00"
                       credits="10 Credits/day"
-                      isSelected={true}
-                      onPress={() => {}}
+                      isSelected={selectedPricing === "monthly"}
+                      onPress={() => setSelectedPricing("monthly")}
                     />
                     <PricingCard
                       type="yearly"
                       price="$100.00"
                       credits="10 Credits/day"
-                      isSelected={true}
-                      onPress={() => {}}
+                      isSelected={selectedPricing === "yearly"}
+                      onPress={() => setSelectedPricing("yearly")}
                     />
                   </>
                 )}
@@ -176,17 +179,13 @@ export default function PricingScreen() {
             {/* CTA Button */}
             <View style={styles.buttonContainer}>
               <PricingButton
-                text={
-                  selectedPlan === "premium"
-                    ? t("home.upgradeNow")
-                    : t("common.currentPlan") || "Current Plan"
-                }
+                text={t("home.upgradeNow")}
                 onPress={() => {
-                  if (selectedPlan === "premium") {
-                    console.log("Upgrade pressed for", selectedPricing);
-                  }
+                  console.log(
+                    `Upgrade pressed for ${selectedPlan} - ${selectedPricing}`
+                  );
                 }}
-                disabled={selectedPlan === "basic"}
+                disabled={false}
               />
             </View>
 

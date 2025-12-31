@@ -34,6 +34,9 @@ const settings = {
   limitedSaves: "حفظ محدود",
   basicSupport: "دعم أساسي",
   restorePurchase: "استعادة المشتريات",
+  limitedAccess: "وصول محدود",
+  adsIncluded: "تتضمن إعلانات",
+  standardDownloads: "جودة قياسية",
 };
 
 export default settings;

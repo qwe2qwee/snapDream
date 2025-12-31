@@ -35,6 +35,9 @@ const settings = {
   limitedSaves: "Limited Saves",
   basicSupport: "Basic Support",
   restorePurchase: "Restore Purchase",
+  limitedAccess: "Limited Access",
+  adsIncluded: "Ads Included",
+  standardDownloads: "Standard Quality",
 };
 
 export default settings;
