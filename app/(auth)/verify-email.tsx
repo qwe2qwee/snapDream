@@ -3,6 +3,7 @@ import { LoginButton } from "@/components/Auth/LoginButton";
 import { GradientBackground } from "@/components/GradientBackground";
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -12,6 +13,7 @@ export default function VerifyEmailScreen() {
   const { email } = useLocalSearchParams<{ email: string }>();
   const { spacing, typography, getResponsiveValue, safeAreaBottom } =
     useResponsive();
+  const { t } = useLanguageStore();
   const fonts = useFontFamily();
 
   const handleVerified = () => {
@@ -95,10 +97,11 @@ export default function VerifyEmailScreen() {
             <EmailIcon width={80} height={80} color="#FFFFFF" />
           </View>
 
-          <Text style={styles.title}>Verify your email</Text>
+          <Text style={styles.title}>{t("auth.verifyEmailTitle")}</Text>
 
           <Text style={styles.subtitle}>
-            A verification link has been sent to{"\n"}
+            {t("auth.verificationLinkSent")}
+            {"\n"}
             <Text style={styles.emailText}>
               {email || "coozy890@gmail.com"}
             </Text>
@@ -109,12 +112,15 @@ export default function VerifyEmailScreen() {
             onPress={handleChangeEmail}
             activeOpacity={0.7}
           >
-            <Text style={styles.changeEmailText}>Change email ?</Text>
+            <Text style={styles.changeEmailText}>{t("auth.changeEmail")}</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.footer}>
-          <LoginButton onPress={handleVerified} text="I've Verified" />
+          <LoginButton
+            onPress={handleVerified}
+            text={t("auth.verifiedButton")}
+          />
 
           <TouchableOpacity
             style={styles.resendContainer}
@@ -122,8 +128,8 @@ export default function VerifyEmailScreen() {
             activeOpacity={0.7}
           >
             <Text style={styles.resendText}>
-              Didn't receive the email?{" "}
-              <Text style={styles.resendLink}>Resend</Text>
+              {t("auth.didNotReceiveEmail")}
+              <Text style={styles.resendLink}>{t("auth.resend")}</Text>
             </Text>
           </TouchableOpacity>
         </View>

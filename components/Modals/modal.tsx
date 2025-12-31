@@ -14,6 +14,7 @@ interface ConfirmModalProps {
   isVisible: boolean;
   onClose: () => void;
   onConfirm: () => void;
+  onCancel?: () => void;
   icon?: IconType; // Custom icon component (SVG or Feather icon name)
   iconName?: keyof typeof Feather.glyphMap; // Feather icon name as fallback
   iconColor?: string;
@@ -21,14 +22,17 @@ interface ConfirmModalProps {
   title: string;
   subtitle: string;
   confirmText?: string;
+  cancelText?: string;
   confirmColor?: string;
   showCloseButton?: boolean;
+  isDestructive?: boolean;
 }
 
 export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   isVisible,
   onClose,
   onConfirm,
+  onCancel,
   icon,
   iconName = "trash-2",
   iconColor = "#FFFFFF",
@@ -36,12 +40,16 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   title,
   subtitle,
   confirmText,
+  cancelText,
   confirmColor = "#FFFFFF",
   showCloseButton = true,
+  isDestructive = false,
 }) => {
   const { t, currentLanguage } = useLanguageStore();
   const isArabic = currentLanguage === "ar";
   const displayConfirmText = confirmText || t("common.confirm");
+  const displayCancelText = cancelText || t("common.cancel");
+
   const { spacing, getResponsiveValue, getBorderRadius, isTablet, width } =
     useResponsive();
 
@@ -96,9 +104,13 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
         width: responsiveValues.iconContainerSize,
         height: responsiveValues.iconContainerSize,
         borderRadius: responsiveValues.iconBorderRadius,
-        backgroundColor: iconBackgroundColor,
+        backgroundColor: isDestructive
+          ? "rgba(255, 59, 48, 0.1)"
+          : iconBackgroundColor,
         marginBottom: spacing.sm,
-        borderColor: "rgba(255, 255, 255, 0.1)",
+        borderColor: isDestructive
+          ? "rgba(255, 59, 48, 0.2)"
+          : "rgba(255, 255, 255, 0.1)",
         borderWidth: 1,
       },
       closeButton: {
@@ -119,17 +131,45 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
         fontFamily: isArabic ? "Zain-Regular" : fonts.Regular,
         marginBottom: spacing.xl,
       },
+      buttonContainer: {
+        flexDirection: "row" as const,
+        gap: spacing.md,
+        width: "100%" as const,
+      },
       confirmButton: {
+        flex: 1,
         height: responsiveValues.buttonHeight,
         borderRadius: responsiveValues.buttonBorderRadius,
-        backgroundColor: confirmColor,
+        backgroundColor: isDestructive ? "#FF3B30" : confirmColor,
+        borderWidth: isDestructive ? 0 : confirmColor === "transparent" ? 1 : 0,
+        borderColor: "rgba(255, 255, 255, 0.2)",
+      },
+      cancelButton: {
+        flex: 1,
+        height: responsiveValues.buttonHeight,
+        borderRadius: responsiveValues.buttonBorderRadius,
+        backgroundColor: "rgba(255, 255, 255, 0.1)",
       },
       confirmButtonText: {
         fontSize: responsiveValues.buttonTextSize,
         fontFamily: isArabic ? "Zain-Bold" : fonts.Bold,
+        color:
+          isDestructive || confirmColor !== "#FFFFFF" ? "#FFFFFF" : "#0D0D0F",
+      },
+      cancelButtonText: {
+        fontSize: responsiveValues.buttonTextSize,
+        fontFamily: isArabic ? "Zain-Bold" : fonts.Bold,
+        color: "#FFFFFF",
       },
     }),
-    [spacing, fonts, responsiveValues, iconBackgroundColor, confirmColor]
+    [
+      spacing,
+      fonts,
+      responsiveValues,
+      iconBackgroundColor,
+      confirmColor,
+      isDestructive,
+    ]
   );
 
   return (
@@ -167,7 +207,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
             <Feather
               name={iconName}
               size={responsiveValues.iconSize}
-              color={iconColor}
+              color={isDestructive ? "#FF3B30" : iconColor}
             />
           )}
         </View>
@@ -180,25 +220,50 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
           {subtitle}
         </Text>
 
-        {/* Confirm Button */}
-        <TouchableOpacity
-          style={[styles.confirmButton, dynamicStyles.confirmButton]}
-          onPress={() => {
-            onConfirm();
-            onClose();
-          }}
-          activeOpacity={0.9}
+        {/* Buttons */}
+        <View
+          style={
+            cancelText ? dynamicStyles.buttonContainer : styles.singleButton
+          }
         >
-          <Text
-            style={[
-              styles.confirmButtonText,
-              dynamicStyles.confirmButtonText,
-              { color: confirmColor === "#FFFFFF" ? "#0D0D0F" : "#FFFFFF" },
-            ]}
+          {cancelText && (
+            <TouchableOpacity
+              style={[styles.confirmButton, dynamicStyles.cancelButton]}
+              onPress={() => {
+                if (onCancel) onCancel();
+                onClose();
+              }}
+              activeOpacity={0.7}
+            >
+              <Text
+                style={[
+                  styles.confirmButtonText,
+                  dynamicStyles.cancelButtonText,
+                ]}
+              >
+                {displayCancelText}
+              </Text>
+            </TouchableOpacity>
+          )}
+
+          <TouchableOpacity
+            style={[styles.confirmButton, dynamicStyles.confirmButton]}
+            onPress={() => {
+              onConfirm();
+              if (!showCloseButton) onClose(); // Auto close if no close button (acting as info modal)
+            }}
+            activeOpacity={0.9}
           >
-            {displayConfirmText}
-          </Text>
-        </TouchableOpacity>
+            <Text
+              style={[
+                styles.confirmButtonText,
+                dynamicStyles.confirmButtonText,
+              ]}
+            >
+              {displayConfirmText}
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </Modal>
   );
@@ -238,6 +303,9 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
+  },
+  singleButton: {
+    width: "100%",
   },
   confirmButtonText: {
     // Text color is dynamic based on button background

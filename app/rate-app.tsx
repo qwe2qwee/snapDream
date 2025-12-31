@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  Alert,
   Linking,
   StatusBar,
   StyleSheet,
@@ -9,9 +8,10 @@ import {
   View,
 } from "react-native";
 
-import Star from "@/assets/icons/Rate.svg";
+import { default as Rate2, default as Star } from "@/assets/icons/Rate.svg";
 import { GradientBackground } from "@/components/GradientBackground";
 import { ImageGenHeader } from "@/components/Imagegen/ImageGenHeader";
+import { ConfirmModal } from "@/components/Modals/modal";
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
 import useLanguageStore from "@/store/useLanguageStore";
@@ -26,6 +26,10 @@ export default function RateAppScreen() {
   const { currentLanguage, t } = useLanguageStore();
   const isArabic = currentLanguage === "ar";
   const fonts = useFontFamily();
+
+  // Modal states
+  const [rateModalVisible, setRateModalVisible] = useState(false);
+  const [feedbackModalVisible, setFeedbackModalVisible] = useState(false);
 
   const getRatingText = (rating: number) => {
     switch (rating) {
@@ -46,27 +50,24 @@ export default function RateAppScreen() {
 
   const handleRating = (value: number) => {
     setRating(value);
-    setTimeout(() => {
-      if (value >= 4) {
-        Alert.alert(t("rateApp.thankYou"), t("rateApp.storeRedirectDesc"), [
-          { text: t("rateApp.notNow"), style: "cancel" },
-          {
-            text: t("rateApp.rateNow"),
-            onPress: () => {
-              Linking.openURL("https://apps.apple.com/app/snackdream");
-            },
-          },
-        ]);
-      } else {
-        Alert.alert(t("rateApp.thankYou"), t("rateApp.improveDesc"), [
-          { text: t("rateApp.notNow"), style: "cancel" },
-          {
-            text: t("rateApp.giveFeedback"),
-            onPress: () => router.push("/feedback"),
-          },
-        ]);
-      }
-    }, 500);
+  };
+
+  const handleSubmit = () => {
+    if (rating >= 4) {
+      setRateModalVisible(true);
+    } else {
+      setFeedbackModalVisible(true);
+    }
+  };
+
+  const handleRateNow = () => {
+    Linking.openURL("https://apps.apple.com/app/snackdream");
+    setRateModalVisible(false);
+  };
+
+  const handleGiveFeedback = () => {
+    setFeedbackModalVisible(false);
+    router.push("/feedback");
   };
 
   const styles = StyleSheet.create({
@@ -192,12 +193,38 @@ export default function RateAppScreen() {
               rating === 0 && styles.submitButtonDisabled,
             ]}
             disabled={rating === 0}
-            onPress={() => handleRating(rating)}
+            onPress={handleSubmit}
             activeOpacity={0.8}
           >
             <Text style={styles.submitButtonText}>{t("rateApp.submit")}</Text>
           </TouchableOpacity>
         </View>
+
+        {/* Rate on Store Modal */}
+        <ConfirmModal
+          isVisible={rateModalVisible}
+          onClose={() => setRateModalVisible(false)}
+          onConfirm={handleRateNow}
+          iconName="star"
+          icon={<Rate2 width={40} height={40} />}
+          title={t("rateApp.thankYou")}
+          subtitle={t("rateApp.storeRedirectDesc")}
+          confirmText={t("rateApp.rateNow")}
+          showCloseButton={true}
+        />
+
+        {/* Feedback Modal */}
+        <ConfirmModal
+          isVisible={feedbackModalVisible}
+          onClose={() => setFeedbackModalVisible(false)}
+          onConfirm={handleGiveFeedback}
+          iconName="message-square"
+          icon={<Rate2 width={40} height={40} />}
+          title={t("rateApp.thankYou")}
+          subtitle={t("rateApp.improveDesc")}
+          confirmText={t("rateApp.giveFeedback")}
+          showCloseButton={true}
+        />
       </GradientBackground>
     </View>
   );

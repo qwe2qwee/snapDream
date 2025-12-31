@@ -1,5 +1,6 @@
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 
@@ -10,6 +11,7 @@ interface LoginLinkProps {
 export const LoginLink: React.FC<LoginLinkProps> = ({ onPress }) => {
   const fonts = useFontFamily();
   const { spacing, typography } = useResponsive();
+  const { t } = useLanguageStore();
 
   const styles = StyleSheet.create({
     container: {
@@ -25,7 +27,7 @@ export const LoginLink: React.FC<LoginLinkProps> = ({ onPress }) => {
     },
     link: {
       fontSize: typography.body,
-      fontFamily: fonts.SemiBold,
+      fontFamily: fonts.Bold,
       color: "#FFFFFF",
       marginLeft: spacing.xs,
     },
@@ -37,8 +39,8 @@ export const LoginLink: React.FC<LoginLinkProps> = ({ onPress }) => {
       onPress={onPress}
       activeOpacity={0.7}
     >
-      <Text style={styles.text}>Already have an account?</Text>
-      <Text style={styles.link}>Login</Text>
+      <Text style={styles.text}>{t("auth.haveAccount")}</Text>
+      <Text style={styles.link}>{t("auth.login")}</Text>
     </TouchableOpacity>
   );
 };

@@ -28,6 +28,11 @@ const auth = {
   justAMoment: "فقط لحظة...",
   successVerified: "تم التحقق من بريدك الإلكتروني بنجاح.\nيمكنك الآن البدء.",
   letsGo: "هيا بنا",
+  verifyEmailTitle: "تحقق من بريدك الإلكتروني",
+  verificationLinkSent: "تم إرسال رابط التحقق إلى\n",
+  changeEmail: "تغيير البريد الإلكتروني؟",
+  verifiedButton: "تم التحقق",
+  didNotReceiveEmail: "لم تستلم البريد الإلكتروني؟ ",
 };
 
 export default auth;

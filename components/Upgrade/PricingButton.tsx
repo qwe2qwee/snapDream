@@ -2,47 +2,59 @@ import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
 import useLanguageStore from "@/store/useLanguageStore";
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface PricingButtonProps {
-  onPress: () => void;
   text: string;
+  onPress: () => void;
+  disabled?: boolean;
 }
 
 export const PricingButton: React.FC<PricingButtonProps> = ({
-  onPress,
   text,
+  onPress,
+  disabled = false,
 }) => {
   const fonts = useFontFamily();
   const { currentLanguage } = useLanguageStore();
   const isArabic = currentLanguage === "ar";
-  const { getResponsiveValue } = useResponsive();
+  const { spacing, getResponsiveValue } = useResponsive();
 
-  const buttonHeight = getResponsiveValue(54, 58, 62, 66, 70);
-  const textSize = getResponsiveValue(18, 19, 20, 21, 22);
+  const fontSize = getResponsiveValue(16, 18, 20, 22, 24);
 
   const styles = StyleSheet.create({
-    button: {
-      backgroundColor: "#FFFFFF",
-      borderRadius: 50,
+    container: {
+      width: "100%",
+      height: getResponsiveValue(50, 56, 62, 68, 74),
+      borderRadius: getResponsiveValue(25, 28, 31, 34, 37),
+      backgroundColor: disabled ? "rgba(255, 255, 255, 0.1)" : "#FFFFFF",
       justifyContent: "center",
       alignItems: "center",
-      height: buttonHeight,
+      borderWidth: 1,
+      borderColor: disabled ? "rgba(255, 255, 255, 0.1)" : "#FFFFFF",
     },
-    buttonText: {
-      fontSize: textSize,
-      fontFamily: isArabic ? "Zain-Medium" : fonts.Medium,
-      color: "#0D0D0F",
+    text: {
+      fontSize: fontSize,
+      fontFamily: isArabic ? "Zain-Bold" : fonts.Bold,
+      color: disabled ? "#8E8E93" : "#0D0D0F",
     },
   });
 
+  if (disabled) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.text}>{text}</Text>
+      </View>
+    );
+  }
+
   return (
     <TouchableOpacity
-      style={styles.button}
+      style={styles.container}
       onPress={onPress}
-      activeOpacity={0.9}
+      activeOpacity={0.8}
     >
-      <Text style={styles.buttonText}>{text}</Text>
+      <Text style={styles.text}>{text}</Text>
     </TouchableOpacity>
   );
 };

@@ -24,7 +24,7 @@ export const ForgotPasswordLink: React.FC<ForgotPasswordLinkProps> = ({
     },
     link: {
       fontSize: typography.body,
-      fontFamily: isArabic ? "Zain-Bold" : fonts.SemiBold,
+      fontFamily: isArabic ? "Zain-Bold" : fonts.Bold,
       color: "#FFFFFF",
     },
   });

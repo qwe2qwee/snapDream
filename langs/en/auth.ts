@@ -9,6 +9,7 @@ const auth = {
   signUp: "Sign Up",
   createAccount: "Create Account",
   noAccount: "Don't have an account?",
+  haveAccount: "Already have an account?",
   loginWelcome: "Hey, welcome back!",
   registerWelcome: "Let's go! Register in seconds.",
   confirmPasswordPlaceholder: "Re-Enter Your Password",
@@ -28,6 +29,11 @@ const auth = {
   successVerified:
     "Your email has been successfully verified.\nYou can now proceed.",
   letsGo: "Let's Go",
+  verifyEmailTitle: "Verify your email",
+  verificationLinkSent: "A verification link has been sent to",
+  changeEmail: "Change email ?",
+  verifiedButton: "I've Verified",
+  didNotReceiveEmail: "Didn't receive the email? ",
 };
 
 export default auth;

@@ -30,6 +30,10 @@ const settings = {
   off: "خصم",
   learnMore: "تعرف على المزيد",
   termsOfUse: "شروط الاستخدام",
+  standardGen: "إنتاج قياسي",
+  limitedSaves: "حفظ محدود",
+  basicSupport: "دعم أساسي",
+  restorePurchase: "استعادة المشتريات",
 };
 
 export default settings;

@@ -2,7 +2,7 @@ import Close from "@/assets/icons/Close.svg";
 import * as Clipboard from "expo-clipboard";
 import React, { useMemo, useState } from "react";
 import {
-  Alert,
+  DimensionValue,
   Linking,
   StyleSheet,
   Text,
@@ -22,6 +22,7 @@ import RedditIcon from "@/assets/icons/Reddit.svg";
 import TelegramIcon from "@/assets/icons/Telegram.svg";
 import TwitterIcon from "@/assets/icons/Twitter.svg";
 import WhatsAppIcon from "@/assets/icons/WhatsApp.svg";
+import { ConfirmModal } from "./modal";
 
 interface SharePlatform {
   name: string;
@@ -55,6 +56,16 @@ export const ShareModal: React.FC<ShareModalProps> = ({
 
   const fonts = useFontFamily();
   const [copied, setCopied] = useState(false);
+  const [infoModalVisible, setInfoModalVisible] = useState(false);
+  const [infoModalContent, setInfoModalContent] = useState({
+    title: "",
+    subtitle: "",
+  });
+
+  const showInfoModal = (title: string, subtitle: string) => {
+    setInfoModalContent({ title, subtitle });
+    setInfoModalVisible(true);
+  };
 
   // Responsive values
   const responsiveValues = useMemo(
@@ -186,10 +197,10 @@ export const ShareModal: React.FC<ShareModalProps> = ({
         await Linking.openURL(shareLink);
         onClose();
       } else {
-        Alert.alert("Error", `Cannot open ${platform.name}`);
+        showInfoModal(t("common.error"), `Cannot open ${platform.name}`);
       }
     } catch (error) {
-      Alert.alert("Error", `Failed to share on ${platform.name}`);
+      showInfoModal(t("common.error"), `Failed to share on ${platform.name}`);
     }
   };
 
@@ -199,7 +210,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
-      Alert.alert("Error", "Failed to copy link");
+      showInfoModal(t("common.error"), "Failed to copy link");
     }
   };
 
@@ -246,6 +257,8 @@ export const ShareModal: React.FC<ShareModalProps> = ({
         padding: spacing.md,
         borderRadius: responsiveValues.urlContainerBorderRadius,
         gap: spacing.md,
+        width: "100%" as DimensionValue,
+        display: "flex" as const,
       },
       urlText: {
         fontSize: responsiveValues.urlTextSize,
@@ -335,6 +348,17 @@ export const ShareModal: React.FC<ShareModalProps> = ({
           </TouchableOpacity>
         </View>
       </View>
+
+      <ConfirmModal
+        isVisible={infoModalVisible}
+        onClose={() => setInfoModalVisible(false)}
+        onConfirm={() => setInfoModalVisible(false)}
+        title={infoModalContent.title}
+        subtitle={infoModalContent.subtitle}
+        confirmText={t("common.ok")}
+        showCloseButton={false}
+        iconName="alert-circle"
+      />
     </Modal>
   );
 };

@@ -28,7 +28,7 @@ export const SignUpLink: React.FC<SignUpLinkProps> = ({ onPress }) => {
     },
     link: {
       fontSize: typography.body,
-      fontFamily: isArabic ? "Zain-Bold" : fonts.SemiBold,
+      fontFamily: isArabic ? "Zain-Bold" : fonts.Bold,
       color: "#FFFFFF",
       marginLeft: isArabic ? 0 : spacing.xs,
       marginRight: isArabic ? spacing.xs : 0,

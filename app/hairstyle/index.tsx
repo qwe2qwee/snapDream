@@ -9,6 +9,7 @@ import {
 } from "@/components/HairStyle/HairStyleModal";
 import { StyleSelector } from "@/components/HairStyle/StyleSelector";
 import { LoadingModal } from "@/components/Modals/LoadingModal";
+import { ConfirmModal } from "@/components/Modals/modal";
 
 import {
   ALL_HAIR_COLORS,
@@ -21,7 +22,7 @@ import useLanguageStore from "@/store/useLanguageStore";
 import { useSafeNavigate } from "@/utils/useSafeNavigate";
 import * as ImagePicker from "expo-image-picker";
 import React, { useState } from "react";
-import { Alert, Platform, StyleSheet, View } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
 export default function HairStyleScreen() {
@@ -45,6 +46,17 @@ export default function HairStyleScreen() {
   // Modal states
   const [showStyleModal, setShowStyleModal] = useState(false);
   const [showColorModal, setShowColorModal] = useState(false);
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [infoModalVisible, setInfoModalVisible] = useState(false);
+  const [infoModalContent, setInfoModalContent] = useState({
+    title: "",
+    subtitle: "",
+  });
+
+  const showInfoModal = (title: string, subtitle: string) => {
+    setInfoModalContent({ title, subtitle });
+    setInfoModalVisible(true);
+  };
 
   // Image picker
   const pickImage = async () => {
@@ -53,9 +65,7 @@ export default function HairStyleScreen() {
         await ImagePicker.requestMediaLibraryPermissionsAsync();
 
       if (status !== "granted") {
-        Alert.alert(t("common.error"), t("hairstyle.permissionsError"), [
-          { text: t("common.ok") },
-        ]);
+        showInfoModal(t("common.error"), t("hairstyle.permissionsError"));
         return;
       }
 
@@ -74,7 +84,7 @@ export default function HairStyleScreen() {
       }
     } catch (error) {
       console.error("Error picking image:", error);
-      Alert.alert(t("common.error"), t("clothSwap.uploadError"));
+      showInfoModal(t("common.error"), t("clothSwap.uploadError"));
     } finally {
       setIsUploadingImage(false);
     }
@@ -82,20 +92,18 @@ export default function HairStyleScreen() {
 
   // Remove image
   const handleRemoveImage = () => {
-    Alert.alert(t("common.removeImage"), t("common.removeImageConfirm"), [
-      { text: t("common.cancel"), style: "cancel" },
-      {
-        text: t("common.remove"),
-        style: "destructive",
-        onPress: () => setUserImage(undefined),
-      },
-    ]);
+    setDeleteModalVisible(true);
+  };
+
+  const confirmRemoveImage = () => {
+    setUserImage(undefined);
+    setDeleteModalVisible(false);
   };
 
   // Generate hairstyle
   const handleGenerate = async () => {
     if (!userImage) {
-      Alert.alert(t("common.error"), t("clothSwap.uploadImage"));
+      showInfoModal(t("common.error"), t("clothSwap.uploadImage"));
       return;
     }
 
@@ -120,9 +128,7 @@ export default function HairStyleScreen() {
     } catch (error) {
       setIsGenerating(false);
       console.error("Generation error:", error);
-      Alert.alert(t("common.error"), t("hairstyle.generateError"), [
-        { text: t("common.ok") },
-      ]);
+      showInfoModal(t("common.error"), t("hairstyle.generateError"));
     }
   };
 
@@ -227,6 +233,31 @@ export default function HairStyleScreen() {
             "{color}",
             t(`hairstyle.items.${selectedColor.id}`) || selectedColor.name
           )}
+      />
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmModal
+        isVisible={deleteModalVisible}
+        onClose={() => setDeleteModalVisible(false)}
+        onConfirm={confirmRemoveImage}
+        title={t("common.removeImage")}
+        subtitle={t("common.removeImageConfirm")}
+        confirmText={t("common.remove")}
+        cancelText={t("common.cancel")}
+        iconName="trash-2"
+        isDestructive
+      />
+
+      {/* Info/Error Modal */}
+      <ConfirmModal
+        isVisible={infoModalVisible}
+        onClose={() => setInfoModalVisible(false)}
+        onConfirm={() => setInfoModalVisible(false)}
+        title={infoModalContent.title}
+        subtitle={infoModalContent.subtitle}
+        confirmText={t("common.ok")}
+        showCloseButton={false}
+        iconName="info"
       />
     </GradientBackground>
   );

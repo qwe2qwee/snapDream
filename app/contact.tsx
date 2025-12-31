@@ -1,7 +1,12 @@
+import { GradientBackground } from "@/components/GradientBackground";
+import { ImageGenHeader } from "@/components/Imagegen/ImageGenHeader";
+import { SuccessModal } from "@/components/Modals/AproveModal";
+import { useFontFamily } from "@/hooks/useFontFamily";
+import { useResponsive } from "@/hooks/useResponsive";
+import useLanguageStore from "@/store/useLanguageStore";
+import * as Linking from "expo-linking";
 import React, { useState } from "react";
 import {
-  Alert,
-  Linking,
   Platform,
   StatusBar,
   StyleSheet,
@@ -12,16 +17,12 @@ import {
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
-import { GradientBackground } from "@/components/GradientBackground";
-import { ImageGenHeader } from "@/components/Imagegen/ImageGenHeader";
-import { useFontFamily } from "@/hooks/useFontFamily";
-import { useResponsive } from "@/hooks/useResponsive";
-import useLanguageStore from "@/store/useLanguageStore";
-import { router } from "expo-router";
-
 export default function ContactScreen() {
   const { spacing, typography, getResponsiveValue, safeAreaBottom } =
     useResponsive();
+  const { t, currentLanguage } = useLanguageStore();
+  const isArabic = currentLanguage === "ar";
+  const fonts = useFontFamily();
 
   const buttonHeight = getResponsiveValue(54, 58, 62, 66, 70);
 
@@ -29,52 +30,34 @@ export default function ContactScreen() {
   const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
+  const [successModalVisible, setSuccessModalVisible] = useState(false);
 
-  const { currentLanguage, t } = useLanguageStore();
-  const isArabic = currentLanguage === "ar";
-  const fonts = useFontFamily();
+  // Email validation regex
+  const isValidEmail = (email: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
 
-  const contactMethods = [
-    {
-      id: "email",
-      label: t("contact.emailUs"),
-      value: "support@snackdream.app",
-      icon: "📧",
-      action: () => Linking.openURL("mailto:support@snackdream.app"),
-    },
-    {
-      id: "twitter",
-      label: "Twitter",
-      value: "@SnackDreamApp",
-      icon: "🐦",
-      action: () => Linking.openURL("https://twitter.com/snackdreamapp"),
-    },
-    {
-      id: "instagram",
-      label: "Instagram",
-      value: "@snackdreamapp",
-      icon: "📸",
-      action: () => Linking.openURL("https://instagram.com/snackdreamapp"),
-    },
-  ];
+  const isFormValid =
+    name.trim().length > 0 &&
+    email.trim().length > 0 &&
+    isValidEmail(email) &&
+    subject.trim().length > 0 &&
+    message.trim().length > 0;
 
   const handleSubmit = () => {
-    if (!name.trim() || !email.trim() || !subject.trim() || !message.trim()) {
-      Alert.alert(t("contact.requiredFields"), t("contact.fillAllFields"));
-      return;
-    }
+    if (!isFormValid) return;
 
-    // Basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      Alert.alert(t("contact.invalidEmail"), t("contact.invalidEmailDesc"));
-      return;
-    }
+    // Simulate API call
+    setSuccessModalVisible(true);
+  };
 
-    // In a real app, submit to backend
-    Alert.alert(t("contact.messageSent"), t("contact.messageSentDesc"), [
-      { text: t("contact.ok"), onPress: () => router.back() },
-    ]);
+  const handleSuccessClose = () => {
+    setSuccessModalVisible(false);
+    // Reset form
+    setName("");
+    setEmail("");
+    setSubject("");
+    setMessage("");
   };
 
   const styles = StyleSheet.create({
@@ -87,52 +70,7 @@ export default function ContactScreen() {
     },
     scrollContent: {
       paddingHorizontal: spacing.md,
-      paddingBottom:
-        getResponsiveValue(120, 140, 140, 160, 180) + safeAreaBottom,
-    },
-    description: {
-      fontSize: typography.body,
-      color: "#A0A0A0",
-      lineHeight: typography.body * 1.5,
-      marginBottom: spacing.lg,
-    },
-    section: {
-      marginBottom: spacing.lg,
-    },
-    sectionTitle: {
-      fontSize: typography.h3,
-      fontWeight: "600",
-      color: "#FFFFFF",
-      marginBottom: spacing.md,
-    },
-    contactMethodsContainer: {
-      gap: spacing.sm,
-    },
-    contactMethod: {
-      flexDirection: "row",
-      alignItems: "center",
-      backgroundColor: "rgba(255, 255, 255, 0.05)",
-      borderRadius: 12,
-      padding: spacing.md,
-      borderWidth: 1,
-      borderColor: "rgba(255, 255, 255, 0.1)",
-      gap: spacing.sm,
-    },
-    contactMethodIcon: {
-      fontSize: typography.h2,
-    },
-    contactMethodContent: {
-      flex: 1,
-    },
-    contactMethodLabel: {
-      fontSize: typography.small,
-      color: "#666666",
-      marginBottom: 2,
-    },
-    contactMethodValue: {
-      fontSize: typography.body,
-      color: "#FFFFFF",
-      fontWeight: "500",
+      flexGrow: 1,
     },
     formSection: {
       marginBottom: spacing.lg,
@@ -151,7 +89,6 @@ export default function ContactScreen() {
       color: "#FFFFFF",
       borderWidth: 1,
       borderColor: "rgba(255, 255, 255, 0.1)",
-      minHeight: 50,
     },
     textArea: {
       minHeight: 150,
@@ -173,15 +110,24 @@ export default function ContactScreen() {
       fontWeight: "700",
       color: "#0D0D0F",
     },
-    divider: {
-      height: 1,
-      backgroundColor: "rgba(255, 255, 255, 0.1)",
-      marginVertical: spacing.lg,
+    supportEmailContainer: {
+      marginTop: spacing.xl,
+      alignItems: "center",
+      marginBottom: spacing.xl,
+    },
+    supportEmailLabel: {
+      fontSize: typography.body,
+      color: "#A0A0A0",
+      marginBottom: spacing.xs,
+      fontFamily: fonts.Regular,
+    },
+    supportEmail: {
+      fontSize: typography.body,
+      color: "#FFFFFF",
+      fontFamily: fonts.Bold,
+      textDecorationLine: "underline",
     },
   });
-
-  const isFormValid =
-    name.trim() && email.trim() && subject.trim() && message.trim();
 
   return (
     <View style={styles.container}>
@@ -193,196 +139,148 @@ export default function ContactScreen() {
 
         <KeyboardAwareScrollView
           style={styles.scrollView}
-          contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
+          contentContainerStyle={[
+            styles.scrollContent,
+            {
+              paddingBottom: spacing.xl * 2 + safeAreaBottom + 80,
+            },
+          ]}
           keyboardShouldPersistTaps="handled"
-          bottomOffset={Platform.OS === "ios" ? 40 : 20}
+          bottomOffset={Platform.OS === "ios" ? 40 : 0}
         >
-          <Text
-            style={[
-              styles.description,
-              isArabic && { fontFamily: fonts.Regular },
-            ]}
-          >
-            {t("contact.desc")}
-          </Text>
-
-          {/* Contact Methods */}
-          <View style={styles.section}>
+          {/* Name Input */}
+          <View style={styles.formSection}>
             <Text
-              style={[
-                styles.sectionTitle,
-                isArabic && { fontFamily: fonts.Bold },
-              ]}
+              style={[styles.label, isArabic && { fontFamily: fonts.SemiBold }]}
             >
-              {t("contact.getInTouch")}
+              {t("contact.name")}
             </Text>
-            <View style={styles.contactMethodsContainer}>
-              {contactMethods.map((method) => (
-                <TouchableOpacity
-                  key={method.id}
-                  style={styles.contactMethod}
-                  onPress={method.action}
-                  activeOpacity={0.7}
-                >
-                  <Text style={styles.contactMethodIcon}>{method.icon}</Text>
-                  <View style={styles.contactMethodContent}>
-                    <Text
-                      style={[
-                        styles.contactMethodLabel,
-                        isArabic && { fontFamily: fonts.Regular },
-                      ]}
-                    >
-                      {method.label}
-                    </Text>
-                    <Text
-                      style={[
-                        styles.contactMethodValue,
-                        isArabic && { fontFamily: fonts.Medium },
-                      ]}
-                    >
-                      {method.value}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              ))}
-            </View>
+            <TextInput
+              style={[
+                styles.input,
+                isArabic && {
+                  fontFamily: fonts.Regular,
+                  textAlign: "right",
+                },
+              ]}
+              placeholder={t("contact.namePlaceholder")}
+              placeholderTextColor="#666666"
+              value={name}
+              onChangeText={setName}
+            />
           </View>
 
-          <View style={styles.divider} />
+          {/* Email Input */}
+          <View style={styles.formSection}>
+            <Text
+              style={[styles.label, isArabic && { fontFamily: fonts.SemiBold }]}
+            >
+              {t("contact.email")}
+            </Text>
+            <TextInput
+              style={[
+                styles.input,
+                isArabic && {
+                  fontFamily: fonts.Regular,
+                  textAlign: "right",
+                },
+              ]}
+              placeholder={t("contact.emailPlaceholder")}
+              placeholderTextColor="#666666"
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
+            />
+          </View>
 
-          {/* Contact Form */}
-          <View style={styles.section}>
+          {/* Subject Input */}
+          <View style={styles.formSection}>
+            <Text
+              style={[styles.label, isArabic && { fontFamily: fonts.SemiBold }]}
+            >
+              {t("contact.subject")}
+            </Text>
+            <TextInput
+              style={[
+                styles.input,
+                isArabic && {
+                  fontFamily: fonts.Regular,
+                  textAlign: "right",
+                },
+              ]}
+              placeholder={t("contact.subjectPlaceholder")}
+              placeholderTextColor="#666666"
+              value={subject}
+              onChangeText={setSubject}
+            />
+          </View>
+
+          {/* Message Input */}
+          <View style={styles.formSection}>
+            <Text
+              style={[styles.label, isArabic && { fontFamily: fonts.SemiBold }]}
+            >
+              {t("contact.message")}
+            </Text>
+            <TextInput
+              style={[
+                styles.input,
+                styles.textArea,
+                isArabic && {
+                  fontFamily: fonts.Regular,
+                  textAlign: "right",
+                },
+              ]}
+              placeholder={t("contact.messagePlaceholder")}
+              placeholderTextColor="#666666"
+              multiline
+              value={message}
+              onChangeText={setMessage}
+              maxLength={1000}
+            />
+          </View>
+
+          {/* Submit Button */}
+          <TouchableOpacity
+            style={[
+              styles.submitButton,
+              !isFormValid && styles.submitButtonDisabled,
+            ]}
+            onPress={handleSubmit}
+            disabled={!isFormValid}
+            activeOpacity={0.7}
+          >
             <Text
               style={[
-                styles.sectionTitle,
+                styles.submitButtonText,
                 isArabic && { fontFamily: fonts.Bold },
               ]}
             >
-              {t("contact.sendMessage")}
+              {t("contact.send")}
             </Text>
+          </TouchableOpacity>
 
-            <View style={styles.formSection}>
-              <Text
-                style={[
-                  styles.label,
-                  isArabic && { fontFamily: fonts.SemiBold },
-                ]}
-              >
-                {t("contact.name")}
-              </Text>
-              <TextInput
-                style={[
-                  styles.input,
-                  isArabic && {
-                    fontFamily: fonts.Regular,
-                    textAlign: "right",
-                  },
-                ]}
-                placeholder={t("contact.namePlaceholder")}
-                placeholderTextColor="#666666"
-                value={name}
-                onChangeText={setName}
-              />
-            </View>
-
-            <View style={styles.formSection}>
-              <Text
-                style={[
-                  styles.label,
-                  isArabic && { fontFamily: fonts.SemiBold },
-                ]}
-              >
-                {t("contact.email")}
-              </Text>
-              <TextInput
-                style={[
-                  styles.input,
-                  isArabic && {
-                    fontFamily: fonts.Regular,
-                    textAlign: "right",
-                  },
-                ]}
-                placeholder={t("contact.emailPlaceholder")}
-                placeholderTextColor="#666666"
-                keyboardType="email-address"
-                autoCapitalize="none"
-                value={email}
-                onChangeText={setEmail}
-              />
-            </View>
-
-            <View style={styles.formSection}>
-              <Text
-                style={[
-                  styles.label,
-                  isArabic && { fontFamily: fonts.SemiBold },
-                ]}
-              >
-                {t("contact.subject")}
-              </Text>
-              <TextInput
-                style={[
-                  styles.input,
-                  isArabic && {
-                    fontFamily: fonts.Regular,
-                    textAlign: "right",
-                  },
-                ]}
-                placeholder={t("contact.subjectPlaceholder")}
-                placeholderTextColor="#666666"
-                value={subject}
-                onChangeText={setSubject}
-              />
-            </View>
-
-            <View style={styles.formSection}>
-              <Text
-                style={[
-                  styles.label,
-                  isArabic && { fontFamily: fonts.SemiBold },
-                ]}
-              >
-                {t("contact.message")}
-              </Text>
-              <TextInput
-                style={[
-                  styles.input,
-                  styles.textArea,
-                  isArabic && {
-                    fontFamily: fonts.Regular,
-                    textAlign: "right",
-                  },
-                ]}
-                placeholder={t("contact.messagePlaceholder")}
-                placeholderTextColor="#666666"
-                multiline
-                value={message}
-                onChangeText={setMessage}
-                maxLength={1000}
-              />
-            </View>
-
+          {/* Support Email Link */}
+          <View style={styles.supportEmailContainer}>
+            <Text style={styles.supportEmailLabel}>{t("contact.emailUs")}</Text>
             <TouchableOpacity
-              style={[
-                styles.submitButton,
-                !isFormValid && styles.submitButtonDisabled,
-              ]}
-              onPress={handleSubmit}
-              disabled={!isFormValid}
-              activeOpacity={0.7}
+              onPress={() => Linking.openURL("mailto:support@snackdream.app")}
             >
-              <Text
-                style={[
-                  styles.submitButtonText,
-                  isArabic && { fontFamily: fonts.Bold },
-                ]}
-              >
-                {t("contact.send")}
-              </Text>
+              <Text style={styles.supportEmail}>support@snackdream.app</Text>
             </TouchableOpacity>
           </View>
         </KeyboardAwareScrollView>
+
+        <SuccessModal
+          isVisible={successModalVisible}
+          onClose={handleSuccessClose}
+          title={t("contact.successTitle")}
+          subtitle={t("contact.successMessage")}
+          buttonText={t("common.ok")}
+          onContinue={handleSuccessClose}
+        />
       </GradientBackground>
     </View>
   );

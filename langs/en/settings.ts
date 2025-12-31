@@ -31,6 +31,10 @@ const settings = {
   off: "off",
   learnMore: "Learn More",
   termsOfUse: "Terms of Use",
+  standardGen: "Standard Generation",
+  limitedSaves: "Limited Saves",
+  basicSupport: "Basic Support",
+  restorePurchase: "Restore Purchase",
 };
 
 export default settings;

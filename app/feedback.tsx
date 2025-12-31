@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  Alert,
   Platform,
   StatusBar,
   StyleSheet,
@@ -13,6 +12,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
 import { GradientBackground } from "@/components/GradientBackground";
 import { ImageGenHeader } from "@/components/Imagegen/ImageGenHeader";
+import { SuccessModal } from "@/components/Modals/AproveModal";
 import { useFontFamily } from "@/hooks/useFontFamily";
 import { useResponsive } from "@/hooks/useResponsive";
 import useLanguageStore from "@/store/useLanguageStore";
@@ -31,6 +31,7 @@ export default function FeedbackScreen() {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [feedback, setFeedback] = useState("");
   const [email, setEmail] = useState("");
+  const [successModalVisible, setSuccessModalVisible] = useState(false);
 
   const categories = [
     { id: "bug", label: t("feedback.bug"), emoji: "🐛" },
@@ -40,19 +41,13 @@ export default function FeedbackScreen() {
   ];
 
   const handleSubmit = () => {
-    if (!selectedCategory) {
-      Alert.alert(t("feedback.categoryRequired"), t("feedback.selectCategory"));
-      return;
-    }
-    if (!feedback.trim()) {
-      Alert.alert(t("feedback.feedbackRequired"), t("feedback.enterFeedback"));
+    // Validation is handled by button disable state, but good to be safe
+    if (!selectedCategory || !feedback.trim()) {
       return;
     }
 
     // In a real app, submit to backend
-    Alert.alert(t("feedback.thankYou"), t("feedback.feedbackSentDesc"), [
-      { text: t("feedback.ok"), onPress: () => router.back() },
-    ]);
+    setSuccessModalVisible(true);
   };
 
   const styles = StyleSheet.create({
@@ -294,6 +289,20 @@ export default function FeedbackScreen() {
             </Text>
           </TouchableOpacity>
         </View>
+
+        {/* Success Modal */}
+        <SuccessModal
+          isVisible={successModalVisible}
+          onClose={() => setSuccessModalVisible(false)}
+          onContinue={() => {
+            setSuccessModalVisible(false);
+            router.back();
+          }}
+          title={t("feedback.thankYou")}
+          subtitle={t("feedback.feedbackSentDesc")}
+          buttonText={t("feedback.ok")}
+          showCloseButton={false}
+        />
       </GradientBackground>
     </View>
   );

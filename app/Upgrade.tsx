@@ -42,7 +42,8 @@ export default function PricingScreen() {
   const mainHeadingSize = getResponsiveValue(24, 26, 28, 30, 32);
   const horizontalPadding = isTablet ? spacing.xl : spacing.lg;
 
-  const features = [
+  /* Features Definitions */
+  const premiumFeatures = [
     { icon: QuickIcon, label: t("settings.quickGen") },
     { icon: SaveIcon, label: t("settings.saveCreations") },
     { icon: LifetimeIcon, label: t("settings.lifetimeAccess") },
@@ -50,6 +51,21 @@ export default function PricingScreen() {
     { icon: HDIcon, label: t("settings.hdDownloads") },
     { icon: CustomerIcon, label: t("settings.support") },
   ];
+
+  const basicFeatures = [
+    {
+      icon: QuickIcon,
+      label: t("settings.standardGen") || "Standard Generation",
+    },
+    { icon: SaveIcon, label: t("settings.limitedSaves") || "Limited Saves" },
+    {
+      icon: CustomerIcon,
+      label: t("settings.basicSupport") || "Basic Support",
+    },
+  ];
+
+  const currentFeatures =
+    selectedPlan === "premium" ? premiumFeatures : basicFeatures;
 
   const styles = StyleSheet.create({
     backgroundImage: {
@@ -105,42 +121,72 @@ export default function PricingScreen() {
             {/* Main Heading */}
             <Text style={styles.mainHeading}>{t("settings.upgradeTitle")}</Text>
 
-            {/* Features Grid */}
-            <PricingFeatures features={features} />
-
             {/* Plan Toggle */}
             <PlanToggle
               selectedPlan={selectedPlan}
               onSelectPlan={setSelectedPlan}
             />
 
+            {/* Features Grid */}
+            <PricingFeatures features={currentFeatures} />
+
             {/* Pricing Cards */}
             <View style={styles.cardsContainer}>
               <View style={styles.cardContainer}>
-                <PricingCard
-                  type="monthly"
-                  price="$49.99"
-                  credits="2500 Credits"
-                  isSelected={selectedPricing === "monthly"}
-                  onPress={() => setSelectedPricing("monthly")}
-                />
+                {selectedPlan === "premium" ? (
+                  <>
+                    <PricingCard
+                      type="monthly"
+                      price="$49.99"
+                      credits="2500 Credits"
+                      isSelected={selectedPricing === "monthly"}
+                      onPress={() => setSelectedPricing("monthly")}
+                    />
 
-                <PricingCard
-                  type="yearly"
-                  price="$99.99"
-                  credits="5000 Credits"
-                  discount="60% off"
-                  isSelected={selectedPricing === "yearly"}
-                  onPress={() => setSelectedPricing("yearly")}
-                />
+                    <PricingCard
+                      type="yearly"
+                      price="$99.99"
+                      credits="5000 Credits"
+                      discount="60% off"
+                      isSelected={selectedPricing === "yearly"}
+                      onPress={() => setSelectedPricing("yearly")}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <PricingCard
+                      type="monthly"
+                      price="$10.00"
+                      credits="10 Credits/day"
+                      isSelected={true}
+                      onPress={() => {}}
+                    />
+                    <PricingCard
+                      type="yearly"
+                      price="$100.00"
+                      credits="10 Credits/day"
+                      isSelected={true}
+                      onPress={() => {}}
+                    />
+                  </>
+                )}
               </View>
             </View>
 
             {/* CTA Button */}
             <View style={styles.buttonContainer}>
               <PricingButton
-                text={t("home.upgradeNow")}
-                onPress={() => console.log("Upgrade pressed")}
+                text={
+                  selectedPlan === "premium"
+                    ? t("home.upgradeNow")
+                    : t("common.currentPlan") || "Current Plan"
+                }
+                onPress={() => {
+                  if (selectedPlan === "premium") {
+                    console.log("Upgrade pressed for", selectedPricing);
+                  }
+                }}
+                disabled={selectedPlan === "basic"}
               />
             </View>
 

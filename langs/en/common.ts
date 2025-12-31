@@ -64,6 +64,7 @@ const common = {
   all: "All",
   image: "Image",
   video: "Video",
+  currentPlan: "Current Plan",
 };
 
 export default common;

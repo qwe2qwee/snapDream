@@ -3,20 +3,37 @@ import { ImageUploadBox } from "@/components/ClothSwap/ImageUploadBox";
 import { GradientBackground } from "@/components/GradientBackground";
 import { ImageGenHeader } from "@/components/Imagegen/ImageGenHeader";
 import { LoadingModal } from "@/components/Modals/LoadingModal";
+import { ConfirmModal } from "@/components/Modals/modal";
 import { useResponsive } from "@/hooks/useResponsive";
 import useLanguageStore from "@/store/useLanguageStore";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 import React, { useState } from "react";
-import { Alert, Platform, StyleSheet, View } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
 export default function ClothSwapScreen() {
   const { t } = useLanguageStore();
-  const { spacing, safeAreaBottom, getResponsiveValue } = useResponsive();
+  const { spacing, safeAreaBottom } = useResponsive();
   const [loading, setLoading] = useState(false);
   const [modelImage, setModelImage] = useState<string | undefined>(undefined);
   const [clothImage, setClothImage] = useState<string | undefined>(undefined);
+
+  // Modal states
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<"model" | "cloth" | null>(
+    null
+  );
+  const [infoModalVisible, setInfoModalVisible] = useState(false);
+  const [infoModalContent, setInfoModalContent] = useState({
+    title: "",
+    subtitle: "",
+  });
+
+  const showInfoModal = (title: string, subtitle: string) => {
+    setInfoModalContent({ title, subtitle });
+    setInfoModalVisible(true);
+  };
 
   const pickImage = async (type: "model" | "cloth") => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -37,7 +54,7 @@ export default function ClothSwapScreen() {
 
   const handleGenerate = async () => {
     if (!modelImage || !clothImage) {
-      Alert.alert(
+      showInfoModal(
         t("common.error"),
         t("clothSwap.uploadImage") // Or a specific error key
       );
@@ -53,25 +70,23 @@ export default function ClothSwapScreen() {
   };
 
   const handleRemoveModelImage = () => {
-    Alert.alert(t("common.removeImage"), t("common.removeImageConfirm"), [
-      { text: t("common.cancel"), style: "cancel" },
-      {
-        text: t("common.remove"),
-        style: "destructive",
-        onPress: () => setModelImage(undefined),
-      },
-    ]);
+    setDeleteTarget("model");
+    setDeleteModalVisible(true);
   };
 
   const handleRemoveClothImage = () => {
-    Alert.alert(t("common.removeImage"), t("common.removeImageConfirm"), [
-      { text: t("common.cancel"), style: "cancel" },
-      {
-        text: t("common.remove"),
-        style: "destructive",
-        onPress: () => setClothImage(undefined),
-      },
-    ]);
+    setDeleteTarget("cloth");
+    setDeleteModalVisible(true);
+  };
+
+  const confirmRemoveImage = () => {
+    if (deleteTarget === "model") {
+      setModelImage(undefined);
+    } else if (deleteTarget === "cloth") {
+      setClothImage(undefined);
+    }
+    setDeleteModalVisible(false);
+    setDeleteTarget(null);
   };
 
   const canGenerate = modelImage && clothImage;
@@ -140,6 +155,31 @@ export default function ClothSwapScreen() {
       </View>
 
       <LoadingModal isVisible={loading} />
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmModal
+        isVisible={deleteModalVisible}
+        onClose={() => setDeleteModalVisible(false)}
+        onConfirm={confirmRemoveImage}
+        title={t("common.removeImage")}
+        subtitle={t("common.removeImageConfirm")}
+        confirmText={t("common.remove")}
+        cancelText={t("common.cancel")}
+        iconName="trash-2"
+        isDestructive
+      />
+
+      {/* Info/Error Modal */}
+      <ConfirmModal
+        isVisible={infoModalVisible}
+        onClose={() => setInfoModalVisible(false)}
+        onConfirm={() => setInfoModalVisible(false)}
+        title={infoModalContent.title}
+        subtitle={infoModalContent.subtitle}
+        confirmText={t("common.ok")}
+        showCloseButton={false}
+        iconName="info"
+      />
     </GradientBackground>
   );
 }
